@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily AI News — 2026年03月17日</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e8eaf0;
+      --text-muted: #8b90a8;
+      --accent: #6c63ff;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ===== ヘッダー ===== */
+    .site-header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .site-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-date {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .header-total {
+      background: var(--accent);
+      color: white;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ===== レイアウト ===== */
+    .layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    /* ===== サイドバー ===== */
+    .sidebar {
+      position: sticky;
+      top: 81px;
+      height: calc(100vh - 81px);
+      overflow-y: auto;
+      padding: 28px 20px;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding: 0 8px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+      transition: background 0.15s;
+    }
+    .nav-item:hover { background: var(--surface2); }
+    .nav-icon { font-size: 1rem; flex-shrink: 0; }
+    .nav-label { flex: 1; }
+    .nav-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .sidebar-stats {
+      margin-top: 28px;
+      padding: 16px;
+      background: var(--surface2);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .stats-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 3px 0;
+    }
+    .stats-item strong { color: var(--text); }
+
+    /* ===== メインコンテンツ ===== */
+    .main-content {
+      padding: 32px 36px;
+      min-height: calc(100vh - 81px);
+    }
+
+    /* ===== カテゴリセクション ===== */
+    .category-section {
+      margin-bottom: 52px;
+      scroll-margin-top: 100px;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 16px;
+      border-left: 4px solid;
+      margin-bottom: 22px;
+    }
+    .category-icon { font-size: 1.4rem; }
+    .category-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .category-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+      padding: 3px 12px;
+      border-radius: 12px;
+    }
+
+    /* ===== カードグリッド ===== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 18px;
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .news-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108,99,255,0.12);
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-source {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .card-title {
+      font-size: 0.97rem;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    .card-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .card-title a:hover { color: var(--accent); }
+    .card-summary {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+    .card-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .card-link:hover { text-decoration: underline; }
+
+    /* ===== フッター ===== */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      background: var(--surface);
+    }
+
+    /* ===== レスポンシブ ===== */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .main-content { padding: 24px 20px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .site-header { padding: 18px 20px; }
+    }
+
+    /* ===== スクロールバー ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-title">⚡ Daily AI News</div>
+      <div class="header-meta">
+        <span class="header-date">📅 2026年03月17日</span>
+        <span class="header-total">本日 35 件</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">カテゴリ</div>
+      
+        <a href="#AI開発ツール" class="nav-item" style="border-left-color:#34a853">
+          <span class="nav-icon">🛠️</span>
+          <span class="nav-label">AI開発ツール</span>
+          <span class="nav-count" style="background:#34a853">1</span>
+        </a>
+        <a href="#AIベンダー" class="nav-item" style="border-left-color:#666">
+          <span class="nav-icon">📌</span>
+          <span class="nav-label">AIベンダー</span>
+          <span class="nav-count" style="background:#666">6</span>
+        </a>
+        <a href="#AIニュースメディア" class="nav-item" style="border-left-color:#7c4dff">
+          <span class="nav-icon">📰</span>
+          <span class="nav-label">AIニュース・メディア</span>
+          <span class="nav-count" style="background:#7c4dff">18</span>
+        </a>
+        <a href="#研究者ニュースレター" class="nav-item" style="border-left-color:#00897b">
+          <span class="nav-icon">🔬</span>
+          <span class="nav-label">研究者・ニュースレター</span>
+          <span class="nav-count" style="background:#00897b">10</span>
+        </a>
+
+      <div class="sidebar-stats">
+        <div class="stats-title">統計</div>
+        <div class="stats-item"><span>AI開発ツール</span><strong>1件</strong></div><div class="stats-item"><span>AIベンダー</span><strong>6件</strong></div><div class="stats-item"><span>AIニュース・メディア</span><strong>18件</strong></div><div class="stats-item"><span>研究者・ニュースレター</span><strong>10件</strong></div>
+        <div class="stats-item" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <span>合計</span><strong>35件</strong>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <section class="category-section" id="AI開発ツール">
+        <div class="category-header" style="border-left-color:#34a853">
+          <span class="category-icon">🛠️</span>
+          <h2 class="category-title">AI開発ツール</h2>
+          <span class="category-badge" style="background:#34a853">1件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#34a853">Cursor</span>
+                <span class="card-date">2026-03-16 09:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://cursor.com/blog/security-agents" target="_blank" rel="noopener">Securing our codebase with autonomous agents</a>
+              </h3>
+              <p class="card-summary">Cursorのセキュリティチームは、自律型エージェントを活用して急速に変化するコードベースの脆弱性を検出・修正する仕組みを構築しました。これにより、手動では追いつかないセキュリティリスクを効率的に管理できるようになっています。エージェントは継続的にコードを監視し、問題を自動的に特定・対応することで、コードの安全性を高めています。</p>
+              <a href="https://cursor.com/blog/security-agents" target="_blank" rel="noopener" class="card-link" style="color:#34a853">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AIベンダー">
+        <div class="category-header" style="border-left-color:#666">
+          <span class="category-icon">📌</span>
+          <h2 class="category-title">AIベンダー</h2>
+          <span class="category-badge" style="background:#666">6件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">OpenAI News</span>
+                <span class="card-date">2026-03-16 09:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://openai.com/index/why-codex-security-doesnt-include-sast" target="_blank" rel="noopener">Why Codex Security Doesn’t Include a SAST Report</a>
+              </h3>
+              <p class="card-summary">OpenAIのCodex Securityは、従来の静的解析ツール（SAST）に依存せず、AIを活用した制約推論と検証を用いて実際の脆弱性を検出しています。この手法により、誤検知（偽陽性）を大幅に減らし、より正確なセキュリティ評価を実現しています。従来のSAST報告書を提供しない理由は、これらの技術的優位性に基づいています。</p>
+              <a href="https://openai.com/index/why-codex-security-doesnt-include-sast" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-03-17 05:51 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/aws-and-nvidia-deepen-strategic-collaboration-to-accelerate-ai-from-pilot-to-production/" target="_blank" rel="noopener">AWS and NVIDIA deepen strategic collaboration to accelerate AI from pilot to production</a>
+              </h3>
+              <p class="card-summary">AWSとNVIDIAは、AIの実運用を加速するために戦略的連携を強化し、新たな技術統合を発表しました。2026年からAWSはBlackwellやRubinアーキテクチャを含む100万台以上のNVIDIA GPUをグローバルに展開し、Amazon EC2でNVIDIA RTX PRO 4500 Blackwell Server Edition GPUを主要クラウドプロバイダーで初めてサポートします。また、NVIDIA NIXLを活用した分散LLM推論のインターコネクト高速化や、Amazon EMRのApache Spark性能を3倍に向上させるなど、AIインフラの拡充と最適化を進めています。これにより、企業や研究者は信頼性とスケーラビリティを備えたAIシステムの構築・運用が可能になります。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/aws-and-nvidia-deepen-strategic-collaboration-to-accelerate-ai-from-pilot-to-production/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-03-17 02:55 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/agentic-ai-in-the-enterprise-part-2-guidance-by-persona/" target="_blank" rel="noopener">Agentic AI in the Enterprise Part 2: Guidance by Persona</a>
+              </h3>
+              <p class="card-summary">AWSのブログ記事「Agentic AI in the Enterprise Part 2: Guidance by Persona」では、エージェント型AIの導入で最も大きな障壁は技術ではなく運用モデルであると指摘しています。価値を生み出す組織は、業務を詳細に定義し、自律性を適切に制限し、継続的な改善を習慣化しています。パート2では、各役割ごとにエージェントAIを成功させるための具体的な責任やリスク、活用ポイントを示し、特に事業責任者にはKPIに直結する業務設計を推奨しています。エージェントの役割を明確にし、業務成果を数値で評価することが成功の鍵です。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/agentic-ai-in-the-enterprise-part-2-guidance-by-persona/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-03-17 01:55 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/introducing-disaggregated-inference-on-aws-powered-by-llm-d/" target="_blank" rel="noopener">Introducing Disaggregated Inference on AWS powered by llm-d</a>
+              </h3>
+              <p class="card-summary">AWSはllm-dチームと協力し、大規模言語モデル（LLM）の推論を効率化する分散推論機能をAWS上で提供開始しました。LLM推論は、入力を並列処理する「prefill」フェーズ（計算負荷が高い）と、トークンを逐次生成する「decode」フェーズ（メモリ帯域幅が重要）に分かれ、それぞれ異なるリソース要件を持つため、従来の一括配置ではGPUの利用効率が低下しがちでした。llm-dを活用した分散推論により、これらのフェーズに最適化したリソース割り当てが可能となり、GPUの稼働率向上とコスト削減を実現します。これにより、大規模AIモデルの推論をスケールさせる際の性能と効率が大幅に改善されます。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/introducing-disaggregated-inference-on-aws-powered-by-llm-d/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-03-16 23:42 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/build-an-offline-feature-store-using-amazon-sagemaker-unified-studio-and-sagemaker-catalog/" target="_blank" rel="noopener">Build an offline feature store using Amazon SageMaker Unified Studio and SageMaker Catalog</a>
+              </h3>
+              <p class="card-summary">機械学習における特徴量の管理は、分散したパイプラインやデータ定義の不整合、重複作業などの課題が多く、モデルの精度低下やガバナンス問題を引き起こしやすいです。Amazon SageMaker Unified StudioとSageMaker Catalogを活用することで、プロジェクト間やアカウント間で安全に特徴量を構築・管理・共有できるオフライン特徴量ストアを構築可能です。このストアは、Apache Icebergによるトランザクション整合性やAWS Lake Formationの細粒度アクセス制御を統合し、時系列に整合した正確な特徴量データを提供し、データリーク防止や再現性を実現します。ブログでは、パブリッシュ・サブスクライブ方式を用いた具体的な実装手順も紹介されています。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/build-an-offline-feature-store-using-amazon-sagemaker-unified-studio-and-sagemaker-catalog/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">Hugging Face Blog</span>
+                <span class="card-date">2026-03-17 06:58 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://huggingface.co/blog/nvidia/physical-ai-for-healthcare-robotics" target="_blank" rel="noopener">The Rise of Physical AI for Healthcare Robotics</a>
+              </h3>
+              <p class="card-summary">Hugging Faceのブログ記事「The Rise of Physical AI for Healthcare Robotics」では、医療ロボットにおける物理的AIの重要性が解説されています。物理的AIは、ロボットが環境との物理的相互作用を理解・適応する能力を指し、手術支援やリハビリテーションなどの医療分野での応用が期待されています。NVIDIAの技術を活用し、高精度なシミュレーションとリアルタイム制御が可能となることで、より安全で効果的な医療ロボットの開発が進んでいます。今後、物理的AIの進展が医療ロボットの性能向上に大きく寄与するとされています。</p>
+              <a href="https://huggingface.co/blog/nvidia/physical-ai-for-healthcare-robotics" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AIニュースメディア">
+        <div class="category-header" style="border-left-color:#7c4dff">
+          <span class="category-icon">📰</span>
+          <h2 class="category-title">AIニュース・メディア</h2>
+          <span class="category-badge" style="background:#7c4dff">18件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">MIT Technology Review AI</span>
+                <span class="card-date">2026-03-17 02:06 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.technologyreview.com/2026/03/16/1134315/where-openais-technology-could-show-up-in-iran/" target="_blank" rel="noopener">Where OpenAI’s technology could show up in Iran</a>
+              </h3>
+              <p class="card-summary">OpenAIはペンタゴンと機密環境でのAI利用に関する物議を醸す契約を結び、軍事利用のガイドライン遵守を求めているものの、自律兵器の開発禁止などの制限は曖昧である。OpenAIの技術は、米国がイランに対する軍事行動を強化する中で、標的選定や攻撃支援などに活用される可能性があるが、実際の運用開始時期は未定である。OpenAIの動機は収益拡大や中国との競争に勝つための自由主義陣営支援と推測されているが、技術の軍事転用に対する社内外の許容度は今後の課題である。</p>
+              <a href="https://www.technologyreview.com/2026/03/16/1134315/where-openais-technology-could-show-up-in-iran/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">MIT Technology Review AI</span>
+                <span class="card-date">2026-03-16 22:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.technologyreview.com/2026/03/16/1133979/nurturing-agentic-ai-beyond-the-toddler-stage/" target="_blank" rel="noopener">Nurturing agentic AI beyond the toddler stage</a>
+              </h3>
+              <p class="card-summary">生成AIは2025年末から2026年初頭にかけて「幼児期」を脱し、複雑なワークフローを自律的に処理する段階に進化しました。これにより、人間が介在する従来のガバナンス手法では対応が難しくなり、AIの行動やリスク管理に対する新たな枠組みが求められています。特に、機械が業務を自動化しても企業リスクを減らさないことが重要で、「AIが作業を行い、人間がリスクを負う」という考え方が強調されています。2026年1月施行のカリフォルニア州法AB 316も、この責任問題に対応するための法整備の一例です。</p>
+              <a href="https://www.technologyreview.com/2026/03/16/1133979/nurturing-agentic-ai-beyond-the-toddler-stage/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-03-17 05:30 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/infrastructure/nvidia-introduces-vera-rubin-a-seven-chip-ai-platform-with-openai-anthropic" target="_blank" rel="noopener">Nvidia introduces Vera Rubin, a seven-chip AI platform with OpenAI, Anthropic and Meta on board</a>
+              </h3>
+              <p class="card-summary">Nvidiaは7つのチップで構成される新しいAIプラットフォーム「Vera Rubin」を発表し、Anthropic、OpenAI、Metaなど主要な顧客と主要クラウドプロバイダーが採用を表明しました。Vera Rubinは、従来のBlackwellシステムと比べて推論スループットが最大10倍、トークンあたりのコストは10分の1に削減されています。NvidiaのCEOジェンセン・ファン氏はこれを「世代を超えた飛躍」と位置づけ、AIインフラの大規模な構築が始まると強調しました。主要クラウドサービスや80以上の製造パートナーがこのプラットフォームを活用し、AIのあらゆる段階を支える基盤となる見込みです。</p>
+              <a href="https://venturebeat.com/infrastructure/nvidia-introduces-vera-rubin-a-seven-chip-ai-platform-with-openai-anthropic" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-03-17 05:30 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/data/nvidia-bluefield-4-stx-adds-a-context-memory-layer-to-storage-to-close-the" target="_blank" rel="noopener">Nvidia BlueField-4 STX adds a context memory layer to storage to close the agentic AI throughput gap</a>
+              </h3>
+              <p class="card-summary">NvidiaはGTC 2026で、GPUと従来のストレージの間に専用のコンテキストメモリ層を挿入するモジュラー参照アーキテクチャ「BlueField-4 STX」を発表しました。これにより、トークン処理速度が5倍、エネルギー効率が4倍、データ取り込み速度が2倍向上し、特にキー・バリューキャッシュ（KVキャッシュ）へのアクセス遅延を解消します。KVキャッシュは大規模言語モデルの推論中に中間計算結果を保持し、効率的な推論と連続的な文脈維持を可能にします。BlueField-4 STXはNvidiaのストレージパートナー向けの参照設計であり、AIに最適化されたインフラ構築を支援します。</p>
+              <a href="https://venturebeat.com/data/nvidia-bluefield-4-stx-adds-a-context-memory-layer-to-storage-to-close-the" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-03-17 05:30 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/infrastructure/nvidias-dgx-station-is-a-desktop-supercomputer-that-runs-trillion-parameter" target="_blank" rel="noopener">Nvidia&#x27;s DGX Station is a desktop supercomputer that runs trillion-parameter AI models without the cloud</a>
+              </h3>
+              <p class="card-summary">Nvidiaは、最大1兆パラメータのAIモデルをクラウドを使わずに実行可能なデスクトップ型スーパーコンピュータ「DGX Station」を発表しました。このマシンは、72コアのGrace CPUとBlackwell Ultra GPUをNVLink-C2Cで接続し、1.8TB/sの高速メモリ帯域を実現、CPUとGPUがシームレスに748GBの共有メモリを利用できます。20ペタフロップスの演算性能を持ち、かつて巨大なデータセンターが必要だった性能をデスクトップサイズに凝縮しています。これにより、AI開発者は高性能モデルをローカル環境で安全かつ効率的に扱うことが可能になります。</p>
+              <a href="https://venturebeat.com/infrastructure/nvidias-dgx-station-is-a-desktop-supercomputer-that-runs-trillion-parameter" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-03-17 04:14 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/technology/z-ai-debuts-faster-cheaper-glm-5-turbo-model-for-agents-and-claws-but-its" target="_blank" rel="noopener">z.ai debuts faster, cheaper GLM-5 Turbo model for agents and &#x27;claws&#x27; — but it&#x27;s not open-source</a>
+              </h3>
+              <p class="card-summary">中国のAIスタートアップZ.aiは、オープンソースのGLM-5モデルを基にした独自の高速・低コスト版「GLM-5-Turbo」を発表しました。このモデルはエージェント向けのツール利用や長連鎖実行、自動化タスクに最適化されており、約20万トークンのコンテキストウィンドウを持ち、API経由で提供されています。価格は入力・出力トークンあたり合計約4.16ドルで、従来モデルより若干安価です。また、同モデルはZ.aiのコーディング支援サービス「GLM Coding」のProプランで利用可能となっていますが、オープンソース化はされていません。</p>
+              <a href="https://venturebeat.com/technology/z-ai-debuts-faster-cheaper-glm-5-turbo-model-for-agents-and-claws-but-its" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-03-16 17:30 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/technology/nvidia-launches-enterprise-ai-agent-platform-with-adobe-salesforce-sap-among" target="_blank" rel="noopener">Nvidia launches enterprise AI agent platform with Adobe, Salesforce, SAP among 17 adopters at GTC 2026</a>
+              </h3>
+              <p class="card-summary">NvidiaはGTC 2026で、企業向けの自律型AIエージェント構築用オープンソースプラットフォーム「Agent Toolkit」を発表しました。AdobeやSalesforce、SAPなど17社の大手企業がこのプラットフォームを採用し、顧客対応や半導体設計、臨床試験管理など多様な業務にAIエージェントを活用します。Agent Toolkitはモデル、ランタイム、セキュリティフレームワーク、最適化ライブラリを備え、すべてNvidiaハードウェア向けに最適化されています。これにより、企業のAI導入が進む中でNvidiaのGPU需要が自然に拡大する構造を築いています。</p>
+              <a href="https://venturebeat.com/technology/nvidia-launches-enterprise-ai-agent-platform-with-adobe-salesforce-sap-among" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-03-16 17:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/orchestration/how-linkedin-replaced-five-feed-retrieval-systems-with-one-llm-model-at-1-3" target="_blank" rel="noopener">How LinkedIn replaced five feed retrieval systems with one LLM model, at 1.3 billion-user scale</a>
+              </h3>
+              <p class="card-summary">LinkedInは従来5つに分かれていたフィード取得システムを、大規模言語モデル（LLM）を活用した単一のシステムに統合しました。この新システムは、専門的な文脈をより正確に理解し、ユーザーの多様なニーズに合わせてパーソナライズされたコンテンツを提供します。設計変更はコンテンツの取得、ランキング、計算資源管理の3層に及び、運用コストの削減とフィードの関連性向上を実現しました。LinkedInのエンジニアは1年間にわたり数百回のテストを重ね、13億ユーザー規模での大規模なインフラ刷新を達成しています。</p>
+              <a href="https://venturebeat.com/orchestration/how-linkedin-replaced-five-feed-retrieval-systems-with-one-llm-model-at-1-3" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-03-17 02:38 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/03/16/merriam-webster-openai-encyclopedia-brittanica-lawsuit/" target="_blank" rel="noopener">The dictionary sues OpenAI</a>
+              </h3>
+              <p class="card-summary">エンサイクロペディア・ブリタニカとメリマン・ウェブスターは、OpenAIが約10万件の記事を許可なく大規模言語モデル（LLM）の学習に使用し、著作権を侵害したとして訴訟を起こしました。両社は自社の辞書や百科事典のコンテンツが無断で利用されたことを問題視しています。今回の訴訟は、AIの学習データにおける著作権問題の重要な事例となっています。</p>
+              <a href="https://techcrunch.com/2026/03/16/merriam-webster-openai-encyclopedia-brittanica-lawsuit/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-03-16 09:30 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/03/15/google-and-accel-cut-through-wrappers-in-4000-ai-startup-pitches-to-pick-five-tied-to-india/" target="_blank" rel="noopener">Google, Accel India accelerator chooses 5 startups and none are ‘AI wrappers’</a>
+              </h3>
+              <p class="card-summary">GoogleとAccel Indiaのアクセラレータープログラムは、インドに関連する約4,000件のAIスタートアップの応募を審査した結果、約70％が既存技術の単なる「ラッパー（包装）」に過ぎないと判断しました。その中から、純粋な技術革新や実用的なAIソリューションを持つ5社のスタートアップを選出しました。今回選ばれた企業は、単なるAIの応用ではなく、独自の技術開発に注力している点が特徴です。</p>
+              <a href="https://techcrunch.com/2026/03/15/google-and-accel-cut-through-wrappers-in-4000-ai-startup-pitches-to-pick-five-tied-to-india/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-03-16 18:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/models-are-applying-to-be-the-face-of-ai-scams/" target="_blank" rel="noopener">Models Are Applying to Be the Face of AI Scams</a>
+              </h3>
+              <p class="card-summary">WIREDの調査によると、Telegram上の複数のチャンネルで「AIフェイスモデル」の求人が掲載されており、主に女性が応募している。これらのモデルは、AIを使った詐欺の顔として利用され、被害者から金銭を騙し取るために使われている可能性が高い。詐欺の手口として、モデルの顔をAIで生成・加工し、信頼感を演出している点が問題視されている。</p>
+              <a href="https://www.wired.com/story/models-are-applying-to-be-the-face-of-ai-scams/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-03-17 06:21 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/gadgets/895458/ecovacs-deebot-x8-x9-pro-omni-robot-vacuum-amazon-big-spring-sale-deal-2026" target="_blank" rel="noopener">Ecovacs’ Deebot X8 and X9 Pro Omni robovacs are nearly 50 percent off</a>
+              </h3>
+              <p class="card-summary">Ecovacsのロボット掃除機「Deebot X8 Pro Omni」と最新モデル「X9 Pro Omni」が、Amazonのビッグスプリングセールに合わせて最大約50％オフで販売されています。両モデルはLiDARと3Dカメラを使った高精度マッピング機能を備え、家具や障害物を自動で回避しながら清掃可能です。また、自動でモップを洗浄し、水タンク付きの多機能ドックで給水と汚水排出も自動化されています。X8は18,000Paの強力な吸引力を持ち、X9は空気流量を増やす独自技術で効率的な清掃を実現しています。</p>
+              <a href="https://www.theverge.com/gadgets/895458/ecovacs-deebot-x8-x9-pro-omni-robot-vacuum-amazon-big-spring-sale-deal-2026" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-03-17 05:41 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/tech/895453/ai-deepfake-netanyahu-claims-conspiracy" target="_blank" rel="noopener">Benjamin Netanyahu is struggling to prove he&amp;#8217;s not an AI clone</a>
+              </h3>
+              <p class="card-summary">イスラエルのベンヤミン・ネタニヤフ首相が、AIによるディープフェイクのクローンではないかという陰謀論がSNSで拡散しています。動画では彼の右手に6本の指があるなど不自然な点が指摘され、現実の証明が難しくなっています。現在のAI技術は映像や音声で本人を高度に再現できるため、ネタニヤフ首相が生存しているという信頼できる証拠があっても疑念が消えにくい状況です。</p>
+              <a href="https://www.theverge.com/tech/895453/ai-deepfake-netanyahu-claims-conspiracy" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-03-17 05:30 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/tech/895301/nvidia-robotaxi-byd-geely-hyperion-lyft-halos" target="_blank" rel="noopener">Nvidia says China’s BYD and Geely will use its robotaxi platform</a>
+              </h3>
+              <p class="card-summary">Nvidiaは、中国の大手自動車メーカーであるBYDとGeelyを自社のロボタクシープログラムに新たに加えたと発表しました。両社はNvidiaのDrive Hyperionプラットフォームを採用し、これはレベル4自動運転車の開発に必要なチップ、コンピュータ、センサー、ソフトウェアを統合したシステムです。BYDはこれまで手動運転車にNvidiaのチップを使用していましたが、今後は次世代のレベル4自動運転車の開発に同プラットフォームを活用します。Geelyも同様に自動運転技術の強化を図る予定です。</p>
+              <a href="https://www.theverge.com/tech/895301/nvidia-robotaxi-byd-geely-hyperion-lyft-halos" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-03-17 03:07 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/games/895396/playstation-pssr-upscaling-cyberpunk-2077-silent-hill" target="_blank" rel="noopener">Sony&amp;#8217;s AI graphics upscaling for PS5 Pro games is getting a big update tonight</a>
+              </h3>
+              <p class="card-summary">SonyはPS5 Pro向けのAIグラフィックスアップスケーリング技術「PlayStation Spectral Super Resolution（PSSR）」を大幅にアップデートしました。今回のアップデートは『サイバーパンク2077』や『ファイナルファンタジーVII リバース』、『サイレントヒル2』など複数タイトルに適用され、映像のちらつきやノイズといった問題が改善されています。Digital Foundryの評価によると、より鮮明で安定した画質が実現されており、AMDとSonyの共同プロジェクト「Project Amethyst」による初の大規模な技術向上となっています。</p>
+              <a href="https://www.theverge.com/games/895396/playstation-pssr-upscaling-cyberpunk-2077-silent-hill" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-03-17 01:15 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/us-treasury-publishes-ai-risk-governance-guidebook-for-financial-institutions/" target="_blank" rel="noopener">US Treasury publishes AI risk Guidebook for financial institutions</a>
+              </h3>
+              <p class="card-summary">米国財務省は、金融機関向けにAIリスク管理のためのガイドブックとフレームワーク（FS AI RMF）を発表しました。これは100以上の金融機関や業界団体、規制当局の協力で作成され、AIシステム特有のリスク（アルゴリズムの偏りや透明性の欠如、サイバー脆弱性など）に対応するための具体的な指針を提供します。FS AI RMFは、既存のNIST AIリスク管理フレームワークを金融業界向けに拡張したもので、AIの成熟度評価やリスク制御の実践的な方法を示し、責任あるAI活用とイノベーション促進を目指しています。</p>
+              <a href="https://www.artificialintelligence-news.com/news/us-treasury-publishes-ai-risk-governance-guidebook-for-financial-institutions/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-03-16 21:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/ntt-data-nvidia-enterprise-ai-factories-production/" target="_blank" rel="noopener">NTT DATA and NVIDIA bring enterprise AI factories to production scale</a>
+              </h3>
+              <p class="card-summary">NTTデータは、NVIDIAのGPU加速コンピューティングとAIソフトウェアを統合したエンタープライズ向けAIファクトリープラットフォームを発表しました。このプラットフォームは、クラウドやエッジ環境で展開可能で、モデルのトレーニングから企業向けアプリケーション開発までのAIライフサイクルを包括的に管理します。これにより、パイロット段階から本番運用への移行にかかる時間とコストを削減し、標準化された成果物の提供を実現します。実際の導入例として、がん研究病院の放射線解析や自動車製造業の生産準備時間短縮、次世代バッテリー生産ラインのシミュレーション検証などが挙げられています。</p>
+              <a href="https://www.artificialintelligence-news.com/news/ntt-data-nvidia-enterprise-ai-factories-production/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-03-16 19:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/openai-frontier-enterprise-ai-agents-saas/" target="_blank" rel="noopener">OpenAI’s Frontier puts AI agents in a fight SaaS can’t afford to lose</a>
+              </h3>
+              <p class="card-summary">OpenAIが2月に発表した「Frontier」は、企業の既存システムにセマンティックレイヤーを提供し、データウェアハウスやCRM、チケット管理ツールなどと連携してAIエージェントが人間と同じビジネスコンテキストで動作できるプラットフォームです。これにより、個別のAIエージェントが増えることで生じる統合の複雑さや断片化を解消し、共通のビジネスコンテキストを共有する仕組みを実現しています。UberやState Farmなどが早期導入企業で、OpenAIは企業向け収益を現在の約40％から年内に50％に引き上げることを目指しています。Frontierは企業の業務効率化に寄与し、例えばある投資会社では営業担当者の作業時間を90％以上削減する成果が報告されています。</p>
+              <a href="https://www.artificialintelligence-news.com/news/openai-frontier-enterprise-ai-agents-saas/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="研究者ニュースレター">
+        <div class="category-header" style="border-left-color:#00897b">
+          <span class="category-icon">🔬</span>
+          <h2 class="category-title">研究者・ニュースレター</h2>
+          <span class="category-badge" style="background:#00897b">10件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Import AI (Jack Clark)</span>
+                <span class="card-date">2026-03-16 21:30 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://importai.substack.com/p/importai-449-llms-training-other" target="_blank" rel="noopener">ImportAI 449: LLMs training other LLMs; 72B distributed training run; computer vision is harder than generative text</a>
+              </h3>
+              <p class="card-summary">Import AIの記事によると、大規模言語モデル（LLM）が他のLLMを自律的に微調整（ファインチューニング）して新しいタスクに適応させる能力が注目されている。チュービンゲン大学などの研究チームは、PostTrainBenchというベンチマークを開発し、限られた計算資源（H100 GPUで10時間）でエージェントがデータ収集から訓練まで自律的に行い、性能向上を目指す手法を評価している。結果は「人間ほど上手くはないが、ある程度可能」というもので、AI自身によるAI開発（AI駆動の研究開発）が今後の重要なテーマであることを示している。また、コンピュータビジョンは生成テキストよりも難しい課題であると指摘されている。</p>
+              <a href="https://importai.substack.com/p/importai-449-llms-training-other" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-03-17 04:15 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/hallucinations-in-llms-are-not-a-bug-in-the-data/" target="_blank" rel="noopener">Hallucinations in LLMs Are Not a Bug in the Data</a>
+              </h3>
+              <p class="card-summary">大規模言語モデル（LLM）の「幻覚（hallucinations）」は、データの問題ではなくモデルのアーキテクチャに起因する特徴であると指摘されている。LLMは確率的に次の単語を予測する仕組みのため、時に事実と異なる情報を生成してしまう。この現象はモデルの設計上避けられないものであり、データの質だけで解決できる問題ではない。したがって、幻覚を減らすにはアーキテクチャの改善や出力の検証が重要となる。</p>
+              <a href="https://towardsdatascience.com/hallucinations-in-llms-are-not-a-bug-in-the-data/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-03-17 04:00 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/follow-the-ai-footpaths/" target="_blank" rel="noopener">Follow the AI Footpaths</a>
+              </h3>
+              <p class="card-summary">この記事では、企業内で公式に導入されていない「シャドウAI」（Shadow AI）が増加している現状を指摘しています。従業員が業務効率化のために独自にAIツールを利用することで、公式のIT管理外でAI活用が進んでいることが「デザイアパス（desire paths）」＝自然発生的な利用経路として例えられています。これにより、組織はAI導入の実態把握や管理が難しくなる一方、現場のニーズに即した柔軟なAI活用の可能性も示唆されています。企業はこうした「AIの足跡」を追跡し、適切なガバナンスと支援体制を整える必要があると述べられています。</p>
+              <a href="https://towardsdatascience.com/follow-the-ai-footpaths/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-03-17 03:04 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/how-to-build-a-production-ready-claude-code-skill/" target="_blank" rel="noopener">How to Build a Production-Ready Claude Code Skill</a>
+              </h3>
+              <p class="card-summary">この記事では、AnthropicのAIモデル「Claude」を活用したコードスキルをゼロから開発し、実運用に耐える形で公開するまでのプロセスを解説しています。具体的には、スキル設計、API連携、エラーハンドリング、テスト、自動デプロイなどの技術的ポイントを詳述しています。また、ユーザー体験を向上させるための工夫や、運用時の課題とその対策についても触れています。これにより、実務で使えるClaudeコードスキルの構築方法が体系的に理解できます。</p>
+              <a href="https://towardsdatascience.com/how-to-build-a-production-ready-claude-code-skill/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-03-17 06:38 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/2026/Mar/16/blackmail/#atom-everything" target="_blank" rel="noopener">Quoting A member of Anthropic’s alignment-science team</a>
+              </h3>
+              <p class="card-summary">Anthropicのアライメント科学チームのメンバーは、政策立案者に対してAIのミスマッチリスクを具体的かつ実感できる形で伝えるために、「恐喝」シナリオを用いた演習を行ったと述べています。この演習は、AIのリスクをこれまで考えたことのなかった人々にも問題の深刻さを理解させることを目的としています。こうした取り組みは、AI倫理や安全性の議論を促進するための重要なステップとされています。</p>
+              <a href="https://simonwillison.net/2026/Mar/16/blackmail/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-03-17 05:12 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/2026/Mar/16/coding-agents-for-data-analysis/#atom-everything" target="_blank" rel="noopener">Coding agents for data analysis</a>
+              </h3>
+              <p class="card-summary">Simon Willison氏はNICAR 2026のワークショップ「Coding agents for data analysis」で、Claude CodeやOpenAI Codexといったツールを使ったデータの探索、分析、クリーニング手法を紹介しました。参加者はPythonとSQLite、Datasetteを用いて実習を行い、GitHub Codespaces上でCodex APIを利用して効率的に作業を進めました。特に、Claude Codeがインタラクティブな可視化を自動生成するデモが注目され、Leafletを使ったヒートマップ作成も行われました。この資料は現地参加者だけでなく、幅広いデータ活用者にも役立つ内容となっています。</p>
+              <a href="https://simonwillison.net/2026/Mar/16/coding-agents-for-data-analysis/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-03-16 23:01 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/guides/agentic-engineering-patterns/how-coding-agents-work/#atom-everything" target="_blank" rel="noopener">How coding agents work</a>
+              </h3>
+              <p class="card-summary">コーディングエージェントは、大規模言語モデル（LLM）を基盤にしており、見えないプロンプトや呼び出し可能なツールを使ってLLMの機能を拡張するソフトウェアです。LLMはテキストをトークンという整数列に変換して処理し、トークン数に応じて課金や処理制限があるため、この仕組みの理解が重要です。近年のモデルはマルチモーダル対応で、画像などの非テキスト入力もトークン化して同様に処理可能です。これにより、コーディングエージェントはより複雑で多様なタスクを実行できます。</p>
+              <a href="https://simonwillison.net/guides/agentic-engineering-patterns/how-coding-agents-work/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-03-16 07:41 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/guides/agentic-engineering-patterns/what-is-agentic-engineering/#atom-everything" target="_blank" rel="noopener">What is agentic engineering?</a>
+              </h3>
+              <p class="card-summary">エージェント工学（agentic engineering）とは、コードを書き実行できるコーディングエージェントの支援を受けてソフトウェアを開発する手法を指します。エージェントは大規模言語モデル（LLM）を用いて目標を設定し、コードを生成・実行しながら目的達成に向けて反復処理を行います。コードの実行能力があることで、生成されたコードの動作検証が可能となり、実用的なソフトウェア開発が実現します。人間の役割は、最適な解決策を選び出し、エージェントに適切な指示やツールを提供することにあります。</p>
+              <a href="https://simonwillison.net/guides/agentic-engineering-patterns/what-is-agentic-engineering/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Last Week in AI</span>
+                <span class="card-date">2026-03-16 15:06 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://lastweekin.ai/p/lwiai-podcast-237-nemotron-3-super" target="_blank" rel="noopener">LWiAI Podcast #237 - Nemotron 3 Super, xAI reborn, Anthropic Lawsuit, Research!</a>
+              </h3>
+              <p class="card-summary">Last Week in AIの第237回ポッドキャストでは、PerplexityがMac向けのローカルAIエージェント「Personal Computer」を発表し、AnthropicはGitHubのコードレビューに新たな価格設定を導入したことが報告されました。Nvidiaは1200億パラメータのNatron Free SuperハイブリッドTransformerモデルのオープンウェイトを公開し、中国向けH200チップの生産を停止しました。また、Anthropicが米国国防総省を「サプライチェーンリスク」指定に対して提訴したニュースや、最新のAI研究動向としてモデルの制御性や効率化に関する複数の成果が紹介されました。</p>
+              <a href="https://lastweekin.ai/p/lwiai-podcast-237-nemotron-3-super" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Last Week in AI</span>
+                <span class="card-date">2026-03-16 13:18 JST</span>
+              </div>
+              <h3 class="card-title">
+                <a href="https://lastweekin.ai/p/last-week-in-ai-338-anthropic-sues" target="_blank" rel="noopener">Last Week in AI #338 - Anthropic sues Trump, xAI starting over, Iran AI Fakes</a>
+              </h3>
+              <p class="card-summary">Anthropicは、国防総省が同社のAI技術「Claude」を「国家安全保障上の供給網リスク」と指定し、政府全体での使用禁止を命じたことに対し、カリフォルニア北部地区裁判所とD.C.巡回区控訴裁判所に提訴しました。国防総省は3月6日付の内部メモで、180日以内に核・ミサイル防衛やサイバー戦などの重要システムからAnthropicのAIを撤去するよう指示しています。一方、OpenAIやGoogleの研究者30名以上がAnthropicを支持する意見書を提出し、今回の措置がAI技術の議論や競争力に悪影響を及ぼすと警告しています。Anthropicは、監視や完全自律型兵器への利用を禁止する条件を求めていましたが、交渉は決裂しています。</p>
+              <a href="https://lastweekin.ai/p/last-week-in-ai-338-anthropic-sues" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    生成日時: 2026-03-17 07:09 JST &nbsp;|&nbsp;
+    情報源: <a href="https://github.com/Olshansk/rss-feeds" target="_blank" style="color:var(--accent)">Olshansk/rss-feeds</a> および各公式RSSフィード &nbsp;|&nbsp;
+    サマリーはAIにより自動生成されています
+  </footer>
+
+</body>
+</html>
