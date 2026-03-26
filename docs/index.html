@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily AI News</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e8eaf0;
+      --text-muted: #8b90a8;
+      --accent: #6c63ff;
+      --accent-soft: rgba(108,99,255,0.14);
+      --radius: 14px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(108,99,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(56,189,248,0.14), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(26,29,39,0.96), rgba(15,17,23,0.92));
+      backdrop-filter: blur(12px);
+      padding: 32px 24px 28px;
+    }
+    .header-inner,
+    .main {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .site-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #7c7cff, #74d8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    .site-desc {
+      color: var(--text-muted);
+      max-width: 760px;
+      font-size: 1rem;
+    }
+    .hero-cards {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .hero-card {
+      background: rgba(26,29,39,0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+    }
+    .hero-label {
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .hero-latest-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .hero-latest-link:hover { color: #ffffff; }
+    .hero-latest-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: var(--accent-soft);
+      color: #d7d4ff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .hero-stat {
+      flex: 1 1 120px;
+      background: var(--surface2);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+    }
+    .hero-stat strong {
+      display: block;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+    .hero-stat span {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    .main {
+      padding: 36px 24px 60px;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .calendar-legend {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .months-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .month-card {
+      background: rgba(26,29,39,0.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .month-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .month-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .month-count {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    .weekday-row,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .weekday {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      text-align: center;
+      padding-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .day-cell {
+      min-height: 68px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px;
+    }
+    .day-cell.empty {
+      visibility: hidden;
+    }
+    .day-link {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .day-link:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(108,99,255,0.16);
+    }
+    .day-link.latest {
+      background: linear-gradient(180deg, rgba(108,99,255,0.18), rgba(34,38,58,1));
+      border-color: #7c7cff;
+    }
+    .day-number {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .day-meta {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+    }
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      background: var(--surface);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    @media (max-width: 820px) {
+      .hero-cards {
+        grid-template-columns: 1fr;
+      }
+      .main {
+        padding-inline: 16px;
+      }
+      .site-header {
+        padding-inline: 16px;
+      }
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-title">⚡ Daily AI News</div>
+      <div class="site-desc">43本のRSSフィードから毎朝自動収集・AIサマリーしたAIニュース一覧。最新号へすぐ飛べて、過去号も月別カレンダーで見返せます。</div>
+      <div class="hero-cards">
+        <section class="hero-card">
+          <span class="hero-label">Latest Edition</span>
+          <div id="latestEdition">
+            <div style="color:var(--text-muted)">最新号を読み込み中...</div>
+          </div>
+        </section>
+        <section class="hero-card">
+          <span class="hero-label">Archive Overview</span>
+          <div class="hero-stats" id="archiveStats">
+            <div class="hero-stat">
+              <strong>--</strong>
+              <span>公開日数</span>
+            </div>
+            <div class="hero-stat">
+              <strong>--</strong>
+              <span>最古の号</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="section-head">
+      <div class="section-title">Archive Calendar</div>
+      <div class="calendar-legend">日付セルをクリックすると、その日のニュース一覧を開きます。</div>
+    </div>
+    <div class="months-grid" id="monthsGrid"></div>
+  </main>
+
+  <footer class="footer">
+    情報源: <a href="https://github.com/Olshansk/rss-feeds" target="_blank">Olshansk/rss-feeds</a> および各公式RSSフィード &nbsp;|&nbsp;
+    サマリーはAIにより自動生成されています
+  </footer>
+
+  <script>
+    const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    function formatDateLabel(date) {
+      return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+    }
+
+    function createMonthCard(monthKey, dates, latestDate) {
+      const [year, month] = monthKey.split('-').map(Number);
+      const card = document.createElement('section');
+      card.className = 'month-card';
+
+      const firstDay = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0);
+
+      const header = document.createElement('div');
+      header.className = 'month-header';
+      header.innerHTML = `
+        <div class="month-title">${year}年${month}月</div>
+        <div class="month-count">${dates.length}件</div>
+      `;
+      card.appendChild(header);
+
+      const weekdays = document.createElement('div');
+      weekdays.className = 'weekday-row';
+      weekdayLabels.forEach((label) => {
+        const el = document.createElement('div');
+        el.className = 'weekday';
+        el.textContent = label;
+        weekdays.appendChild(el);
+      });
+      card.appendChild(weekdays);
+
+      const grid = document.createElement('div');
+      grid.className = 'calendar-grid';
+
+      for (let i = 0; i < firstDay.getDay(); i += 1) {
+        const empty = document.createElement('div');
+        empty.className = 'day-cell empty';
+        grid.appendChild(empty);
+      }
+
+      for (let day = 1; day <= lastDay.getDate(); day += 1) {
+        const dateSlug = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const hasEntry = dates.includes(dateSlug);
+
+        if (!hasEntry) {
+          const empty = document.createElement('div');
+          empty.className = 'day-cell';
+          empty.innerHTML = `<span class="day-number" style="color:var(--text-muted);opacity:0.35">${day}</span>`;
+          grid.appendChild(empty);
+          continue;
+        }
+
+        const link = document.createElement('a');
+        link.className = 'day-cell day-link' + (dateSlug === latestDate ? ' latest' : '');
+        link.href = `${dateSlug}.html`;
+        link.innerHTML = `
+          <span class="day-number">${day}</span>
+          <span class="day-meta">${dateSlug === latestDate ? '最新号' : '公開済み'}</span>
+        `;
+        grid.appendChild(link);
+      }
+
+      card.appendChild(grid);
+      return card;
+    }
+
+    fetch('archive-index.json')
+      .then((response) => response.json())
+      .then((dates) => {
+        const sortedDates = [...dates].sort((a, b) => b.localeCompare(a));
+        const latestDate = sortedDates[0];
+        const latestEdition = document.getElementById('latestEdition');
+        const archiveStats = document.getElementById('archiveStats');
+        const monthsGrid = document.getElementById('monthsGrid');
+
+        if (!sortedDates.length) {
+          latestEdition.innerHTML = '<div style="color:var(--text-muted)">まだ記事がありません。</div>';
+          archiveStats.innerHTML = '';
+          monthsGrid.innerHTML = '<p style="color:var(--text-muted)">アーカイブはまだありません。</p>';
+          return;
+        }
+
+        const latestDateObj = new Date(`${latestDate}T00:00:00`);
+        latestEdition.innerHTML = `
+          <a class="hero-latest-link" href="${latestDate}.html">
+            <span>📅 ${formatDateLabel(latestDateObj)}</span>
+            <span>→</span>
+          </a>
+          <div class="hero-latest-badge">最新号を読む</div>
+        `;
+
+        const oldestDate = sortedDates[sortedDates.length - 1];
+        archiveStats.innerHTML = `
+          <div class="hero-stat">
+            <strong>${sortedDates.length}</strong>
+            <span>公開日数</span>
+          </div>
+          <div class="hero-stat">
+            <strong>${oldestDate.slice(5).replace('-', '/')}</strong>
+            <span>最古の号</span>
+          </div>
+        `;
+
+        const monthMap = new Map();
+        sortedDates.forEach((date) => {
+          const monthKey = date.slice(0, 7);
+          if (!monthMap.has(monthKey)) monthMap.set(monthKey, []);
+          monthMap.get(monthKey).push(date);
+        });
+
+        Array.from(monthMap.entries()).forEach(([monthKey, monthDates]) => {
+          monthsGrid.appendChild(createMonthCard(monthKey, monthDates, latestDate));
+        });
+      })
+      .catch(() => {
+        document.getElementById('monthsGrid').innerHTML = '<p style="color:var(--text-muted)">アーカイブの読み込みに失敗しました。ローカル確認では `uv run python daily-ai-news-generator/scripts/serve_docs.py` を使ってください。</p>';
+      });
+  </script>
+</body>
+</html>
