@@ -13,10 +13,18 @@ import html as html_module
 REPO_ROOT = Path(__file__).resolve().parents[2]
 INPUT_JSON = REPO_ROOT / "daily-ai-news-generator" / "output" / "daily_articles.json"
 DOCS_DIR = REPO_ROOT / "docs"
+ARCHIVE_INDEX = DOCS_DIR / "archive-index.json"
 
 def load_data():
     with INPUT_JSON.open("r", encoding="utf-8") as f:
         return json.load(f)
+
+def load_archive_dates():
+    if not ARCHIVE_INDEX.exists():
+        return []
+    with ARCHIVE_INDEX.open("r", encoding="utf-8") as f:
+        dates = json.load(f)
+    return sorted(dates, reverse=True)
 
 CATEGORY_ICONS = {
     "Anthropic": "🤖",
@@ -51,9 +59,20 @@ def article_id(article):
 
 def generate_html(data):
     date_str = data["date"]
+    date_slug = data.get("date_slug")
+    if not date_slug:
+        date_slug = data["date"].replace("年", "-").replace("月", "-").replace("日", "").replace("--", "-")
     generated_at = data["generated_at"]
     total = data["total"]
     categories = data["categories"]
+    archive_dates = load_archive_dates()
+
+    if date_slug not in archive_dates:
+        archive_dates = sorted({date_slug, *archive_dates}, reverse=True)
+
+    current_index = archive_dates.index(date_slug)
+    newer_date = archive_dates[current_index - 1] if current_index > 0 else None
+    older_date = archive_dates[current_index + 1] if current_index + 1 < len(archive_dates) else None
 
     # カテゴリ別件数サマリー
     cat_summary = [(cat, len(arts)) for cat, arts in categories.items() if arts]
@@ -216,6 +235,45 @@ def generate_html(data):
     }}
     .header-filter input {{
       accent-color: var(--accent);
+    }}
+    .day-navigation {{
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 18px 36px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }}
+    .nav-pill {{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      padding: 9px 14px;
+      font-size: 0.84rem;
+      transition: border-color 0.2s, transform 0.15s, color 0.2s;
+    }}
+    .nav-pill:hover {{
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }}
+    .nav-pill.is-muted {{
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.02);
+    }}
+    .nav-pill.is-disabled {{
+      color: var(--text-muted);
+      opacity: 0.5;
+      pointer-events: none;
+    }}
+    .nav-spacer {{
+      flex: 1 1 auto;
     }}
 
     /* ===== レイアウト ===== */
@@ -446,8 +504,10 @@ def generate_html(data):
       .main-content {{ padding: 24px 20px; }}
       .cards-grid {{ grid-template-columns: 1fr; }}
       .site-header {{ padding: 18px 20px; }}
+      .day-navigation {{ padding: 14px 20px 0; }}
       .header-inner {{ align-items: flex-start; flex-direction: column; }}
       .header-meta {{ width: 100%; justify-content: space-between; flex-wrap: wrap; }}
+      .nav-spacer {{ display: none; }}
     }}
 
     /* ===== スクロールバー ===== */
@@ -474,6 +534,13 @@ def generate_html(data):
       </div>
     </div>
   </header>
+
+  <nav class="day-navigation" aria-label="日付ナビゲーション">
+    <a class="nav-pill is-muted" href="index.html">← アーカイブ一覧へ</a>
+    {f'<a class="nav-pill" href="{older_date}.html">← 前の日</a>' if older_date else '<span class="nav-pill is-disabled">← 前の日</span>'}
+    <span class="nav-spacer"></span>
+    {f'<a class="nav-pill" href="{newer_date}.html">次の日 →</a>' if newer_date else '<span class="nav-pill is-disabled">次の日 →</span>'}
+  </nav>
 
   <div class="layout">
     <aside class="sidebar">
@@ -502,6 +569,8 @@ def generate_html(data):
 
   <script>
     (() => {{
+      const currentDateSlug = '{date_slug}';
+      const navRoot = document.querySelector('.day-navigation');
       const storageKey = 'daily-ai-news:interests';
       const filterKey = 'daily-ai-news:interest-filter';
       const cards = Array.from(document.querySelectorAll('.news-card'));
@@ -575,6 +644,43 @@ def generate_html(data):
           applyFilterState(selected);
         }});
       }});
+
+      if (navRoot) {{
+        fetch('archive-index.json')
+          .then((response) => response.json())
+          .then((dates) => {{
+            const sortedDates = [...dates].sort((a, b) => b.localeCompare(a));
+            const index = sortedDates.indexOf(currentDateSlug);
+            if (index === -1) return;
+
+            const olderDate = sortedDates[index + 1];
+            const newerDate = index > 0 ? sortedDates[index - 1] : null;
+            const navItems = navRoot.querySelectorAll('.nav-pill');
+            const olderLink = navItems[1];
+            const newerLink = navItems[2];
+
+            if (olderDate && olderLink) {{
+              olderLink.classList.remove('is-disabled');
+              olderLink.setAttribute('href', `${{olderDate}}.html`);
+            }}
+            if (!olderDate && olderLink) {{
+              olderLink.removeAttribute('href');
+              olderLink.classList.add('is-disabled');
+            }}
+
+            if (newerDate && newerLink) {{
+              newerLink.classList.remove('is-disabled');
+              newerLink.setAttribute('href', `${{newerDate}}.html`);
+            }}
+            if (!newerDate && newerLink) {{
+              newerLink.removeAttribute('href');
+              newerLink.classList.add('is-disabled');
+            }}
+          }})
+          .catch(() => {{
+            // archive-index.json が読めない環境でも、初期レンダリング済みのナビをそのまま使う
+          }});
+      }}
     }})();
   </script>
 
