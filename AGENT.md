@@ -15,7 +15,7 @@
 ## Generator Scripts
 
 - `daily-ai-news-generator/scripts/fetch_daily.py`
-  - Fetches recent items from 43 RSS feeds.
+  - Fetches recent items from 44 RSS feeds.
   - Deduplicates by title similarity.
   - Uses Gemini to generate Japanese summaries.
   - Uses Gemini again for semantic deduplication and AI relevance filtering.

@@ -3,7 +3,8 @@
 Daily AI News - フィード取得・重複排除・サマリー生成スクリプト
 ai-news-feedsスキルの全フィードから過去24時間の記事を収集する
 
-フィード一覧はai-news-feedsスキル（/home/ubuntu/skills/ai-news-feeds/SKILL.md）と完全一致（全43件）。
+フィード一覧はai-news-feedsスキル（/home/ubuntu/skills/ai-news-feeds/SKILL.md）をベースにしつつ、
+ローカル追加の公式RSSも含む（全44件）。
 
 処理フロー:
   1. 全フィードから記事取得
@@ -72,6 +73,7 @@ FEED_CATEGORIES = {
         ("Google DeepMind",          "https://deepmind.google/blog/rss.xml"),
         ("Google AI Blog",           "https://blog.google/innovation-and-ai/technology/ai/rss/"),
         ("Microsoft AI",             "https://news.microsoft.com/source/topics/ai/feed/"),
+        ("Microsoft AI Models",      "https://microsoft.ai/news-categories/models/feed/"),
         ("AWS ML Blog",              "https://aws.amazon.com/blogs/machine-learning/feed/"),
         ("Hugging Face Blog",        "https://huggingface.co/blog/feed.xml"),
         ("NVIDIA Deep Learning",     "https://blogs.nvidia.com/blog/category/deep-learning/feed/"),
