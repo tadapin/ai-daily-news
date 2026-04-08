@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily AI News — 2026年04月09日</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e8eaf0;
+      --text-muted: #8b90a8;
+      --accent: #6c63ff;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ===== ヘッダー ===== */
+    .site-header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .site-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-date {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .header-total {
+      background: var(--accent);
+      color: white;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .header-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      padding: 6px 12px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    .header-filter input {
+      accent-color: var(--accent);
+    }
+    .day-navigation {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 18px 36px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      padding: 9px 14px;
+      font-size: 0.84rem;
+      transition: border-color 0.2s, transform 0.15s, color 0.2s;
+    }
+    .nav-pill:hover {
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .nav-pill.is-muted {
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.02);
+    }
+    .nav-pill.is-disabled {
+      color: var(--text-muted);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .nav-spacer {
+      flex: 1 1 auto;
+    }
+
+    /* ===== レイアウト ===== */
+    .layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    /* ===== サイドバー ===== */
+    .sidebar {
+      position: sticky;
+      top: 81px;
+      height: calc(100vh - 81px);
+      overflow-y: auto;
+      padding: 28px 20px;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding: 0 8px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+      transition: background 0.15s;
+    }
+    .nav-item:hover { background: var(--surface2); }
+    .nav-icon { font-size: 1rem; flex-shrink: 0; }
+    .nav-label { flex: 1; }
+    .nav-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .sidebar-stats {
+      margin-top: 28px;
+      padding: 16px;
+      background: var(--surface2);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .stats-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 3px 0;
+    }
+    .stats-item strong { color: var(--text); }
+
+    /* ===== メインコンテンツ ===== */
+    .main-content {
+      padding: 32px 36px;
+      min-height: calc(100vh - 81px);
+    }
+
+    /* ===== カテゴリセクション ===== */
+    .category-section {
+      margin-bottom: 52px;
+      scroll-margin-top: 100px;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 16px;
+      border-left: 4px solid;
+      margin-bottom: 22px;
+    }
+    .category-icon { font-size: 1.4rem; }
+    .category-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .category-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+      padding: 3px 12px;
+      border-radius: 12px;
+    }
+
+    /* ===== カードグリッド ===== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 18px;
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .news-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108,99,255,0.12);
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -2px;
+    }
+    .interest-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .interest-toggle:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .interest-toggle.is-selected {
+      border-color: var(--accent);
+      background: rgba(108,99,255,0.12);
+      color: var(--text);
+    }
+    .interest-icon {
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .news-card.is-selected {
+      border-color: var(--accent);
+      box-shadow: 0 10px 26px rgba(108,99,255,0.14);
+    }
+    .news-card.is-hidden-by-filter {
+      display: none;
+    }
+    .card-source {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .card-title {
+      font-size: 0.97rem;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    .card-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .card-title a:hover { color: var(--accent); }
+    .card-summary {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+    .card-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .card-link:hover { text-decoration: underline; }
+
+    /* ===== フッター ===== */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      background: var(--surface);
+    }
+
+    /* ===== レスポンシブ ===== */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .main-content { padding: 24px 20px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .site-header { padding: 18px 20px; }
+      .day-navigation { padding: 14px 20px 0; }
+      .header-inner { align-items: flex-start; flex-direction: column; }
+      .header-meta { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      .nav-spacer { display: none; }
+    }
+
+    /* ===== スクロールバー ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-title">⚡ Daily AI News</div>
+      <div class="header-meta">
+        <div class="header-tools">
+          <span class="header-date">📅 2026年04月09日</span>
+          <label class="header-filter">
+            <input type="checkbox" id="interestFilter">
+            <span>気になる記事だけ表示</span>
+          </label>
+        </div>
+        <span class="header-total">本日 36 件</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="day-navigation" aria-label="日付ナビゲーション">
+    <a class="nav-pill is-muted" href="index.html">← アーカイブ一覧へ</a>
+    <a class="nav-pill" href="2026-04-08.html">← 前の日</a>
+    <span class="nav-spacer"></span>
+    <span class="nav-pill is-disabled">次の日 →</span>
+  </nav>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">カテゴリ</div>
+      
+        <a href="#Anthropic" class="nav-item" style="border-left-color:#c85250">
+          <span class="nav-icon">🤖</span>
+          <span class="nav-label">Anthropic</span>
+          <span class="nav-count" style="background:#c85250">2</span>
+        </a>
+        <a href="#AI開発ツール" class="nav-item" style="border-left-color:#34a853">
+          <span class="nav-icon">🛠️</span>
+          <span class="nav-label">AI開発ツール</span>
+          <span class="nav-count" style="background:#34a853">1</span>
+        </a>
+        <a href="#AIベンダー" class="nav-item" style="border-left-color:#666">
+          <span class="nav-icon">📌</span>
+          <span class="nav-label">AIベンダー</span>
+          <span class="nav-count" style="background:#666">9</span>
+        </a>
+        <a href="#AIニュースメディア" class="nav-item" style="border-left-color:#7c4dff">
+          <span class="nav-icon">📰</span>
+          <span class="nav-label">AIニュース・メディア</span>
+          <span class="nav-count" style="background:#7c4dff">19</span>
+        </a>
+        <a href="#研究者ニュースレター" class="nav-item" style="border-left-color:#00897b">
+          <span class="nav-icon">🔬</span>
+          <span class="nav-label">研究者・ニュースレター</span>
+          <span class="nav-count" style="background:#00897b">5</span>
+        </a>
+
+      <div class="sidebar-stats">
+        <div class="stats-title">統計</div>
+        <div class="stats-item"><span>Anthropic</span><strong>2件</strong></div><div class="stats-item"><span>AI開発ツール</span><strong>1件</strong></div><div class="stats-item"><span>AIベンダー</span><strong>9件</strong></div><div class="stats-item"><span>AIニュース・メディア</span><strong>19件</strong></div><div class="stats-item"><span>研究者・ニュースレター</span><strong>5件</strong></div>
+        <div class="stats-item" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <span>合計</span><strong>36件</strong>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <section class="category-section" id="Anthropic">
+        <div class="category-header" style="border-left-color:#c85250">
+          <span class="category-icon">🤖</span>
+          <h2 class="category-title">Anthropic</h2>
+          <span class="category-badge" style="background:#c85250">2件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="734aa208022a1ea6">
+              <div class="card-meta">
+                <span class="card-source" style="color:#c85250">Claude</span>
+                <span class="card-date">2026-04-08 09:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="734aa208022a1ea6"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://claude.com/blog/carta-healthcare-clinical-abstractor" target="_blank" rel="noopener">How Carta Healthcare gets AI to reason like a clinical abstractor</a>
+              </h3>
+              <p class="card-summary">Carta Healthcareは、AIが臨床医のように情報を解釈できるようにするために、自然言語処理（NLP）と機械学習を組み合わせています。これにより、医療記録から重要な情報を抽出し、診断や治療計画の作成を支援します。このアプローチは、医療データの解析精度を向上させ、医師の負担を軽減する点で重要です。</p>
+              <a href="https://claude.com/blog/carta-healthcare-clinical-abstractor" target="_blank" rel="noopener" class="card-link" style="color:#c85250">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="2669563492d0b82a">
+              <div class="card-meta">
+                <span class="card-source" style="color:#c85250">Claude</span>
+                <span class="card-date">2026-04-08 09:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="2669563492d0b82a"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://claude.com/blog/claude-managed-agents" target="_blank" rel="noopener">Claude Managed Agents: get to production 10x faster</a>
+              </h3>
+              <p class="card-summary">Claude Managed Agentsは、AIモデルの開発とデプロイを迅速かつ効率的に行うためのプラットフォームです。このサービスを利用することで、開発者は手動での設定や管理作業から解放され、より迅速にプロダクション環境に移行することが可能になります。特に、複雑なインフラストラクチャの管理が不要になるため、時間とリソースの節約が実現します。これにより、企業は競争力を維持しつつ、迅速な市場投入が可能となります。</p>
+              <a href="https://claude.com/blog/claude-managed-agents" target="_blank" rel="noopener" class="card-link" style="color:#c85250">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AI開発ツール">
+        <div class="category-header" style="border-left-color:#34a853">
+          <span class="category-icon">🛠️</span>
+          <h2 class="category-title">AI開発ツール</h2>
+          <span class="category-badge" style="background:#34a853">1件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="eabba51117540227">
+              <div class="card-meta">
+                <span class="card-source" style="color:#34a853">Cursor</span>
+                <span class="card-date">2026-04-08 21:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="eabba51117540227"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://cursor.com/blog/bugbot-learning" target="_blank" rel="noopener">Bugbot now self-improves with learned rules</a>
+              </h3>
+              <p class="card-summary">Bugbotは、新たに自己改善機能を搭載しました。この新機能は、過去のデータとユーザーからのフィードバックを基に、自らルールを学び適応する能力を持っています。これにより、Bugbotはより効率的かつ効果的にバグを検出し修正することが可能となり、開発プロセス全体の効率性が向上します。この技術革新は、特に大規模なソフトウェアプロジェクトにおいて、時間とコストの大幅な削減に寄与すると期待されています。</p>
+              <a href="https://cursor.com/blog/bugbot-learning" target="_blank" rel="noopener" class="card-link" style="color:#34a853">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AIベンダー">
+        <div class="category-header" style="border-left-color:#666">
+          <span class="category-icon">📌</span>
+          <h2 class="category-title">AIベンダー</h2>
+          <span class="category-badge" style="background:#666">9件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="5e65414929fa0fa3">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">OpenAI News</span>
+                <span class="card-date">2026-04-08 23:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="5e65414929fa0fa3"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://openai.com/index/next-phase-of-enterprise-ai" target="_blank" rel="noopener">The next phase of enterprise AI</a>
+              </h3>
+              <p class="card-summary">OpenAIは、企業向けAIの次なる段階について説明しています。これには、Frontier、ChatGPT Enterprise、Codex、および企業全体でのAIエージェントの導入が含まれ、これらがさまざまな業界での採用を加速させています。この段階では、より高度なAI技術が企業の効率性と生産性を向上させることが期待されています。</p>
+              <a href="https://openai.com/index/next-phase-of-enterprise-ai" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="b8c685fee799353d">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">OpenAI News</span>
+                <span class="card-date">2026-04-08 14:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="b8c685fee799353d"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://openai.com/index/introducing-child-safety-blueprint" target="_blank" rel="noopener">Introducing the Child Safety Blueprint</a>
+              </h3>
+              <p class="card-summary">OpenAIは、AI技術の責任ある開発を目指し、「Child Safety Blueprint」を発表しました。このロードマップには、安全対策、年齢に適した設計、そしてオンラインでの若者保護と empowermentのための協力が含まれています。これにより、AI技術が子供たちに与える影響を最小限に抑え、安全で有益な環境を提供することが目指されています。</p>
+              <a href="https://openai.com/index/introducing-child-safety-blueprint" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="e3fa38342139492a">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-04-09 04:51 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="e3fa38342139492a"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/customize-amazon-nova-models-with-amazon-bedrock-fine-tuning/" target="_blank" rel="noopener">Customize Amazon Nova models with Amazon Bedrock fine-tuning</a>
+              </h3>
+              <p class="card-summary">Amazon Bedrockは、Amazon Novaモデルをカスタマイズして特定のビジネスニーズに対応するための簡単な方法を提供します。顧客がAI展開を拡大する中で、独自の知識やワークフローを反映したモデルが必要になります。Amazon Bedrockでは、ラベル付き入力-出力例を用いた教師ありファインチューニング（SFT）、報酬関数を使用した強化学習ファインチューニング（RFT）、および知識転移によるモデル蒸留の3つの手法をサポートしています。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/customize-amazon-nova-models-with-amazon-bedrock-fine-tuning/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="698d7022646729df">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-04-09 04:48 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="698d7022646729df"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/human-in-the-loop-constructs-for-agentic-workflows-in-healthcare-and-life-sciences/" target="_blank" rel="noopener">Human-in-the-loop constructs for agentic workflows in healthcare and life sciences</a>
+              </h3>
+              <p class="card-summary">この記事では、医療およびライフサイエンス分野におけるAIエージェントの利用について説明しています。これらのAIエージェントは、臨床データの処理や規制申請、医療コーディングの自動化、薬物開発の加速などに役立っています。しかし、医療データの敏感性やGxPコンプライアンスなどの規制要件により、重要な意思決定ポイントでの人間の監視が必要です。このため、人間-in-the-loop（HITL）の構築が不可欠です。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/human-in-the-loop-constructs-for-agentic-workflows-in-healthcare-and-life-sciences/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="af6eda6438838ba6">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-04-09 04:45 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="af6eda6438838ba6"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/building-intelligent-audio-search-with-amazon-nova-embeddings-a-deep-dive-into-semantic-audio-understanding/" target="_blank" rel="noopener">Building intelligent audio search with Amazon Nova Embeddings: A deep dive into semantic audio understanding</a>
+              </h3>
+              <p class="card-summary">この記事では、Amazon Nova Multimodal Embeddingsを使用して音声コンテンツを検索可能なインテリジェントデータに変換する方法について詳しく説明しています。従来のテキストベースの検索方法では捉えきれない音響特性（トーン、感情、音楽的特徴、環境音など）をベクトル表現でエンコードし、自然言語クエリによる意味検索や類似音声のマッチング、自動カテゴリ分類が可能になります。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/building-intelligent-audio-search-with-amazon-nova-embeddings-a-deep-dive-into-semantic-audio-understanding/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="6c6def2e148636c6">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-04-09 04:43 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="6c6def2e148636c6"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/reinforcement-fine-tuning-on-amazon-bedrock-best-practices/" target="_blank" rel="noopener">Reinforcement fine-tuning on Amazon Bedrock: Best practices</a>
+              </h3>
+              <p class="card-summary">AWS ML Blogの記事「Reinforcement fine-tuning on Amazon Bedrock: Best practices」では、Amazon Bedrock上での強化学習によるファインチューニング（RFT）のベストプラクティスについて解説しています。RFTは、Amazon Novaやオープンソースモデルをカスタマイズするために使用され、大規模なラベル付きデータセットが不要です。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/reinforcement-fine-tuning-on-amazon-bedrock-best-practices/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="943f6009a8b56ba6">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-04-08 08:32 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="943f6009a8b56ba6"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/manage-ai-costs-with-amazon-bedrock-projects/" target="_blank" rel="noopener">Manage AI costs with Amazon Bedrock Projects</a>
+              </h3>
+              <p class="card-summary">AWS ML Blogの記事「Manage AI costs with Amazon Bedrock Projects」では、Amazon Bedrock Projectsを使用してAIワークロードのコスト管理を行う方法について説明しています。組織がAmazon Bedrock上でAIワークロードをスケールさせる際、コストの内訳を理解することが重要です。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/manage-ai-costs-with-amazon-bedrock-projects/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="7bab292d2a8b4411">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">Hugging Face Blog</span>
+                <span class="card-date">2026-04-08 23:27 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="7bab292d2a8b4411"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://huggingface.co/blog/ibm-research/altk-evolve" target="_blank" rel="noopener">ALTK‑Evolve: On‑the‑Job Learning for AI Agents</a>
+              </h3>
+              <p class="card-summary">ALTK-Evolveは、AIエージェントが実世界のタスクを学習しながら適応できるようにする新しいフレームワークです。このシステムは、エージェントが環境との相互作用を通じてリアルタイムで知識を更新し、より効率的にタスクを遂行できるよう支援します。特に、継続的な学習と適応が求められるシナリオにおいて、その効果が期待されています。</p>
+              <a href="https://huggingface.co/blog/ibm-research/altk-evolve" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="dbb4ffbd2f2a1f8e">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">Hugging Face Blog</span>
+                <span class="card-date">2026-04-08 09:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="dbb4ffbd2f2a1f8e"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://huggingface.co/blog/safetensors-joins-pytorch-foundation" target="_blank" rel="noopener">Safetensors is Joining the PyTorch Foundation</a>
+              </h3>
+              <p class="card-summary">Safetensorsは、PyTorchエコシステムにおける重要なオープンソースプロジェクトであり、この度PyTorch財団に加わることになりました。これにより、SafetensorsはPyTorchコミュニティとの連携を強化し、安全かつ効率的なテンソル操作のためのツールとリソースを提供し続けることが期待されます。この提携は、機械学習研究者や開発者がより安心してPyTorchを利用できる環境を整えるための重要なステップとなります。</p>
+              <a href="https://huggingface.co/blog/safetensors-joins-pytorch-foundation" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AIニュースメディア">
+        <div class="category-header" style="border-left-color:#7c4dff">
+          <span class="category-icon">📰</span>
+          <h2 class="category-title">AIニュース・メディア</h2>
+          <span class="category-badge" style="background:#7c4dff">19件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="e722e1ddb6b3edc1">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">MIT Technology Review AI</span>
+                <span class="card-date">2026-04-08 23:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="e722e1ddb6b3edc1"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.technologyreview.com/2026/04/08/1135398/mustafa-suleyman-ai-future/" target="_blank" rel="noopener">Mustafa Suleyman: AI development won’t hit a wall anytime soon—here’s why</a>
+              </h3>
+              <p class="card-summary">AI開発が近い将来壁にぶつかることはないと述べる理由は、AIの進化が指数関数的なトレンドに基づいているためです。2010年から現在までの間に、AIモデルのトレーニングデータ量は1兆倍に増加しました。これは計算能力の爆発的な向上を意味し、他の要素もこれに依存しています。ムーアの法則の減速やデータ不足、エネルギー制約といった課題はあるものの、計算リソースの増加と効率的な利用により、AIの進化は予測可能です。</p>
+              <a href="https://www.technologyreview.com/2026/04/08/1135398/mustafa-suleyman-ai-future/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="397928a2df109e51">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-04-09 05:34 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="397928a2df109e51"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/technology/goodbye-llama-meta-launches-new-proprietary-ai-model-muse-spark-first-since" target="_blank" rel="noopener">Goodbye, Llama? Meta launches new proprietary AI model Muse Spark — first since Superintelligence Labs&#x27; formation</a>
+              </h3>
+              <p class="card-summary">Metaは、生成AI時代において最も興味深い企業の一つであり、主にオープンソースのLLaMA言語モデルのリリースにより忠実で巨大なユーザー基盤を築きました。しかし、Llama 4のデビューが賛否両論を呼び、ベンチマークの誤用が明らかになった後、状況は一変しました。この混乱を受けて、Metaの創業者兼CEOであるマーク・ザッカーバーグは、2025年の夏にAI操作を全面的に見直し、Meta Superintelligence Labs（MSL）という新しい内部部門を設立しました。</p>
+              <a href="https://venturebeat.com/technology/goodbye-llama-meta-launches-new-proprietary-ai-model-muse-spark-first-since" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="5696babfde737458">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-04-09 04:04 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="5696babfde737458"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/technology/llm-referred-traffic-converts-at-30-40-and-most-enterprises-arent-optimizing" target="_blank" rel="noopener">LLM-referred traffic converts at 30-40% — and most enterprises aren&#x27;t optimizing for it</a>
+              </h3>
+              <p class="card-summary">この記事では、AIエージェントの普及により、従来のSEOモデルが機能しなくなり、新たな「Answer Engine Optimization（AEO）」が必要になっていると述べています。AEOは、エージェントがユーザーの意図を理解し、簡潔で構造化されたコンテンツを提供することを目指します。これにより、企業はエージェント向けの最適化戦略を策定する必要があります。</p>
+              <a href="https://venturebeat.com/technology/llm-referred-traffic-converts-at-30-40-and-most-enterprises-arent-optimizing" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="f7a674c5fc326be1">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-04-09 02:18 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="f7a674c5fc326be1"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/orchestration/new-framework-lets-ai-agents-rewrite-their-own-skills-without-retraining-the" target="_blank" rel="noopener">New framework lets AI agents rewrite their own skills without retraining the underlying model</a>
+              </h3>
+              <p class="card-summary">新しいフレームワーク「Memento-Skills」は、複数の大学の研究者によって開発され、AIエージェントが環境の変化に適応するために再訓練を必要とせずにスキルを開発できるようにします。このフレームワークは、既存の市場提供物（例：OpenClawやClaude Code）に継続的な学習能力を追加します。Memento-Skillsは、システムが外部メモリを通じて徐々に能力を向上させることを可能にし、モデルのパラメータを変更せずに適応性を高めます。</p>
+              <a href="https://venturebeat.com/orchestration/new-framework-lets-ai-agents-rewrite-their-own-skills-without-retraining-the" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="16858d01aeea4975">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-04-08 07:14 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="16858d01aeea4975"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/data/block-introduces-managerbot-a-proactive-square-ai-agent-and-the-clearest" target="_blank" rel="noopener">Block introduces Managerbot, a proactive Square AI agent and the clearest proof point yet for Jack Dorsey’s AI bet</a>
+              </h3>
+              <p class="card-summary">BlockがSquareプラットフォームに新しいAIエージェント「Managerbot」を導入しました。このエージェントは、ビジネスの監視、問題の特定、解決策の提案を自動的に行い、ユーザーが質問する必要がありません。これはCEOジャック・ドーシーのAIによる業務変革への賭けの最も明確な証拠です。</p>
+              <a href="https://venturebeat.com/data/block-introduces-managerbot-a-proactive-square-ai-agent-and-the-clearest" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="a5d4e4709d0c2ce6">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-09 06:05 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="a5d4e4709d0c2ce6"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/08/poke-makes-ai-agents-as-easy-as-sending-a-text/" target="_blank" rel="noopener">Poke makes AI agents as easy as sending a text</a>
+              </h3>
+              <p class="card-summary">Pokeは、テキストメッセージを通じてAIエージェントを提供し、複雑な設定やアプリ、技術的な知識を必要とせずにタスク管理や自動化を実現します。これにより、日常ユーザーが手軽にAIの利便性を享受できるようになります。</p>
+              <a href="https://techcrunch.com/2026/04/08/poke-makes-ai-agents-as-easy-as-sending-a-text/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="7f9541eceefbacd2">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-09 05:09 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="7f9541eceefbacd2"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/08/aws-boss-explains-why-investing-billions-in-both-anthropic-and-openai-is-an-ok-conflict/" target="_blank" rel="noopener">AWS boss explains why investing billions in both Anthropic and OpenAI is an OK conflict</a>
+              </h3>
+              <p class="card-summary">AWSのボスは、AnthropicとOpenAIへの多額の投資が競合しても問題ない理由を説明しました。彼は、クラウド企業がパートナーと競い合うことも日常茶飯事であり、これがAWSの文化に深く根付いていると述べました。この背景には、競争を通じて技術革新を促進し、顧客に最良のサービスを提供するという企業理念があります。</p>
+              <a href="https://techcrunch.com/2026/04/08/aws-boss-explains-why-investing-billions-in-both-anthropic-and-openai-is-an-ok-conflict/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="cd93246ccb9a0d80">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-09 03:23 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="cd93246ccb9a0d80"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/08/tubi-is-the-first-streamer-to-launch-a-native-app-within-chatgpt/" target="_blank" rel="noopener">Tubi is the first streamer to launch a native app within ChatGPT</a>
+              </h3>
+              <p class="card-summary">Tubiは、AIチャットボットChatGPT内でネイティブアプリを初めて提供するストリーミングサービスとなりました。これにより、ユーザーはChatGPTを通じてTubiのコンテンツに簡単にアクセスできるようになります。この取り組みは、ストリーミング業界におけるAI技術の活用を促進し、ユーザー体験を向上させる重要なステップです。</p>
+              <a href="https://techcrunch.com/2026/04/08/tubi-is-the-first-streamer-to-launch-a-native-app-within-chatgpt/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="9b69372fd2013806">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-09 01:01 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="9b69372fd2013806"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/08/astropads-workbench-reimagines-remote-desktop-for-ai-agents-not-it-support/" target="_blank" rel="noopener">Astropad’s Workbench reimagines remote desktop for AI agents, not IT support</a>
+              </h3>
+              <p class="card-summary">AstropadのWorkbenchは、AIエージェントをリモートで監視・制御するための新しいツールで、Mac Minis上で動作し、iPhoneやiPadから低遅延ストリーミングとモバイルアクセスが可能です。これにより、ITサポートではなくAIエージェントの管理が効率化されます。</p>
+              <a href="https://techcrunch.com/2026/04/08/astropads-workbench-reimagines-remote-desktop-for-ai-agents-not-it-support/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="d7236625018f8bee">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-09 00:23 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="d7236625018f8bee"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/08/openai-releases-a-new-safety-blueprint-to-address-the-rise-in-child-sexual-exploitation/" target="_blank" rel="noopener">OpenAI releases a new safety blueprint to address the rise in child sexual exploitation</a>
+              </h3>
+              <p class="card-summary">OpenAIは、AI技術の進展に伴う児童性的搾取の急増に対処するため、新たな安全対策ブループリントを発表しました。このブループリントは、AIの悪用を防ぐための具体的なガイドラインとベストプラクティスを提供し、業界全体での協力を推進することを目的としています。これにより、安全で倫理的なAI利用が促進され、児童保護の強化が期待されています。</p>
+              <a href="https://techcrunch.com/2026/04/08/openai-releases-a-new-safety-blueprint-to-address-the-rise-in-child-sexual-exploitation/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="31f670b4b110bc75">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-09 00:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="31f670b4b110bc75"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/08/databricks-matei-zaharia-wins-acm-computing-prize-agi/" target="_blank" rel="noopener">Databricks co-founder wins prestigious ACM award, says ‘AGI is here already’</a>
+              </h3>
+              <p class="card-summary">Databricksの共同創業者であるマテイス・ザラリアが、Association for Computing Machineryから最高の栄誉を受賞しました。ザラリアは現在、研究のためのAIに取り組んでおり、AGI（汎用人工知能）は単に誤解されていると述べています。この受賞は、AI研究における彼の貢献と、AGIに対する彼の視点が評価されたことを示しています。</p>
+              <a href="https://techcrunch.com/2026/04/08/databricks-matei-zaharia-wins-acm-computing-prize-agi/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="b51e0e719a7e6f32">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-08 22:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="b51e0e719a7e6f32"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/08/atlassian-confluence-visual-ai-tools-agents/" target="_blank" rel="noopener">Atlassian launches visual AI tools and third-party agents in Confluence</a>
+              </h3>
+              <p class="card-summary">Atlassianは、Confluenceユーザー向けに視覚的なAIツールとサードパーティエージェントを導入しました。これにより、ユーザーはソフトウェア内でビジュアルアセットを作成できるようになりました。また、Lovable、Replit、Gammaといったサードパーティエージェントとも連携しています。</p>
+              <a href="https://techcrunch.com/2026/04/08/atlassian-confluence-visual-ai-tools-agents/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="ab5745f1daadfe46">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-04-09 03:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="ab5745f1daadfe46"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/army-developing-ai-system-victor-chatbot-soldiers/" target="_blank" rel="noopener">The US Army Is Building Its Own Chatbot for Combat</a>
+              </h3>
+              <p class="card-summary">米国陸軍は、戦闘中に兵士が必要とする重要な情報を迅速に提供するために、独自のチャットボットを開発しています。このAIシステムは、実際の軍事データを用いて訓練されており、リアルタイムでの情報提供が可能です。これにより、兵士たちはより効率的に作戦を遂行できるようになります。</p>
+              <a href="https://www.wired.com/story/army-developing-ai-system-victor-chatbot-soldiers/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="4ad2a6f1df9e065f">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-04-09 00:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="4ad2a6f1df9e065f"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/entertainment/905862/the-miniature-wife-was-an-exercise-in-visual-trickery" target="_blank" rel="noopener">The Miniature Wife was an exercise in visual trickery</a>
+              </h3>
+              <p class="card-summary">2013年の短編小説「The Miniature Wife」では、夫が妻をコーヒーカップほどの大きさに縮めてしまい、彼女は物理的に脆弱になり、通常サイズの人々と効果的にコミュニケーションを取るのが難しくなる。しかし、この小さな体が彼女に夫を驚かせる強さを引き出す。Peacockのシリーズ adaptationでは、エリザベス・バンクスとマシュー・マクファディンが主演し、夫婦関係の複雑さをさらに深めている。</p>
+              <a href="https://www.theverge.com/entertainment/905862/the-miniature-wife-was-an-exercise-in-visual-trickery" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="16e4903801b9ccb1">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-04-09 04:59 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="16e4903801b9ccb1"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/ai/2026/04/metas-superintelligence-lab-unveils-its-first-public-model-muse-spark/" target="_blank" rel="noopener">Meta&#x27;s Superintelligence Lab unveils its first public model, Muse Spark</a>
+              </h3>
+              <p class="card-summary">MetaはSuperintelligence Labを設立し、最初の公開モデル「Muse Spark」を発表しました。これは、同社のAI努力を全面的に刷新したもので、InstagramやFacebook、Threadsなどのプラットフォームからコンテンツを活用します。Muse Sparkは現在、特定の場所やトレンドに関する質問に対して公開投稿をリンクする機能を持ち、将来的にはユーザー生成コンテンツの引用やReels、写真の統合を目指しています。</p>
+              <a href="https://arstechnica.com/ai/2026/04/metas-superintelligence-lab-unveils-its-first-public-model-muse-spark/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="b7af76ff3d622538">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-04-09 02:37 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="b7af76ff3d622538"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/tech-policy/2026/04/to-beat-altman-in-court-musk-offers-to-give-all-damages-to-open-ai-nonprofit/" target="_blank" rel="noopener">To beat Altman in court, Musk offers to give all damages to OpenAI nonprofit</a>
+              </h3>
+              <p class="card-summary">2026年4月、イーロン・マスクはOpenAIとそのCEOサム・アルトマンを相手取った訴訟を修正し、不正に得た利益はマスク個人ではなくAI企業の慈善部門に返還されるべきだと主張しました。マスクの弁護士であるマーク・トーバーオフは、マスクが「一銭たりとも自分のために求めていない」と述べています。</p>
+              <a href="https://arstechnica.com/tech-policy/2026/04/to-beat-altman-in-court-musk-offers-to-give-all-damages-to-open-ai-nonprofit/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="ca5985c345265c25">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-04-08 22:34 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="ca5985c345265c25"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/ai/2026/04/anthropic-limits-access-to-mythos-its-new-cybersecurity-ai-model/" target="_blank" rel="noopener">Anthropic limits access to Mythos, its new cybersecurity AI model</a>
+              </h3>
+              <p class="card-summary">Anthropicは、サイバーセキュリティAIモデル「Claude Mythos Preview」をAmazon、Apple、Microsoftなどの選ばれた顧客に提供開始しました。このモデルは、Broadcom、Cisco、CrowdStrikeなどの vetted組織に限定して提供され、米国政府とも使用について協議中です。</p>
+              <a href="https://arstechnica.com/ai/2026/04/anthropic-limits-access-to-mythos-its-new-cybersecurity-ai-model/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="e39d90089e7f804b">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-04-08 19:43 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="e39d90089e7f804b"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/ai-workflows-developer-success-and-central-project-management-needs/" target="_blank" rel="noopener">AI’s software development success and central management needs</a>
+              </h3>
+              <p class="card-summary">AI開発の成功と中央管理の必要性についての記事では、OutSystemsの調査結果を基に、多くの企業がAIをIT機能内で初期生産段階に進めていることが示されています。しかし、AIの導入がガバナンスや統合に追いついていないという警告もあります。ITリーダーが望むAIエージェントの機能と組織の安全な制御範囲とのギャップが問題視されており、企業はAIシステムの制御や既存プラットフォームとの統合を強化する必要があります。</p>
+              <a href="https://www.artificialintelligence-news.com/news/ai-workflows-developer-success-and-central-project-management-needs/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="5e0f1d5974679b76">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-04-08 19:23 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="5e0f1d5974679b76"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/microsoft-open-source-toolkit-secures-ai-agents-at-runtime/" target="_blank" rel="noopener">Microsoft open-source toolkit secures AI agents at runtime</a>
+              </h3>
+              <p class="card-summary">Microsoftは、AIエージェントのランタイムセキュリティを強化するための新しいオープンソースツールキットを発表しました。自律的な言語モデルがコードを実行し、企業ネットワークにアクセスする速度が従来のポリシー制御を上回っているため、セキュリティの懸念が高まっています。このツールキットは、モデルが実行時にアクションを試みる際に監視、評価、およびブロックすることで、より厳格なガバナンスを提供します。</p>
+              <a href="https://www.artificialintelligence-news.com/news/microsoft-open-source-toolkit-secures-ai-agents-at-runtime/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="研究者ニュースレター">
+        <div class="category-header" style="border-left-color:#00897b">
+          <span class="category-icon">🔬</span>
+          <h2 class="category-title">研究者・ニュースレター</h2>
+          <span class="category-badge" style="background:#00897b">5件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="73936039eff2c410">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-04-09 01:30 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="73936039eff2c410"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/why-ai-is-training-on-its-own-garbage-and-how-to-fix-it/" target="_blank" rel="noopener">Why AI Is Training on Its Own Garbage (and How to Fix It)</a>
+              </h3>
+              <p class="card-summary">AIモデルが訓練データとして不適切な情報を使用することがあり、これが「AIのゴミ」問題として知られています。この問題は、データの質やバイアス、プライバシー保護の欠如などが原因で発生します。解決策としては、高品質なデータ収集、データクリーニング、倫理的なデータ利用、そして透明性の確保が重要です。これにより、AIモデルの性能向上と信頼性が確保されます。</p>
+              <a href="https://towardsdatascience.com/why-ai-is-training-on-its-own-garbage-and-how-to-fix-it/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="d4d01d309c9c3d03">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-04-09 00:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="d4d01d309c9c3d03"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/detecting-translation-hallucinations-with-attention-misalignment/" target="_blank" rel="noopener">Detecting Translation Hallucinations with Attention Misalignment</a>
+              </h3>
+              <p class="card-summary">この記事では、ニューラル機械翻訳における「翻訳ホールキュリーション」を検出するための低コストな方法が紹介されています。具体的には、注意の不一致を利用してトークンレベルの不確実性を推定する方法が説明されています。これにより、翻訳の品質を向上させるための新たなアプローチが提供されます。</p>
+              <a href="https://towardsdatascience.com/detecting-translation-hallucinations-with-attention-misalignment/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="58fb86e57bec197d">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-04-08 22:30 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="58fb86e57bec197d"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/how-to-use-claude-code-to-build-a-minimum-viable-product/" target="_blank" rel="noopener">How to Use Claude Code to Build a Minimum Viable Product</a>
+              </h3>
+              <p class="card-summary">Claude Codeは、コーディングエージェントを使用してMVP（Minimum Viable Product）を構築するためのツールです。これにより、製品アイデアを効果的に提示することができます。特に、データサイエンスや機械学習のプロジェクトにおいて、迅速にプロトタイプを作成し、フィードバックを得ることが可能です。</p>
+              <a href="https://towardsdatascience.com/how-to-use-claude-code-to-build-a-minimum-viable-product/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="1da5097cfa63e6bf">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-04-08 21:00 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="1da5097cfa63e6bf"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/grounding-your-llm-a-practical-guide-to-rag-for-enterprise-knowledge-bases/" target="_blank" rel="noopener">Grounding Your LLM: A Practical Guide to RAG for Enterprise Knowledge Bases</a>
+              </h3>
+              <p class="card-summary">この記事は、企業向け知識ベースにおけるLLM（大規模言語モデル）の「Grounding」について解説しています。Groundingとは、モデルが現実世界の知識やコンテキストとどのように関連付けるかを指し、RAG（Reasoning about Action and Goals）という手法を用いてこれを実現する方法を具体的に説明しています。RAGは、モデルがユーザーの意図を理解し、適切な応答を生成するための基盤を提供します。</p>
+              <a href="https://towardsdatascience.com/grounding-your-llm-a-practical-guide-to-rag-for-enterprise-knowledge-bases/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="5d8799313a1183cf">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-04-09 00:18 JST</span>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="5d8799313a1183cf"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/2026/Apr/8/giles-turnbull/#atom-everything" target="_blank" rel="noopener">Quoting Giles Turnbull</a>
+              </h3>
+              <p class="card-summary">Giles Turnbullは、AIツールが他人の仕事を試すのに使われることに対する一般的な好意について言及しています。しかし、他人が同じツールを使って自分の仕事を行うことには消極的であることが多いと指摘しています。この指摘は、AIの利用における倫理的な側面や職業的責任についての議論を深める上で重要です。</p>
+              <a href="https://simonwillison.net/2026/Apr/8/giles-turnbull/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    生成日時: 2026-04-09 07:03 JST &nbsp;|&nbsp;
+    情報源: <a href="https://github.com/Olshansk/rss-feeds" target="_blank" style="color:var(--accent)">Olshansk/rss-feeds</a> および各公式RSSフィード &nbsp;|&nbsp;
+    サマリーはAIにより自動生成されています
+  </footer>
+
+  <script>
+    (() => {
+      const currentDateSlug = '2026-04-09';
+      const navRoot = document.querySelector('.day-navigation');
+      const storageKey = 'daily-ai-news:interests';
+      const filterKey = 'daily-ai-news:interest-filter';
+      const cards = Array.from(document.querySelectorAll('.news-card'));
+      const buttons = Array.from(document.querySelectorAll('.interest-toggle'));
+      const filterCheckbox = document.getElementById('interestFilter');
+
+      const loadSelected = () => {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          return new Set(Array.isArray(parsed) ? parsed : []);
+        } catch (_error) {
+          return new Set();
+        }
+      };
+
+      const saveSelected = (selected) => {
+        localStorage.setItem(storageKey, JSON.stringify(Array.from(selected)));
+      };
+
+      const applyCardState = (selected) => {
+        cards.forEach((card) => {
+          const id = card.dataset.articleId;
+          const isSelected = selected.has(id);
+          card.classList.toggle('is-selected', isSelected);
+        });
+
+        buttons.forEach((button) => {
+          const id = button.dataset.articleId;
+          const isSelected = selected.has(id);
+          button.classList.toggle('is-selected', isSelected);
+          button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          const icon = button.querySelector('.interest-icon');
+          const label = button.querySelector('.interest-label');
+          if (icon) icon.textContent = isSelected ? '☑' : '☐';
+          if (label) label.textContent = isSelected ? '保存済み' : '保存';
+        });
+      };
+
+      const applyFilterState = (selected) => {
+        const onlyInterested = Boolean(filterCheckbox?.checked);
+        cards.forEach((card) => {
+          const id = card.dataset.articleId;
+          const shouldHide = onlyInterested && !selected.has(id);
+          card.classList.toggle('is-hidden-by-filter', shouldHide);
+        });
+      };
+
+      const selected = loadSelected();
+      applyCardState(selected);
+
+      if (filterCheckbox) {
+        filterCheckbox.checked = localStorage.getItem(filterKey) === 'true';
+        applyFilterState(selected);
+        filterCheckbox.addEventListener('change', () => {
+          localStorage.setItem(filterKey, String(filterCheckbox.checked));
+          applyFilterState(selected);
+        });
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const id = button.dataset.articleId;
+          if (!id) return;
+          if (selected.has(id)) {
+            selected.delete(id);
+          } else {
+            selected.add(id);
+          }
+          saveSelected(selected);
+          applyCardState(selected);
+          applyFilterState(selected);
+        });
+      });
+
+      if (navRoot) {
+        fetch('archive-index.json')
+          .then((response) => response.json())
+          .then((dates) => {
+            const sortedDates = [...dates].sort((a, b) => b.localeCompare(a));
+            const index = sortedDates.indexOf(currentDateSlug);
+            if (index === -1) return;
+
+            const olderDate = sortedDates[index + 1];
+            const newerDate = index > 0 ? sortedDates[index - 1] : null;
+            const navItems = navRoot.querySelectorAll('.nav-pill');
+            const olderLink = navItems[1];
+            const newerLink = navItems[2];
+
+            if (olderDate && olderLink) {
+              olderLink.classList.remove('is-disabled');
+              olderLink.setAttribute('href', `${olderDate}.html`);
+            }
+            if (!olderDate && olderLink) {
+              olderLink.removeAttribute('href');
+              olderLink.classList.add('is-disabled');
+            }
+
+            if (newerDate && newerLink) {
+              newerLink.classList.remove('is-disabled');
+              newerLink.setAttribute('href', `${newerDate}.html`);
+            }
+            if (!newerDate && newerLink) {
+              newerLink.removeAttribute('href');
+              newerLink.classList.add('is-disabled');
+            }
+          })
+          .catch(() => {
+            // archive-index.json が読めない環境でも、初期レンダリング済みのナビをそのまま使う
+          });
+      }
+    })();
+  </script>
+
+</body>
+</html>
