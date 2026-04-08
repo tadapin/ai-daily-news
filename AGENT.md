@@ -17,8 +17,8 @@
 - `daily-ai-news-generator/scripts/fetch_daily.py`
   - Fetches recent items from 44 RSS feeds.
   - Deduplicates by title similarity.
-  - Uses Gemini to generate Japanese summaries.
-  - Uses Gemini again for semantic deduplication and AI relevance filtering.
+  - Uses an OpenAI-compatible API to generate Japanese summaries.
+  - Uses the same OpenAI-compatible API for summary generation and AI relevance filtering.
   - Writes `daily-ai-news-generator/output/daily_articles.json`.
 - `daily-ai-news-generator/scripts/generate_html.py`
   - Reads `daily_articles.json`.
@@ -60,9 +60,10 @@ uv run python daily-ai-news-generator/scripts/serve_docs.py
 ## Secrets And Environment Files
 
 - `daily-ai-news-generator/scripts/fetch_daily.py` loads the repository-root `.env` via `python-dotenv`.
-- Gemini access depends on `GEMINI_API_KEY` being available in that `.env`.
+- LLM access depends on `OPENAI_API_KEY` being available in that `.env`.
+- For OpenAI-compatible providers, set `OPENAI_BASE_URL` and `OPENAI_MODEL` in `.env` as needed.
 - When working in a worktree, confirm that the active worktree can also read the required environment configuration before running scripts.
-- If `.env` or equivalent environment configuration is missing, or if `GEMINI_API_KEY` has not been restored, stop and ask the user how they want secrets restored before proceeding.
+- If `.env` or equivalent environment configuration is missing, or if `OPENAI_API_KEY` has not been restored, stop and ask the user how they want secrets restored before proceeding.
 - Do not guess, synthesize, or silently replace secret values.
 
 ## Operational Expectations
