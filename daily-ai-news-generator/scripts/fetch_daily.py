@@ -157,6 +157,19 @@ def format_jst(dt):
         return jst.strftime("%Y-%m-%d %H:%M JST")
     return "日時不明"
 
+def extract_json_object(text):
+    text = text.strip()
+    if not text:
+        raise ValueError("empty response")
+    fenced = re.search(r"```(?:json)?\s*(\{.*\})\s*```", text, re.S)
+    if fenced:
+        text = fenced.group(1)
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        raise ValueError("json object not found")
+    return json.loads(text[start:end + 1])
+
 # ─── Step 2: タイトルベースの重複排除（高速・LLM不要） ──────────────────────
 
 def normalize_title(title):
@@ -218,6 +231,13 @@ def normalize_summary_text(text):
 def count_summary_sentences(summary):
     return len([s for s in re.split(r"[。.!?]+", summary) if s.strip()])
 
+def is_summary_primarily_japanese(summary):
+    if not summary:
+        return False
+    japanese_chars = len(re.findall(r"[\u3040-\u30ff\u3400-\u9fff]", summary))
+    latin_letters = len(re.findall(r"[A-Za-z]", summary))
+    return japanese_chars >= max(20, latin_letters)
+
 def is_summary_in_range(summary, min_len=140, max_len=240, min_sentences=2, max_sentences=4):
     sentence_count = count_summary_sentences(summary)
     return min_len <= len(summary) <= max_len and min_sentences <= sentence_count <= max_sentences
@@ -262,115 +282,127 @@ def finalize_summary_text(summary, min_len=140, max_len=240, max_sentences=4):
 
     return summary[:max_len].rstrip()
 
-def summarize(title, url, text, source):
+def summarize_and_filter(title, url, text, source):
     prompt = (
-        "以下の記事を日本語で要約してください。"
-        "必ず2〜4文で、合計140〜240文字程度にしてください。"
-        "1文だけで終えず、何が起きたか、何が新しいか、なぜ重要かを含めてください。"
-        "箇条書きは禁止です。"
-        "見出し、前置き、説明、引用符は不要です。"
-        "『日本語サマリー:』『要約:』のようなラベルは絶対に出力せず、要約本文だけをそのまま返してください。\n\n"
+        "以下の記事を読み、日本語要約とAI関連判定を行ってください。"
+        "必ずJSONオブジェクト1つだけを返してください。コードブロックは禁止です。"
+        "JSON以外の文字は一切出力しないでください。\n\n"
+        "返却JSONの形式:\n"
+        "{\n"
+        '  "summary": "140〜240文字、2〜4文の日本語要約",\n'
+        '  "is_ai_related": true,\n'
+        '  "reason": "判定理由を1文で簡潔に"\n'
+        "}\n\n"
+        "判定ルール:\n"
+        "- AI/機械学習/LLM/自動化/ロボティクス/AI企業動向/AI研究/AI活用事例に直接関係する場合だけ is_ai_related=true\n"
+        "- 一般ガジェット、セール、政治一般、スポーツ、音楽、SNS炎上、一般消費者向けニュースなどは AI の単語が出ても is_ai_related=false\n"
+        "- summary は必ず自然な日本語で書く。英語の文や英語中心の説明は禁止\n"
+        "- summary は見出し、前置き、ラベル、引用符なしで本文だけにする\n"
+        "- summary では何が起きたか、何が新しいか、なぜ重要かを含める\n\n"
         f"情報源: {source}\n"
         f"タイトル: {title}\n"
         f"URL: {url}\n"
         f"本文（抜粋）: {text}\n\n"
-        "要約本文のみを出力:"
+        "JSONのみを出力:"
     )
     retry_prompt = (
-        "次の要約を書き直してください。"
-        "指定から外れています。必ず2〜4文、140〜240文字で、長すぎても短すぎてもいけません。"
-        "何が起きたか、何が新しいか、なぜ重要かを盛り込んでください。"
-        "箇条書きは禁止です。"
-        "見出し、前置き、説明、引用符は不要です。"
-        "『日本語サマリー:』『要約:』のようなラベルは絶対に出力せず、要約本文だけを返してください。\n\n"
+        "前回の出力は要件を満たしていません。"
+        "必ずJSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。"
+        "summary は 140〜240文字、2〜4文の自然な日本語要約にしてください。英語中心の要約は禁止です。"
+        "is_ai_related は true/false の真偽値にしてください。"
+        "reason は簡潔な1文にしてください。\n\n"
         f"タイトル: {title}\n"
         f"元記事情報: {text}\n\n"
-        "要約本文のみを出力:"
+        "JSONのみを出力:"
     )
     expand_prompt = (
-        "次の日本語要約は短すぎます。内容を水増しせず、元記事情報にある事実だけを使って、"
+        "次のJSONを修正してください。"
+        "summary が短すぎるので、内容を水増しせず元記事情報の事実だけを使って、"
         "2〜4文・140〜240文字に自然に書き直してください。"
-        "何が起きたか、何が新しいか、なぜ重要かを含めてください。"
-        "見出し、前置き、説明、引用符、ラベルは禁止です。要約本文だけを返してください。\n\n"
+        "JSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。\n\n"
         f"タイトル: {title}\n"
         f"元記事情報: {text}\n"
-        "短すぎる要約:\n{summary}\n\n"
-        "要約本文のみを出力:"
+        "修正前JSON:\n{payload}\n\n"
+        "JSONのみを出力:"
+    )
+    japanese_retry_prompt = (
+        "次のJSONを修正してください。summary が英語中心になっています。"
+        "summary は必ず自然な日本語だけで書き、英語の文を混ぜないでください。"
+        "内容を水増しせず、元記事情報の事実だけを使って、2〜4文・140〜240文字に整えてください。"
+        "JSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。\n\n"
+        f"タイトル: {title}\n"
+        f"元記事情報: {text}\n"
+        "修正前JSON:\n{payload}\n\n"
+        "JSONのみを出力:"
+    )
+    translation_retry_prompt = (
+        "次のJSONを修正してください。summary を必ず自然な日本語へ翻訳・整形してください。"
+        "英語の文を残してはいけません。事実関係は変えず、2〜4文・140〜240文字にしてください。"
+        "JSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。\n\n"
+        "修正前JSON:\n{payload}\n\n"
+        "JSONのみを出力:"
     )
     try:
-        summary = ""
+        payload = None
         for attempt, temperature in enumerate((0.3, 0.2, 0.1), start=1):
             current_prompt = prompt if attempt == 1 else retry_prompt
-            summary = finalize_summary_text(
-                generate_text(current_prompt, max_output_tokens=400, temperature=temperature)
-            )
-            if is_summary_in_range(summary):
+            raw = generate_text(current_prompt, max_output_tokens=500, temperature=temperature)
+            payload = extract_json_object(raw)
+            summary = finalize_summary_text(str(payload.get("summary", "")))
+            is_ai_related = bool(payload.get("is_ai_related"))
+            payload["summary"] = summary
+            payload["is_ai_related"] = is_ai_related
+            payload["reason"] = str(payload.get("reason", "")).strip()
+            if is_ai_related and is_summary_in_range(summary) and is_summary_primarily_japanese(summary):
                 break
-        if len(summary) < 140:
-            summary = finalize_summary_text(
-                generate_text(
-                    expand_prompt.format(summary=summary),
-                    max_output_tokens=400,
-                    temperature=0.2,
-                )
+        if payload is None:
+            raise ValueError("classification payload missing")
+
+        if payload.get("is_ai_related") and len(payload["summary"]) < 140:
+            raw = generate_text(
+                expand_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
+                max_output_tokens=500,
+                temperature=0.2,
             )
-        return finalize_summary_text(summary).strip()
+            expanded = extract_json_object(raw)
+            payload["summary"] = finalize_summary_text(str(expanded.get("summary", payload["summary"])))
+            payload["reason"] = str(expanded.get("reason", payload.get("reason", ""))).strip()
+            payload["is_ai_related"] = bool(expanded.get("is_ai_related", payload["is_ai_related"]))
+
+        if payload.get("is_ai_related") and not is_summary_primarily_japanese(payload["summary"]):
+            raw = generate_text(
+                japanese_retry_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
+                max_output_tokens=500,
+                temperature=0.1,
+            )
+            rewritten = extract_json_object(raw)
+            payload["summary"] = finalize_summary_text(str(rewritten.get("summary", payload["summary"])))
+            payload["reason"] = str(rewritten.get("reason", payload.get("reason", ""))).strip()
+            payload["is_ai_related"] = bool(rewritten.get("is_ai_related", payload["is_ai_related"]))
+
+        if payload.get("is_ai_related") and not is_summary_primarily_japanese(payload["summary"]):
+            raw = generate_text(
+                translation_retry_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
+                max_output_tokens=500,
+                temperature=0,
+            )
+            translated = extract_json_object(raw)
+            payload["summary"] = finalize_summary_text(str(translated.get("summary", payload["summary"])))
+            payload["reason"] = str(translated.get("reason", payload.get("reason", ""))).strip()
+            payload["is_ai_related"] = bool(translated.get("is_ai_related", payload["is_ai_related"]))
+
+        return {
+            "summary": finalize_summary_text(str(payload.get("summary", ""))).strip(),
+            "is_ai_related": bool(payload.get("is_ai_related")),
+            "reason": str(payload.get("reason", "")).strip(),
+        }
     except Exception as e:
-        print(f"  [SUMMARY ERROR] {title[:40]}: {e}")
-        return "（サマリー生成に失敗しました）"
-
-# ─── Step 4: AI関連フィルタリング（LLM） ────────────────────────────────────
-
-def filter_ai_related_llm(articles):
-    """
-    AIに関連しない記事をLLMで検出・除去する。
-    バッチ処理でAPI呼び出し回数を削減。
-    """
-    if not articles:
-        return articles
-
-    result = []
-    for i in range(0, len(articles), FILTER_BATCH_SIZE):
-        batch = articles[i:i + FILTER_BATCH_SIZE]
-        items_text = "\n".join(
-            f"[{j}] {art['title']}\nサマリー: {art['summary'][:120]}"
-            for j, art in enumerate(batch)
-        )
-
-        prompt = (
-            "以下の記事について、AIまたは機械学習・データサイエンス・LLM・自動化・ロボティクスに"
-            "直接関連するものを「関連あり」、そうでないものを「関連なし」と判定してください。\n\n"
-            "判定基準:\n"
-            "- 関連あり: AI技術・製品・研究・規制・企業動向・AI活用事例など\n"
-            "- 関連なし: スポーツ、エンタメ、ガジェットレビュー、セール情報、一般ニュースなど（AIと無関係なもの）\n\n"
-            f"{items_text}\n\n"
-            "「関連なし」の記事の番号をカンマ区切りで返してください。すべて関連ありなら「なし」と返してください。\n"
-            "例: 1,3\n"
-            "回答（番号のみ）:"
-        )
-        try:
-            answer = generate_text(prompt, max_output_tokens=100, temperature=0).strip()
-            if answer == "なし" or not answer:
-                result.extend(batch)
-                continue
-
-            remove_indices = set()
-            for part in answer.split(","):
-                part = part.strip()
-                if part.isdigit():
-                    remove_indices.add(int(part))
-
-            kept = [art for j, art in enumerate(batch) if j not in remove_indices]
-            removed = len(batch) - len(kept)
-            if removed > 0:
-                removed_titles = [batch[j]["title"][:50] for j in remove_indices if j < len(batch)]
-                print(f"  [AI関連フィルタ] {removed}件を除去: {removed_titles}")
-            result.extend(kept)
-        except Exception as e:
-            print(f"  [FILTER ERROR] {e}")
-            result.extend(batch)
-
-    return result
+        print(f"  [SUMMARY/FILTER ERROR] {title[:40]}: {e}")
+        return {
+            "summary": "（サマリー生成に失敗しました）",
+            "is_ai_related": True,
+            "reason": "AI関連判定に失敗したため記事を維持",
+        }
 
 # ─── メイン処理 ──────────────────────────────────────────────────────────────
 
@@ -417,19 +449,30 @@ def main():
     print(f"全カテゴリ合計: {len(all_articles_flat)}件")
     print()
 
-    print("=== Step 3: サマリー生成 ===")
+    print("=== Step 3: サマリー生成・AI関連判定 ===")
+    after_filter = []
     for art in all_articles_flat:
-        print(f"  サマリー: {art['title'][:60]}...")
-        art["summary"] = summarize(art["title"], art["url"], art["text"], art["source"])
+        print(f"  解析: {art['title'][:60]}...")
+        analysis = summarize_and_filter(
+            art["title"],
+            art["url"],
+            art["text"],
+            art["source"],
+        )
+        art["summary"] = analysis["summary"]
+        art["reason"] = analysis["reason"]
+        if analysis["is_ai_related"]:
+            after_filter.append(art)
+        else:
+            print(f"  [AI関連フィルタ] 除外: {art['title'][:50]} / {analysis['reason']}")
         time.sleep(0.3)
-    print(f"サマリー生成完了: {len(all_articles_flat)}件")
+    print(f"サマリー生成・判定完了: {len(all_articles_flat)}件")
     print()
 
     after_dedup = all_articles_flat
-    print("=== Step 4: AI関連フィルタリング（LLM）===")
-    after_filter = filter_ai_related_llm(after_dedup)
-    removed_filter = len(after_dedup) - len(after_filter)
-    print(f"AI関連フィルタ: {len(after_dedup)}件 → {len(after_filter)}件（{removed_filter}件除去）")
+    print("=== Step 4: AI関連フィルタ結果 ===")
+    removed_filter = len(all_articles_flat) - len(after_filter)
+    print(f"AI関連フィルタ: {len(all_articles_flat)}件 → {len(after_filter)}件（{removed_filter}件除去）")
     print()
 
     # ── カテゴリ別に再分類 ──
