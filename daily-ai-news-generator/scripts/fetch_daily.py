@@ -18,8 +18,8 @@ import feedparser
 import requests
 import re
 import json
-import time
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
@@ -31,12 +31,11 @@ DAYS_BACK = 1
 OLSHANSK_BASE = "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DailyAINews/1.0)"}
 
-# LLMによる関連性チェックのバッチサイズ
-FILTER_BATCH_SIZE = 20
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_DIR = REPO_ROOT / "daily-ai-news-generator" / "output"
 OUTPUT_JSON = OUTPUT_DIR / "daily_articles.json"
 ENV_PATH = REPO_ROOT / ".env"
+DEFAULT_SUMMARY_CONCURRENCY = 3
 
 # ===== カテゴリ別フィード定義（ai-news-feedsスキルと完全一致） =====
 
@@ -157,6 +156,9 @@ def format_jst(dt):
         return jst.strftime("%Y-%m-%d %H:%M JST")
     return "日時不明"
 
+def log_now():
+    return (datetime.now(timezone.utc) + timedelta(hours=9)).strftime("%H:%M:%S")
+
 def extract_json_object(text):
     text = text.strip()
     if not text:
@@ -169,6 +171,26 @@ def extract_json_object(text):
     if start == -1 or end == -1 or end <= start:
         raise ValueError("json object not found")
     return json.loads(text[start:end + 1])
+
+def get_summary_concurrency():
+    raw_value = os.environ.get("SUMMARY_CONCURRENCY", str(DEFAULT_SUMMARY_CONCURRENCY))
+    try:
+        concurrency = int(raw_value)
+    except (TypeError, ValueError):
+        print(
+            f"[WARN] SUMMARY_CONCURRENCY={raw_value!r} は不正です。"
+            f"デフォルト値 {DEFAULT_SUMMARY_CONCURRENCY} を使用します。"
+        )
+        return DEFAULT_SUMMARY_CONCURRENCY
+
+    if concurrency < 1:
+        print(
+            f"[WARN] SUMMARY_CONCURRENCY={concurrency} は 1 以上を指定してください。"
+            f"デフォルト値 {DEFAULT_SUMMARY_CONCURRENCY} を使用します。"
+        )
+        return DEFAULT_SUMMARY_CONCURRENCY
+
+    return concurrency
 
 # ─── Step 2: タイトルベースの重複排除（高速・LLM不要） ──────────────────────
 
@@ -458,22 +480,35 @@ Previous JSON:
             "reason": str(payload.get("reason", "")).strip(),
         }
     except Exception as e:
-        print(f"  [SUMMARY/FILTER ERROR] {title[:40]}: {e}")
+        print(f"  [{log_now()}] [SUMMARY/FILTER ERROR] {title[:40]}: {e}")
         return {
             "summary": "（サマリー生成に失敗しました）",
             "is_ai_related": True,
             "reason": "AI関連判定に失敗したため記事を維持",
         }
 
+def process_article(index, article):
+    title = article["title"]
+    print(f"  [{log_now()}] [START {index}] {title[:60]}...")
+    analysis = summarize_and_filter(
+        article["title"],
+        article["url"],
+        article["text"],
+        article["source"],
+    )
+    return index, analysis
+
 # ─── メイン処理 ──────────────────────────────────────────────────────────────
 
 def main():
     cutoff = get_cutoff()
     today_jst = (datetime.now(timezone.utc) + timedelta(hours=9)).strftime("%Y年%m月%d日")
+    summary_concurrency = get_summary_concurrency()
     print(f"=== Daily AI News 取得開始 ===")
     print(f"対象日: {today_jst}")
     print(f"取得期間: {cutoff.strftime('%Y-%m-%d %H:%M UTC')} 以降")
     print(f"フィード数: {sum(len(v) for v in FEED_CATEGORIES.values())}件")
+    print(f"要約並列度: {summary_concurrency}")
     print()
 
     all_articles_flat = []  # 全カテゴリをまたいだ重複排除用
@@ -512,21 +547,29 @@ def main():
 
     print("=== Step 3: サマリー生成・AI関連判定 ===")
     after_filter = []
-    for art in all_articles_flat:
-        print(f"  解析: {art['title'][:60]}...")
-        analysis = summarize_and_filter(
-            art["title"],
-            art["url"],
-            art["text"],
-            art["source"],
-        )
-        art["summary"] = analysis["summary"]
-        art["reason"] = analysis["reason"]
-        if analysis["is_ai_related"]:
-            after_filter.append(art)
-        else:
-            print(f"  [AI関連フィルタ] 除外: {art['title'][:50]} / {analysis['reason']}")
-        time.sleep(0.3)
+    total_to_process = len(all_articles_flat)
+    completed = 0
+    with ThreadPoolExecutor(max_workers=summary_concurrency) as executor:
+        future_to_index = {
+            executor.submit(process_article, index, art): index
+            for index, art in enumerate(all_articles_flat, start=1)
+        }
+
+        for future in as_completed(future_to_index):
+            index, analysis = future.result()
+            art = all_articles_flat[index - 1]
+            art["summary"] = analysis["summary"]
+            art["reason"] = analysis["reason"]
+
+            completed += 1
+            print(f"  [{log_now()}] [DONE {completed}/{total_to_process}] {art['title'][:60]}...")
+
+            if analysis["is_ai_related"]:
+                after_filter.append(art)
+            else:
+                print(f"  [{log_now()}] [AI関連フィルタ] 除外: {art['title'][:50]} / {analysis['reason']}")
+
+    after_filter.sort(key=lambda art: art["date_raw"], reverse=True)
     print(f"サマリー生成・判定完了: {len(all_articles_flat)}件")
     print()
 
