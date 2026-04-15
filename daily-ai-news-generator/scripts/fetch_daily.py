@@ -211,13 +211,49 @@ def deduplicate_by_title(articles):
 
 # ─── Step 3: サマリー生成 ────────────────────────────────────────────────────
 
-def generate_text(prompt, max_output_tokens=300, temperature=0.3):
-    resp = client.chat.completions.create(
-        model=OPENAI_MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        temperature=temperature,
-        max_tokens=max_output_tokens,
-    )
+JSON_SYSTEM_PROMPT = "You are a JSON generator. No talk. No code blocks. Output exactly one JSON object."
+SUMMARY_FILTER_JSON_SCHEMA = {
+    "name": "summary_filter_result",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "summary": {"type": "string"},
+            "is_ai_related": {"type": "boolean"},
+            "reason": {"type": "string"},
+        },
+        "required": ["summary", "is_ai_related", "reason"],
+        "additionalProperties": False,
+    },
+}
+
+def generate_text(
+    prompt,
+    max_output_tokens=300,
+    temperature=0.3,
+    system_prompt=None,
+    json_mode=False,
+    json_schema=None,
+):
+    messages = []
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+    messages.append({"role": "user", "content": prompt})
+
+    request_kwargs = {
+        "model": OPENAI_MODEL,
+        "messages": messages,
+        "temperature": temperature,
+        "max_tokens": max_output_tokens,
+    }
+    if json_schema:
+        request_kwargs["response_format"] = {
+            "type": "json_schema",
+            "json_schema": json_schema,
+        }
+    elif json_mode:
+        request_kwargs["response_format"] = {"type": "json_object"}
+
+    resp = client.chat.completions.create(**request_kwargs)
     return (resp.choices[0].message.content or "").strip()
 
 def normalize_summary_text(text):
@@ -283,70 +319,89 @@ def finalize_summary_text(summary, min_len=140, max_len=240, max_sentences=4):
     return summary[:max_len].rstrip()
 
 def summarize_and_filter(title, url, text, source):
-    prompt = (
-        "以下の記事を読み、日本語要約とAI関連判定を行ってください。"
-        "必ずJSONオブジェクト1つだけを返してください。コードブロックは禁止です。"
-        "JSON以外の文字は一切出力しないでください。\n\n"
-        "返却JSONの形式:\n"
-        "{\n"
-        '  "summary": "140〜240文字、2〜4文の日本語要約",\n'
-        '  "is_ai_related": true,\n'
-        '  "reason": "判定理由を1文で簡潔に"\n'
-        "}\n\n"
-        "判定ルール:\n"
-        "- AI/機械学習/LLM/自動化/ロボティクス/AI企業動向/AI研究/AI活用事例に直接関係する場合だけ is_ai_related=true\n"
-        "- 一般ガジェット、セール、政治一般、スポーツ、音楽、SNS炎上、一般消費者向けニュースなどは AI の単語が出ても is_ai_related=false\n"
-        "- summary は必ず自然な日本語で書く。英語の文や英語中心の説明は禁止\n"
-        "- summary は見出し、前置き、ラベル、引用符なしで本文だけにする\n"
-        "- summary では何が起きたか、何が新しいか、なぜ重要かを含める\n\n"
-        f"情報源: {source}\n"
-        f"タイトル: {title}\n"
-        f"URL: {url}\n"
-        f"本文（抜粋）: {text}\n\n"
-        "JSONのみを出力:"
-    )
-    retry_prompt = (
-        "前回の出力は要件を満たしていません。"
-        "必ずJSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。"
-        "summary は 140〜240文字、2〜4文の自然な日本語要約にしてください。英語中心の要約は禁止です。"
-        "is_ai_related は true/false の真偽値にしてください。"
-        "reason は簡潔な1文にしてください。\n\n"
-        f"タイトル: {title}\n"
-        f"元記事情報: {text}\n\n"
-        "JSONのみを出力:"
-    )
-    expand_prompt = (
-        "次のJSONを修正してください。"
-        "summary が短すぎるので、内容を水増しせず元記事情報の事実だけを使って、"
-        "2〜4文・140〜240文字に自然に書き直してください。"
-        "JSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。\n\n"
-        f"タイトル: {title}\n"
-        f"元記事情報: {text}\n"
-        "修正前JSON:\n{payload}\n\n"
-        "JSONのみを出力:"
-    )
-    japanese_retry_prompt = (
-        "次のJSONを修正してください。summary が英語中心になっています。"
-        "summary は必ず自然な日本語だけで書き、英語の文を混ぜないでください。"
-        "内容を水増しせず、元記事情報の事実だけを使って、2〜4文・140〜240文字に整えてください。"
-        "JSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。\n\n"
-        f"タイトル: {title}\n"
-        f"元記事情報: {text}\n"
-        "修正前JSON:\n{payload}\n\n"
-        "JSONのみを出力:"
-    )
-    translation_retry_prompt = (
-        "次のJSONを修正してください。summary を必ず自然な日本語へ翻訳・整形してください。"
-        "英語の文を残してはいけません。事実関係は変えず、2〜4文・140〜240文字にしてください。"
-        "JSONオブジェクト1つだけを返してください。コードブロックや説明文は禁止です。\n\n"
-        "修正前JSON:\n{payload}\n\n"
-        "JSONのみを出力:"
-    )
+    prompt = f"""Read the article below and return only a single JSON object.
+Do not include code blocks, markdown, or any text outside the JSON.
+
+JSON Schema:
+{{
+  "summary": "[Japanese] A natural 2-4 sentence summary (140-240 characters). Focus on what happened, what is new, and its significance. No headers or quotes.",
+  "is_ai_related": boolean,
+  "reason": "[Japanese] A brief, one-sentence explanation for why the article is or is not AI-related."
+}}
+
+AI Relevance Criteria:
+- True: The main topic is AI/ML/LLM, robotics, AI research, AI products, AI companies, or concrete AI use cases.
+- False: The main topic is general tech, gadgets, sales, entertainment, politics, sports, or other non-AI news, even if AI is mentioned incidentally.
+
+Article Data:
+Source: {source}
+Title: {title}
+URL: {url}
+Content: {text}
+"""
+    retry_prompt = f"""Fix the response and return only a single JSON object.
+Do not include code blocks, markdown, or any text outside the JSON.
+
+Requirements:
+- summary must be natural Japanese
+- summary must be 140-240 characters and 2-4 sentences
+- summary must explain what happened, what is new, and why it matters
+- is_ai_related must be a JSON boolean
+- reason must be one short Japanese sentence explaining why the article is or is not AI-related
+
+Title: {title}
+Content: {text}
+"""
+    expand_prompt = f"""Rewrite the JSON and return only a single JSON object.
+Do not include code blocks, markdown, or any text outside the JSON.
+
+Keep the facts, but make summary longer.
+- summary must be natural Japanese
+- summary must be 140-240 characters and 2-4 sentences
+- summary must explain what happened, what is new, and why it matters
+
+Title: {title}
+Content: {text}
+Previous JSON:
+{{payload}}
+"""
+    japanese_retry_prompt = f"""Rewrite the JSON and return only a single JSON object.
+Do not include code blocks, markdown, or any text outside the JSON.
+
+The summary is not Japanese enough.
+- summary must be natural Japanese only
+- do not leave English sentences in summary
+- summary must be 140-240 characters and 2-4 sentences
+- reason must be one short Japanese sentence
+
+Title: {title}
+Content: {text}
+Previous JSON:
+{{payload}}
+"""
+    translation_retry_prompt = """Rewrite the JSON and return only a single JSON object.
+Do not include code blocks, markdown, or any text outside the JSON.
+
+Translate the summary into natural Japanese.
+- keep the facts unchanged
+- do not leave English sentences in summary
+- summary must be 140-240 characters and 2-4 sentences
+- reason must be one short Japanese sentence
+
+Previous JSON:
+{payload}
+"""
     try:
         payload = None
         for attempt, temperature in enumerate((0.3, 0.2, 0.1), start=1):
             current_prompt = prompt if attempt == 1 else retry_prompt
-            raw = generate_text(current_prompt, max_output_tokens=500, temperature=temperature)
+            raw = generate_text(
+                current_prompt,
+                max_output_tokens=500,
+                temperature=temperature,
+                system_prompt=JSON_SYSTEM_PROMPT,
+                json_schema=SUMMARY_FILTER_JSON_SCHEMA,
+            )
             payload = extract_json_object(raw)
             summary = finalize_summary_text(str(payload.get("summary", "")))
             is_ai_related = bool(payload.get("is_ai_related"))
@@ -363,6 +418,8 @@ def summarize_and_filter(title, url, text, source):
                 expand_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
                 max_output_tokens=500,
                 temperature=0.2,
+                system_prompt=JSON_SYSTEM_PROMPT,
+                json_schema=SUMMARY_FILTER_JSON_SCHEMA,
             )
             expanded = extract_json_object(raw)
             payload["summary"] = finalize_summary_text(str(expanded.get("summary", payload["summary"])))
@@ -374,6 +431,8 @@ def summarize_and_filter(title, url, text, source):
                 japanese_retry_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
                 max_output_tokens=500,
                 temperature=0.1,
+                system_prompt=JSON_SYSTEM_PROMPT,
+                json_schema=SUMMARY_FILTER_JSON_SCHEMA,
             )
             rewritten = extract_json_object(raw)
             payload["summary"] = finalize_summary_text(str(rewritten.get("summary", payload["summary"])))
@@ -385,6 +444,8 @@ def summarize_and_filter(title, url, text, source):
                 translation_retry_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
                 max_output_tokens=500,
                 temperature=0,
+                system_prompt=JSON_SYSTEM_PROMPT,
+                json_schema=SUMMARY_FILTER_JSON_SCHEMA,
             )
             translated = extract_json_object(raw)
             payload["summary"] = finalize_summary_text(str(translated.get("summary", payload["summary"])))
