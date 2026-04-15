@@ -51,6 +51,12 @@ uv run python daily-ai-news-generator/scripts/generate_html.py
 uv run python daily-ai-news-generator/scripts/push_to_github.py --date YYYY-MM-DD --html docs/YYYY-MM-DD.html
 ```
 
+- For real-time progress logs from `fetch_daily.py`, prefer unbuffered execution:
+
+```bash
+.venv/bin/python -u daily-ai-news-generator/scripts/fetch_daily.py
+```
+
 - Local preview:
 
 ```bash
@@ -62,6 +68,8 @@ uv run python daily-ai-news-generator/scripts/serve_docs.py
 - `daily-ai-news-generator/scripts/fetch_daily.py` loads the repository-root `.env` via `python-dotenv`.
 - LLM access depends on `OPENAI_API_KEY` being available in that `.env`.
 - For OpenAI-compatible providers, set `OPENAI_BASE_URL` and `OPENAI_MODEL` in `.env` as needed.
+- Summary parallelism is controlled by `.env` variable `SUMMARY_CONCURRENCY` and defaults to `3`.
+- Local benchmarking in this environment showed `SUMMARY_CONCURRENCY=5` outperforming `1` and `3` during the early summary phase, so treat `5` as a good starting point when GPU headroom is available.
 - When working in a worktree, confirm that the active worktree can also read the required environment configuration before running scripts.
 - If `.env` or equivalent environment configuration is missing, or if `OPENAI_API_KEY` has not been restored, stop and ask the user how they want secrets restored before proceeding.
 - Do not guess, synthesize, or silently replace secret values.
