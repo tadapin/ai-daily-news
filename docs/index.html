@@ -353,7 +353,10 @@
       return card;
     }
 
-    fetch('archive-index.json')
+    const archiveIndexUrl = new URL('archive-index.json', window.location.href);
+    archiveIndexUrl.searchParams.set('_', Date.now().toString());
+
+    fetch(archiveIndexUrl.toString(), { cache: 'no-store' })
       .then((response) => response.json())
       .then((dates) => {
         const sortedDates = [...dates].sort((a, b) => b.localeCompare(a));
