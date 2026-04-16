@@ -181,6 +181,11 @@
       border-radius: 10px;
       flex-shrink: 0;
     }
+    .nav-duplicate {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
     .sidebar-stats {
       margin-top: 28px;
       padding: 16px;
@@ -237,6 +242,13 @@
       padding: 3px 12px;
       border-radius: 12px;
     }
+    .category-duplicate-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
 
     /* ===== カードグリッド ===== */
     .cards-grid {
@@ -270,6 +282,28 @@
       justify-content: flex-end;
       margin-top: -2px;
     }
+    .card-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 20px;
+    }
+    .duplicate-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(108,99,255,0.35);
+      background: rgba(108,99,255,0.12);
+      color: #c8c3ff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+    }
+    .duplicate-badge.is-candidate {
+      border-color: rgba(255,159,67,0.35);
+      background: rgba(255,159,67,0.12);
+      color: #ffd0a3;
+    }
     .interest-toggle {
       display: inline-flex;
       align-items: center;
@@ -302,6 +336,9 @@
     }
     .news-card.is-hidden-by-filter {
       display: none;
+    }
+    .news-card.is-duplicate-candidate {
+      border-style: dashed;
     }
     .card-source {
       font-size: 0.78rem;
@@ -381,8 +418,15 @@
             <input type="checkbox" id="interestFilter">
             <span>気になる記事だけ表示</span>
           </label>
+          <label class="header-filter">
+            <input type="checkbox" id="duplicateFilter">
+            <span>重複記事も表示</span>
+          </label>
         </div>
-        <span class="header-total">本日 54 件</span>
+        <div class="header-tools">
+          <span class="header-total">本日 34 件</span>
+          <span class="header-filter">重複候補 10 件</span>
+        </div>
       </div>
     </div>
   </header>
@@ -401,29 +445,37 @@
         <a href="#AI開発ツール" class="nav-item" style="border-left-color:#34a853">
           <span class="nav-icon">🛠️</span>
           <span class="nav-label">AI開発ツール</span>
-          <span class="nav-count" style="background:#34a853">3</span>
+          <span class="nav-count" style="background:#34a853">1</span>
+          
         </a>
         <a href="#AIベンダー" class="nav-item" style="border-left-color:#666">
           <span class="nav-icon">📌</span>
           <span class="nav-label">AIベンダー</span>
-          <span class="nav-count" style="background:#666">8</span>
+          <span class="nav-count" style="background:#666">4</span>
+          <span class="nav-duplicate">+重複2</span>
         </a>
         <a href="#AIニュースメディア" class="nav-item" style="border-left-color:#7c4dff">
           <span class="nav-icon">📰</span>
           <span class="nav-label">AIニュース・メディア</span>
-          <span class="nav-count" style="background:#7c4dff">37</span>
+          <span class="nav-count" style="background:#7c4dff">24</span>
+          <span class="nav-duplicate">+重複8</span>
         </a>
         <a href="#研究者ニュースレター" class="nav-item" style="border-left-color:#00897b">
           <span class="nav-icon">🔬</span>
           <span class="nav-label">研究者・ニュースレター</span>
-          <span class="nav-count" style="background:#00897b">6</span>
+          <span class="nav-count" style="background:#00897b">5</span>
+          
         </a>
 
       <div class="sidebar-stats">
         <div class="stats-title">統計</div>
-        <div class="stats-item"><span>AI開発ツール</span><strong>3件</strong></div><div class="stats-item"><span>AIベンダー</span><strong>8件</strong></div><div class="stats-item"><span>AIニュース・メディア</span><strong>37件</strong></div><div class="stats-item"><span>研究者・ニュースレター</span><strong>6件</strong></div>
+        <div class="stats-item"><span>AI開発ツール</span><strong>1件</strong></div><div class="stats-item"><span>AIベンダー</span><strong>4件</strong></div><div class="stats-item"><span>AIニュース・メディア</span><strong>24件</strong></div><div class="stats-item"><span>研究者・ニュースレター</span><strong>5件</strong></div>
+        <div class="stats-item"><span>重複候補</span><strong>10件</strong></div>
         <div class="stats-item" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-          <span>合計</span><strong>54件</strong>
+          <span>表示件数</span><strong>34件</strong>
+        </div>
+        <div class="stats-item">
+          <span>総件数</span><strong>44件</strong>
         </div>
       </div>
     </aside>
@@ -434,15 +486,17 @@
         <div class="category-header" style="border-left-color:#34a853">
           <span class="category-icon">🛠️</span>
           <h2 class="category-title">AI開発ツール</h2>
-          <span class="category-badge" style="background:#34a853">3件</span>
+          <span class="category-badge" style="background:#34a853">1件</span>
+          
         </div>
         <div class="cards-grid">
           
-            <article class="news-card" data-article-id="371a93be2da556b4">
+            <article class="news-card" data-article-id="371a93be2da556b4" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#34a853">Windsurf Blog</span>
                 <span class="card-date">2026-04-15 21:00 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge">重複 2件</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -457,56 +511,8 @@
               <h3 class="card-title">
                 <a href="https://windsurf.com/blog/windsurf-2-0" target="_blank" rel="noopener">Windsurf 2.0: Introducing the Agent Command Center and Devin in Windsurf</a>
               </h3>
-              <p class="card-summary">本記事では、エージェントの共同作業を可能にする「Windsurf 2.0」が紹介されました。ローカルとクラウドのエージェントが連携し、より多くのタスクを処理できるようになった点が大きな進展です。これにより、開発者はこれまで以上に複雑で大規模なシステム構築が可能となり、生産性が飛躍的に向上することが期待されます。</p>
+              <p class="card-summary">Windsurf 2.0では、ローカルエージェントとクラウドエージェントが連携して船をより多く運用できるようにする「エージェントコマンドセンター」と「Devin」が導入されました。これは、複数のAIエージェントが協調して複雑なタスクを処理し、より効率的で高度な船の管理を可能にするものです。これにより、船舶運用の自動化と最適化が大幅に進み、新しいレベルの効率性が実現します。</p>
               <a href="https://windsurf.com/blog/windsurf-2-0" target="_blank" rel="noopener" class="card-link" style="color:#34a853">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="54b752cc6e78b262">
-              <div class="card-meta">
-                <span class="card-source" style="color:#34a853">Windsurf Next Changelog</span>
-                <span class="card-date">2026-04-15 09:00 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="54b752cc6e78b262"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://windsurf.com/changelog/windsurf-next#2.0.1044" target="_blank" rel="noopener">Windsurf Next 2.0.1044</a>
-              </h3>
-              <p class="card-summary">Windsurfがメジャーアップデートされ、クラウドエージェント「Devin」が直接利用可能になりました。これにより、ローカルセッションからワンクリックでタスクを委任し、専用VM上で動作するDevinの変更点やテスト結果を確認できます。この統合により、開発者は外部ツールへの移動なしに高度なAI支援を得られ、ワークフローが大幅に効率化されます。</p>
-              <a href="https://windsurf.com/changelog/windsurf-next#2.0.1044" target="_blank" rel="noopener" class="card-link" style="color:#34a853">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="dc1abab383d0616c">
-              <div class="card-meta">
-                <span class="card-source" style="color:#34a853">Cursor</span>
-                <span class="card-date">2026-04-15 09:00 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="dc1abab383d0616c"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://cursor.com/blog/canvas" target="_blank" rel="noopener">Interact with agent-created visualizations in canvases</a>
-              </h3>
-              <p class="card-summary">エージェントが作成したビジュアライゼーションをキャンバス上で直接操作できるようになりました。これにより、ユーザーは単に結果を見るだけでなく、インタラクティブな形でデータと対話しながら分析を進められます。この機能は、データ理解のプロセスを飛躍的に向上させ、より深い洞察を引き出すことを可能にします。</p>
-              <a href="https://cursor.com/blog/canvas" target="_blank" rel="noopener" class="card-link" style="color:#34a853">
                 記事を読む →
               </a>
             </article>
@@ -516,15 +522,17 @@
         <div class="category-header" style="border-left-color:#666">
           <span class="category-icon">📌</span>
           <h2 class="category-title">AIベンダー</h2>
-          <span class="category-badge" style="background:#666">8件</span>
+          <span class="category-badge" style="background:#666">4件</span>
+          <span class="category-duplicate-badge">重複候補 2件</span>
         </div>
         <div class="cards-grid">
           
-            <article class="news-card" data-article-id="4fd8019e837ad6a3">
+            <article class="news-card is-duplicate-candidate" data-article-id="4fd8019e837ad6a3" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#666">Google DeepMind</span>
                 <span class="card-date">2026-04-16 01:03 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.70</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -539,40 +547,17 @@
               <h3 class="card-title">
                 <a href="https://deepmind.google/blog/gemini-3-1-flash-tts-the-next-generation-of-expressive-ai-speech/" target="_blank" rel="noopener">Gemini 3.1 Flash TTS: the next generation of expressive AI speech</a>
               </h3>
-              <p class="card-summary">新しい音声モデル「Gemini 3.1 Flash TTS」が発表され、より表現力豊かなAI音声生成が可能になりました。特に、粒度の細かいオーディオタグを導入したことで、発話のニュアンスや感情にこれまで以上に細かく指示を与えることができるようになった点が大きな進歩です。これにより、単なるテキスト読み上げを超えた、人間味あふれる高品質な音声コンテンツ制作が期待でき、多様なメディアでの活用価値が高まります。</p>
+              <p class="card-summary">Google DeepMindは、感情表現豊かな音声生成のための詳細なオーディオタグを導入した新しい音声モデルGemini 3.1 Flash TTSを発表しました。これにより、AIの音声に対してより正確な制御が可能になり、表現力豊かな音声生成が実現します。これは、AIによる音声合成の質と制御性を大幅に向上させるものです。</p>
               <a href="https://deepmind.google/blog/gemini-3-1-flash-tts-the-next-generation-of-expressive-ai-speech/" target="_blank" rel="noopener" class="card-link" style="color:#666">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="741d5979b7c29688">
-              <div class="card-meta">
-                <span class="card-source" style="color:#666">AWS ML Blog</span>
-                <span class="card-date">2026-04-16 00:22 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="741d5979b7c29688"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://aws.amazon.com/blogs/machine-learning/create-rich-custom-tooltips-in-amazon-quick-sight/" target="_blank" rel="noopener">Create rich, custom tooltips in Amazon Quick Sight</a>
-              </h3>
-              <p class="card-summary">AWSは、Amazon Quick Sightにシートツールチップ機能を追加しました。これにより、ダッシュボード作成者は自由形式のレイアウトシートを使って、チャートやKPIなどを組み合わせたリッチでカスタムなツールチップを設計できます。ホバー時に動的に情報が表示され、データ探索時のストーリーテリングが強化されます。</p>
-              <a href="https://aws.amazon.com/blogs/machine-learning/create-rich-custom-tooltips-in-amazon-quick-sight/" target="_blank" rel="noopener" class="card-link" style="color:#666">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="7f1cb242b44c690a">
+            <article class="news-card" data-article-id="7f1cb242b44c690a" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#666">AWS ML Blog</span>
                 <span class="card-date">2026-04-16 00:20 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -587,16 +572,17 @@
               <h3 class="card-title">
                 <a href="https://aws.amazon.com/blogs/machine-learning/accelerating-decode-heavy-llm-inference-with-speculative-decoding-on-aws-trainium-and-vllm/" target="_blank" rel="noopener">Accelerating decode-heavy LLM inference with speculative decoding on AWS Trainium and vLLM</a>
               </h3>
-              <p class="card-summary">AWSがTrainium上で推論を高速化する手法として、推測的デコーディング（Speculative Decoding）を紹介。これにより、特にトークン生成が多いワークロードにおいて、最大3倍の加速が可能となり、コスト削減とスループット向上に貢献します。開発者はこの技術を利用して、AIアシスタントなどの費用対効果の高いアプリケーションを構築できます。</p>
+              <p class="card-summary">AWS TrainiumとvLLM上でQwen3モデルの推論における遅延を短縮するために、スペキュラティブデコーディングが有効であることを実証した。この手法は、トークン生成を最大3倍高速化し、特にデコード集中的なワークロードにおいてコストとスループットを向上させる。これにより、生成AIアプリケーションにおける推論コストの主要因であるデコード段階のボトルネックが解消される。</p>
               <a href="https://aws.amazon.com/blogs/machine-learning/accelerating-decode-heavy-llm-inference-with-speculative-decoding-on-aws-trainium-and-vllm/" target="_blank" rel="noopener" class="card-link" style="color:#666">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="eae6465f8edbe8b6">
+            <article class="news-card" data-article-id="eae6465f8edbe8b6" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#666">AWS ML Blog</span>
                 <span class="card-date">2026-04-16 00:15 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -611,16 +597,17 @@
               <h3 class="card-title">
                 <a href="https://aws.amazon.com/blogs/machine-learning/rede-mater-dei-de-saude-monitoring-ai-agents-in-the-revenue-cycle-with-amazon-bedrock-agentcore/" target="_blank" rel="noopener">Rede Mater Dei de Saúde: Monitoring AI agents in the revenue cycle with Amazon Bedrock AgentCore</a>
               </h3>
-              <p class="card-summary">ブラジルの医療機関であるRede Mater Dei de Saúdeが、収益サイクルにおけるAIエージェントの監視・管理にAmazon Bedrock AgentCoreを導入した。これにより、複雑な医療プロセスにおける手作業やデータ分断の問題に対処し、請求拒否といった課題解決を目指す。これは、大規模病院ネットワークにおけるAI運用の信頼性と持続可能性の確保という点で重要である。</p>
+              <p class="card-summary">Rede Mater Dei de Saúdeは、医療におけるキャッシュフローや請求拒否のリスクに影響を与える重要な業務において、AIエージェントの監視、追跡、管理の必要性に直面しています。同組織はAmazon Bedrock AgentCoreを使用して12のAIエージェントを導入し、運用上の持続可能性を確保しようとしています。これは、複雑な医療プロセスにおける非効率性を改善し、収益サイクルを最適化するための重要な取り組みです。</p>
               <a href="https://aws.amazon.com/blogs/machine-learning/rede-mater-dei-de-saude-monitoring-ai-agents-in-the-revenue-cycle-with-amazon-bedrock-agentcore/" target="_blank" rel="noopener" class="card-link" style="color:#666">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="60756e40e3e9222e">
+            <article class="news-card" data-article-id="60756e40e3e9222e" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#666">Hugging Face Blog</span>
                 <span class="card-date">2026-04-15 21:07 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -635,16 +622,17 @@
               <h3 class="card-title">
                 <a href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis" target="_blank" rel="noopener">Inside VAKRA: Reasoning, Tool Use, and Failure Modes of Agents</a>
               </h3>
-              <p class="card-summary">IBMリサーチが開発したVAKRAベンチマークは、エージェントの推論能力、ツール利用能力、そして失敗モードを詳細に分析する新しい評価指標を提供します。これにより、大規模言語モデル（LLM）ベースのエージェントの実用的な限界点を明らかにし、今後のAIシステム設計における重要な指針となります。</p>
+              <p class="card-summary">本記事は、エージェントの推論、ツール利用、および失敗モードについて深く掘り下げています。エージェントがどのように思考し、外部ツールを効果的に使用するのか、そしてどのような状況で失敗するのかというメカニズムを分析しています。これは、より信頼性が高く、実用的なAIシステムを開発するための重要な洞察を提供します。</p>
               <a href="https://huggingface.co/blog/ibm-research/vakra-benchmark-analysis" target="_blank" rel="noopener" class="card-link" style="color:#666">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="1ff7b7d8d70b00c7">
+            <article class="news-card is-duplicate-candidate" data-article-id="1ff7b7d8d70b00c7" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#666">OpenAI News</span>
                 <span class="card-date">2026-04-15 19:00 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.49</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -659,16 +647,17 @@
               <h3 class="card-title">
                 <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk" target="_blank" rel="noopener">The next evolution of the Agents SDK</a>
               </h3>
-              <p class="card-summary">OpenAIがAgents SDKをアップデートし、ネイティブなサンドボックス実行機能とモデルネイティブのハーネスを搭載しました。これにより、開発者はファイルやツールにまたがる安全で長時間稼働するエージェント構築が可能になります。これは、より複雑で信頼性の高い自律型AIシステムの開発を促進します。</p>
+              <p class="card-summary">OpenAIはAgents SDKを更新し、ネイティブのサンドボックス実行とモデルネイティブなハーネスを追加しました。これにより、開発者はファイルやツールを介して安全で長期実行可能なエージェントを構築できるようになります。これは、より高度で安全なAIエージェント開発を促進するものです。</p>
               <a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk" target="_blank" rel="noopener" class="card-link" style="color:#666">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="d5778bb25a7cf316">
+            <article class="news-card" data-article-id="d5778bb25a7cf316" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#666">Hugging Face Blog</span>
                 <span class="card-date">2026-04-15 18:25 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -683,32 +672,8 @@
               <h3 class="card-title">
                 <a href="https://huggingface.co/blog/Hcompany/holotab" target="_blank" rel="noopener">Meet HoloTab by HCompany. Your AI browser companion.</a>
               </h3>
-              <p class="card-summary">HCompanyから新しいAIブラウザコンパニオン「HoloTab」が発表されました。このツールは、ウェブ上の情報をより深く理解し、ユーザーの作業を強力にサポートすることが可能です。これにより、情報収集やリサーチの効率が飛躍的に向上し、日々のデジタルワークフローを変革する重要な一歩となります。</p>
+              <p class="card-summary">HCompanyが提供するAIブラウザコンパニオン「HoloTab」が発表されました。これは、AI技術を活用してブラウジング体験を向上させる新しいツールです。この新製品は、ユーザーがより効率的かつ直感的に情報を検索し、整理できるようにすることで、情報過多の現代において非常に重要です。</p>
               <a href="https://huggingface.co/blog/Hcompany/holotab" target="_blank" rel="noopener" class="card-link" style="color:#666">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="24bff607f370e505">
-              <div class="card-meta">
-                <span class="card-source" style="color:#666">Google AI (Olshansk)</span>
-                <span class="card-date">2026-04-15 09:00 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="24bff607f370e505"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://developers.googleblog.com/subagents-have-arrived-in-gemini-cli/" target="_blank" rel="noopener">Subagents have arrived in Gemini CLI</a>
-              </h3>
-              <p class="card-summary">Gemini CLIにサブエージェント機能が搭載され、複雑なタスクを専門のエージェントが隔離されたコンテキストウィンドウで処理できるようになりました。これにより、メインセッションの速度と集中力を維持しつつ、複数の作業を並行して実行可能になります。この仕組みは、多段階の実行結果を要約することで「コンテキストローテーション」を防ぎ、生産性を大幅に向上させることが期待されます。</p>
-              <a href="https://developers.googleblog.com/subagents-have-arrived-in-gemini-cli/" target="_blank" rel="noopener" class="card-link" style="color:#666">
                 記事を読む →
               </a>
             </article>
@@ -718,15 +683,17 @@
         <div class="category-header" style="border-left-color:#7c4dff">
           <span class="category-icon">📰</span>
           <h2 class="category-title">AIニュース・メディア</h2>
-          <span class="category-badge" style="background:#7c4dff">37件</span>
+          <span class="category-badge" style="background:#7c4dff">24件</span>
+          <span class="category-duplicate-badge">重複候補 8件</span>
         </div>
         <div class="cards-grid">
           
-            <article class="news-card" data-article-id="f0a02f808be3abcc">
+            <article class="news-card" data-article-id="f0a02f808be3abcc" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">VentureBeat</span>
                 <span class="card-date">2026-04-16 05:58 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -741,16 +708,17 @@
               <h3 class="card-title">
                 <a href="https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook" target="_blank" rel="noopener">Microsoft patched a Copilot Studio prompt injection. The data exfiltrated anyway.</a>
               </h3>
-              <p class="card-summary">マイクロソフトのCopilot Studioでプロンプトインジェクション脆弱性が発見され、パッチが適用された。この事象は、エージェントプラットフォームにおける新たな脆弱性クラスのリスクを示唆しており、単なる修正では完全に排除できないと指摘されている。また、Salesforce側での同様の脆弱性も確認されている。</p>
+              <p class="card-summary">マイクロソフトはCopilot Studioにおけるプロンプトインジェクションの脆弱性について修正パッチを適用しましたが、データはすでに流出しました。この脆弱性はエージェントプラットフォームにおけるプロンプトインジェクションの扱いに関するものであり、将来的なセキュリティ対策の基準となることを示唆しています。研究者たちは、エージェントシステムにおける新たな脆弱性クラスが生まれている点を指摘しています。</p>
               <a href="https://venturebeat.com/security/microsoft-salesforce-copilot-agentforce-prompt-injection-cve-agent-remediation-playbook" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="9425778dd395d904">
+            <article class="news-card" data-article-id="9425778dd395d904" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">The Verge</span>
                 <span class="card-date">2026-04-16 04:50 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -765,16 +733,17 @@
               <h3 class="card-title">
                 <a href="https://www.theverge.com/column/912627/trump-jesus-ai-whcd-penguin-meme" target="_blank" rel="noopener">Trump’s posting even more AI-generated Trump-Jesus fan art</a>
               </h3>
-              <p class="card-summary">トランプ氏が自身のソーシャルメディアに、AIによって生成された「トランプ・ジーザス」のファンアートを投稿したことが話題となっています。これは、政治的なメッセージと最新技術であるAIアートの組み合わせという点で注目されています。この行為は、著名人がAI技術をどのように利用し、自己のイメージ戦略に取り入れているかを示す一例として重要です。</p>
+              <p class="card-summary">トランプ氏がさらにAI生成のトランプ・イエスファンアートを投稿したというニュースが報じられています。これは、テクノロジーと宗教的な右派の結びつきに関する議論の中で、AIがどのように影響を与えているかを示唆しています。この出来事は、デジタルメディアにおける画像生成技術の進化と、それが文化や政治的言説に与える影響について考える上で重要です。</p>
               <a href="https://www.theverge.com/column/912627/trump-jesus-ai-whcd-penguin-meme" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="33383ab4b43dfa9d">
+            <article class="news-card is-duplicate-candidate" data-article-id="33383ab4b43dfa9d" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
                 <span class="card-date">2026-04-16 04:46 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.68</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -789,16 +758,17 @@
               <h3 class="card-title">
                 <a href="https://arstechnica.com/gadgets/2026/04/google-launches-search-app-for-windows-gemini-app-for-mac/" target="_blank" rel="noopener">Google releases new apps for Windows and MacOS</a>
               </h3>
-              <p class="card-summary">GoogleがWindows用検索アプリとMac用のGeminiネイティブアプリを正式リリースした。これにより、ユーザーはブラウザ経由だけでなく、OSに統合された形でGoogleの検索機能やAI機能を利用できるようになったのが大きな新展開である。これは日常的なPC操作における情報アクセス体験を大きく向上させる意義を持つ。</p>
+              <p class="card-summary">GoogleがWindowsとmacOS向けの新しいデスクトップアプリをリリースしました。Windowsでは、ウェブやローカルファイル・アプリを瞬時に検索できる「Googleアプリ」が正式に提供され、AIオーバービューなどの機能も搭載されています。また、Apple向けにはGeminiのネイティブアプリが提供され、ユーザーはよりシームレスな方法でGoogleのAI機能を利用できるようになりました。</p>
               <a href="https://arstechnica.com/gadgets/2026/04/google-launches-search-app-for-windows-gemini-app-for-mac/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="c0249e17eb21fa5d">
+            <article class="news-card" data-article-id="c0249e17eb21fa5d" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">VentureBeat</span>
                 <span class="card-date">2026-04-16 04:35 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -813,16 +783,17 @@
               <h3 class="card-title">
                 <a href="https://venturebeat.com/security/frontier-models-are-failing-one-in-three-production-attempts-and-getting-harder-to-audit" target="_blank" rel="noopener">Frontier models are failing one in three production attempts — and getting harder to audit</a>
               </h3>
-              <p class="card-summary">最先端のAIエージェントが実務ワークフローに組み込まれつつあるものの、依然として約3分の1の試行で失敗するという信頼性の課題を抱えている。スタンフォードHAIの報告によると、この能力と信頼性のギャップが2026年のITリーダーにとって最大の運用上の課題であり、「ギザギザの最前線」と呼ばれる現象が生じている。モデルは知識テストでは高い性能を示す一方、実世界での安定した実行にはまだ課題が残る。</p>
+              <p class="card-summary">最先端のAIモデルは、実務での試行において約3分の1で失敗しており、能力と信頼性の間のギャップが運用上の主要な課題となっている。この不安定なパフォーマンスは「ギザギザのフロンティア」と呼ばれ、AI研究者によって提唱されている。しかし、特定のベンチマークでは大幅な進歩が見られ、エージェントのソフトウェア問題解決能力などが向上している。</p>
               <a href="https://venturebeat.com/security/frontier-models-are-failing-one-in-three-production-attempts-and-getting-harder-to-audit" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="679b47090bac97ce">
+            <article class="news-card" data-article-id="679b47090bac97ce" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
                 <span class="card-date">2026-04-16 04:34 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -837,16 +808,17 @@
               <h3 class="card-title">
                 <a href="https://arstechnica.com/ai/2026/04/robot-dogs-now-read-gauges-and-thermometers-using-google-gemini/" target="_blank" rel="noopener">Boston Dynamics’ robot dog now reads gauges and thermometers with Google&#x27;s AI</a>
               </h3>
-              <p class="card-summary">ボストン・ダイナミクスのロボット犬Spotが、GoogleのAIを活用し、アナログ温度計や圧力計の読み取りが可能になった。これは、Gemini Robotics-ER 1.6モデルによる「身体化された推論」能力の向上を示しており、産業現場での高度な視覚的検査能力を飛躍的に高める意義を持つ。</p>
+              <p class="card-summary">ボストン・ダイナミクスのロボット犬Spotが、Google DeepMindの新しいAIモデルを搭載することで、工場や倉庫内でアナログの温度計や圧力計を正確に読み取れるようになりました。この進歩は、ロボットが物理的な環境と相互作用する際の「具現化された推論」能力を高めることを目指しています。これにより、Spotは複雑な視覚的推論を用いて、複数の計器やテキストを解釈し、検査任務を遂行できるようになり、産業分野での自動検査能力が大幅に向上します。</p>
               <a href="https://arstechnica.com/ai/2026/04/robot-dogs-now-read-gauges-and-thermometers-using-google-gemini/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="1ae0945775688b1f">
+            <article class="news-card" data-article-id="1ae0945775688b1f" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">VentureBeat</span>
                 <span class="card-date">2026-04-16 04:30 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -861,16 +833,17 @@
               <h3 class="card-title">
                 <a href="https://venturebeat.com/orchestration/meta-researchers-introduce-hyperagents-to-unlock-self-improving-ai-for-non-coding-tasks" target="_blank" rel="noopener">Meta researchers introduce &#x27;hyperagents&#x27; to unlock self-improving AI for non-coding tasks</a>
               </h3>
-              <p class="card-summary">Metaの研究者らが、自己改善型のAIシステム「ハイパーエージェント」を発表した。これは、従来の固定的な仕組みに依存せず、ロボティクスや文書レビューなどの非コーディング領域で自律的に問題解決ロジックを書き換え・最適化できるのが新しさである。これにより、人間による手動の介入なしに、より適応性の高いエージェントの開発が可能になる点が重要だ。</p>
+              <p class="card-summary">Metaの研究者たちは、コーディング以外のタスクで自己改善するAIを解き放つために「ハイパーエージェント」を導入した。これは、AIが問題解決の論理と基盤コードを継続的に書き直し最適化するシステムである。これにより、ロボティクスや文書レビューなどの非コーディング領域での自己改善が可能となり、人間による手動のプロンプトエンジニアリングを減らし、より適応性の高いエージェントの開発を目指す。</p>
               <a href="https://venturebeat.com/orchestration/meta-researchers-introduce-hyperagents-to-unlock-self-improving-ai-for-non-coding-tasks" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="cb2ebd1ff52f9f2c">
+            <article class="news-card is-duplicate-candidate" data-article-id="cb2ebd1ff52f9f2c" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-16 04:28 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.66</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -885,16 +858,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/openai-updates-its-agents-sdk-to-help-enterprises-build-safer-more-capable-agents/" target="_blank" rel="noopener">OpenAI updates its Agents SDK to help enterprises build safer, more capable agents</a>
               </h3>
-              <p class="card-summary">OpenAIがエージェント構築ツールキットを強化し、エンタープライズでの利用を促進します。これにより、より安全で高性能な自律型AIエージェントの開発が可能になります。このアップデートは、企業が実用的なAIソリューションを構築する上での障壁を下げ、業務自動化の次のステップを大きく前進させる点で重要です。</p>
+              <p class="card-summary">OpenAIは、エージェントAIの人気が高まる中、企業がより安全で能力の高いエージェントを構築できるよう、そのエージェントSDKの機能を拡張しました。このアップデートにより、企業は複雑なタスクを自動化し、より高度な意思決定を支援するシステムを開発することが可能になります。これは、ビジネスにおけるAI活用の新たな可能性を広げ、生産性の向上に大きく貢献します。</p>
               <a href="https://techcrunch.com/2026/04/15/openai-updates-its-agents-sdk-to-help-enterprises-build-safer-more-capable-agents/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="dc4771e2fea61fbd">
+            <article class="news-card" data-article-id="dc4771e2fea61fbd" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-16 03:55 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -909,16 +883,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/hightouch-reaches-100m-arr-fueled-by-marketing-tools-powered-by-ai/" target="_blank" rel="noopener">Hightouch reaches $100M ARR fueled by marketing tools powered by AI</a>
               </h3>
-              <p class="card-summary">マーケティングツールにAIを搭載したことで、Hightouch社が年間経常収益（ARR）1億ドルを達成しました。この成長は、特に新しくローンチされたAIエージェントプラットフォームによるものであり、マーケターの業務効率化という点で大きな意味を持ちます。これにより、市場におけるAI活用型のマーケティングツールの需要の高まりを示しています。</p>
+              <p class="card-summary">ハイタッチは、AIエージェントプラットフォームをマーケター向けに提供することで、わずか20ヶ月で年間経常収益（ARR）7000万ドルを達成し、年間1億ドルに到達しました。これは、AIを活用したマーケティングツールが市場で大きな需要を持っていることを示しています。この成功は、AI技術がビジネス成長と収益化において非常に強力な推進力となることを証明しており、今後のスタートアップにとって重要な事例となります。</p>
               <a href="https://techcrunch.com/2026/04/15/hightouch-reaches-100m-arr-fueled-by-marketing-tools-powered-by-ai/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="c8bfd5ef45f3a34d">
+            <article class="news-card" data-article-id="c8bfd5ef45f3a34d" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">VentureBeat</span>
                 <span class="card-date">2026-04-16 03:40 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -933,16 +908,17 @@
               <h3 class="card-title">
                 <a href="https://venturebeat.com/orchestration/we-tested-anthropics-redesigned-claude-code-desktop-app-and-routines-heres-what-enterprises-should-know" target="_blank" rel="noopener">We tested Anthropic’s redesigned Claude Code desktop app and &#x27;Routines&#x27; — here&#x27;s what enterprises should know</a>
               </h3>
-              <p class="card-summary">AnthropicがClaude Codeデスクトップアプリを再設計し、「Routines」を発表した。これは、AIの利用が単なるチャットボットからワークフォースへの移行を示唆しており、開発者の役割がコード記述から複数のタスクを管理する「オーケストレーション」へと変化していることを示す。この新機能群は、開発環境をコマンドセンター化し、複雑な作業フローの自動実行を可能にする。</p>
+              <p class="card-summary">Anthropicは、Claude Codeデスクトップアプリの再設計と「Routines」機能のリリースを発表しました。これは、開発者の役割が単なるチャットボットからの移行を経て、複数の作業を同時に管理する高レベルなオーケストレーターへと変化していることを示しています。新しいインターフェースは、開発者が複数のタスクやセッションを一つのビューで管理できる「ミッションコントロール」機能を提供し、「会話」から「オーケストレーション」への哲学的な移行を反映しています。</p>
               <a href="https://venturebeat.com/orchestration/we-tested-anthropics-redesigned-claude-code-desktop-app-and-routines-heres-what-enterprises-should-know" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="86d77369b12128d5">
+            <article class="news-card" data-article-id="86d77369b12128d5" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-16 03:38 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -957,16 +933,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/ai-learning-app-gizmo-levels-up-with-13m-users-and-a-22m-investment/" target="_blank" rel="noopener">AI learning app Gizmo levels up with 13M users and a $22M investment</a>
               </h3>
-              <p class="card-summary">AI学習アプリのGizmoが、ユーザー数1300万人を突破し、シリーズAで2200万ドルの資金調達に成功しました。この大きな成長と資金調達により、プラットフォームの機能強化やさらなる市場拡大が見込まれます。これにより、より多くの学習者が高度なAI教育コンテンツを利用できる環境が整う点が重要です。</p>
+              <p class="card-summary">AIを活用した学習プラットフォームであるGizmoが、1300万人以上のユーザーを獲得し、シリーズAで2200万ドルの資金調達に成功しました。これは、AI技術を用いた教育コンテンツへの需要の高まりを示しており、教育分野におけるAIの応用と市場拡大が大きな注目を集めていることを意味します。</p>
               <a href="https://techcrunch.com/2026/04/15/ai-learning-app-gizmo-levels-up-with-13m-users-and-a-22m-investment/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="e0e9c692feee54b6">
+            <article class="news-card" data-article-id="e0e9c692feee54b6" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-16 03:33 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -981,16 +958,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/can-ai-judge-journalism-a-thiel-backed-startup-says-yes-even-if-it-risks-chilling-whistleblowers/" target="_blank" rel="noopener">Can AI judge journalism? A Thiel-backed startup says yes, even if it risks chilling whistleblowers</a>
               </h3>
-              <p class="card-summary">スティーブ・ティール氏の支援を受けるスタートアップが、AIを用いてジャーナリズムを評価するサービスを提供しようとしています。ユーザーは有料で記事に異議を唱えることができ、メディアの信頼性検証の新しい形を提示しています。しかし、批判的な意見もあり、これが内部告発者を萎縮させたり、報道のあり方を歪める危険性がある点が懸念されています。</p>
+              <p class="card-summary">AIがジャーナリズムを判断するという、ティール支援のスタートアップの計画について報じられています。このシステムは、ユーザーがストーリーに異議を唱えるために支払いを行うことを可能にします。しかし、批評家たちはこれが内部告発者を萎縮させたり、メディアの責任ある仕組みを変化させたりするリスクがあると警告しています。</p>
               <a href="https://techcrunch.com/2026/04/15/can-ai-judge-journalism-a-thiel-backed-startup-says-yes-even-if-it-risks-chilling-whistleblowers/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="a3c7bd24398f82f5">
+            <article class="news-card is-duplicate-candidate" data-article-id="a3c7bd24398f82f5" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-16 03:22 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.62</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1005,16 +983,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/google-rolls-out-a-native-gemini-app-for-mac/" target="_blank" rel="noopener">Google rolls out a native Gemini app for Mac</a>
               </h3>
-              <p class="card-summary">GoogleがMac向けにネイティブのGeminiアプリをリリースしました。これにより、ユーザーは画面上のあらゆるものやローカルファイルの内容を直接Geminiと共有し、その場でサポートを受けることが可能になります。これは、デバイス上での情報処理とAIによる支援がシームレスに統合されることを意味し、Macユーザーの生産性を大きく向上させる重要な進化です。</p>
+              <p class="card-summary">GoogleはMac向けにネイティブのGeminiアプリをリリースしました。これにより、ユーザーは画面上の内容やローカルファイルなどをGeminiと共有し、その場で情報や支援を得ることができます。これは、従来の検索やアシスタント機能を超え、よりシームレスで文脈に基づいた操作体験を提供することを意味します。</p>
               <a href="https://techcrunch.com/2026/04/15/google-rolls-out-a-native-gemini-app-for-mac/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="4a345d617447c2e1">
+            <article class="news-card" data-article-id="4a345d617447c2e1" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">The Verge</span>
                 <span class="card-date">2026-04-16 03:10 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge">重複 2件</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1029,16 +1008,17 @@
               <h3 class="card-title">
                 <a href="https://www.theverge.com/tech/912638/google-gemini-mac-app" target="_blank" rel="noopener">Google launches a Gemini AI app on Mac</a>
               </h3>
-              <p class="card-summary">GoogleがMac向けにGeminiアプリをローンチし、デスクトップからウィンドウを切り替えることなくAIアシスタントと対話可能になった。Option + Spaceのショートカットでフローティングチャットバブルが呼び出され、画面共有によるシステム情報へのアクセスを通じて質問に回答する点が新しい。これにより、Mac上でのAIとの連携が大幅に強化される。</p>
+              <p class="card-summary">GoogleはMac向けに新しいGeminiアプリをリリースしました。このアプリを使えば、デスクトップ上のウィンドウを切り替えることなくAIアシスタントと対話できます。Option + Spaceショートカットでフローティングチャットバブルを表示し、システム情報を許可することで、画面の内容に基づいて質問に答えることができます。これは、MacユーザーがよりシームレスにAI機能を利用できるようにする点で重要です。</p>
               <a href="https://www.theverge.com/tech/912638/google-gemini-mac-app" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="f08025193826307b">
+            <article class="news-card" data-article-id="f08025193826307b" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">WIRED AI</span>
                 <span class="card-date">2026-04-16 03:00 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1053,16 +1033,17 @@
               <h3 class="card-title">
                 <a href="https://www.wired.com/story/ai-could-democratize-one-of-techs-most-valuable-resources/" target="_blank" rel="noopener">AI Could Democratize One of Tech&#x27;s Most Valuable Resources</a>
               </h3>
-              <p class="card-summary">AI技術の進化により、これまで専門的で難しかった半導体チップの設計やソフトウェアの最適化が容易になりつつあります。これにより、誰もが高度なレベルでのチップ開発に携われる可能性を秘めており、業界全体に大きな変革をもたらすと期待されています。この進展は、テクノロジー分野における資源アクセスの民主化を意味します。</p>
+              <p class="card-summary">人工知能（AI）は、チップ設計や多様なシリコン向けのソフトウェア最適化を大幅に容易にし、技術の民主化を促進しています。この進展により、スタートアップ企業はAIを活用してチップ製造における革命を目指しており、これは今後の半導体産業とテクノロジー開発のあり方を大きく変える可能性があります。AIがもたらすこの変化は、より多くの人々が最先端の計算資源にアクセスし、新たな産業構造を生み出す上で非常に重要です。</p>
               <a href="https://www.wired.com/story/ai-could-democratize-one-of-techs-most-valuable-resources/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="8d2c296143a54b3a">
+            <article class="news-card" data-article-id="8d2c296143a54b3a" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">VentureBeat</span>
                 <span class="card-date">2026-04-16 02:52 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1077,16 +1058,17 @@
               <h3 class="card-title">
                 <a href="https://venturebeat.com/orchestration/ais-next-bottleneck-isnt-the-models-its-whether-agents-can-think-together" target="_blank" rel="noopener">AI&#x27;s next bottleneck isn&#x27;t the models — it&#x27;s whether agents can think together</a>
               </h3>
-              <p class="card-summary">AIエージェントは現在、単にワークフローで繋げられるものの、真の意味での「思考の共有」ができていない点が大きなボトルネックだと指摘されています。今後は、人間のように意図や文脈を共有し、共同で新しい問題解決に取り組める「認知のインターネット」のような次世代インフラが必要になります。この進展は、AIが単なるツールの域を超え、真の集合知へと進化する鍵となるため重要です。</p>
+              <p class="card-summary">AIエージェントはワークフローで繋がったり監督モデルに接続できても、意味的な整合性や共有された文脈がないため、真に「一緒に考える」ことができないというボトルネックがある。次世代システムを解放するには、「認知のインターネット」として、意図や文脈を共有する新しいプロトコルが必要である。</p>
               <a href="https://venturebeat.com/orchestration/ais-next-bottleneck-isnt-the-models-its-whether-agents-can-think-together" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="04f02c641a2878a2">
+            <article class="news-card is-duplicate-candidate" data-article-id="04f02c641a2878a2" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-16 02:24 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.71</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1101,40 +1083,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/indias-vibe-coding-startup-emergent-enters-openclaw-like-ai-agent-space/" target="_blank" rel="noopener">India’s vibe-coding startup Emergent enters OpenClaw-like AI agent space</a>
               </h3>
-              <p class="card-summary">インドのスタートアップEmergentが、チャットを通じてタスク管理と自動化を可能にするAIエージェント「Wingman」を発表した。これはWhatsAppやTelegramなどのプラットフォーム上で動作し、ユーザー体験に組み込まれた形でAI機能を提供する点が新しい。これにより、日常的なコミュニケーションツール内で高度な自動化が可能になることが期待される。</p>
+              <p class="card-summary">インドのバイブコーディング・スタートアップEmergentが、OpenClawのようなAIエージェント分野に参入した。彼らのWingmanは、WhatsAppやTelegramなどのプラットフォームでチャットを通じてユーザーがタスクを管理し自動化できるようにする。これは、自然言語によるタスク自動化という新しいアプローチを示している。</p>
               <a href="https://techcrunch.com/2026/04/15/indias-vibe-coding-startup-emergent-enters-openclaw-like-ai-agent-space/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="ccfd8b23a82148a3">
-              <div class="card-meta">
-                <span class="card-source" style="color:#7c4dff">The Verge</span>
-                <span class="card-date">2026-04-16 02:04 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="ccfd8b23a82148a3"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://www.theverge.com/gadgets/911853/best-buy-ultimate-upgrade-sale-2026-tech-deals-apple" target="_blank" rel="noopener">Best Buy’s Ultimate Upgrade Sale features deals on dozens of our favorite gadgets</a>
-              </h3>
-              <p class="card-summary">ベストバイが「究極のアップグレードセール」を開催し、AirPods Pro 3やPixel 10Aなど人気ガジェットが大幅割引になっています。最新モデルから定番品まで幅広く対象となっており、価格競争も激化しているため、購入の絶好の機会です。このセールを利用すれば、様々な高機能デバイスをお得に手に入れることができます。</p>
-              <a href="https://www.theverge.com/gadgets/911853/best-buy-ultimate-upgrade-sale-2026-tech-deals-apple" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="f21ec418989afca2">
+            <article class="news-card is-duplicate-candidate" data-article-id="f21ec418989afca2" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
                 <span class="card-date">2026-04-16 01:54 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.65</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1149,16 +1108,17 @@
               <h3 class="card-title">
                 <a href="https://arstechnica.com/ai/2026/04/adobe-takes-creative-cloud-into-claude-code-esque-territory/" target="_blank" rel="noopener">Adobe takes Creative Cloud into Claude Code-esque territory</a>
               </h3>
-              <p class="card-summary">Adobeが、PhotoshopやIllustratorなどのクリエイティブアプリ群に、チャットベースのインターフェースを導入した。これは単なる機能追加ではなく、複数のアプリケーションを横断して複雑なプロジェクト全体を管理・実行できる点が画期的である。これにより、専門家にとっては作業効率化を図り、初心者にとってはツールの複雑さによる障壁を低減させることを目指している。</p>
+              <p class="card-summary">Adobeが、PhotoshopやIllustratorなどのクリエイティブアプリケーションに、複数のアプリをまたいだ複雑なマルチモーダルプロジェクトを処理できるチャットベースのインターフェースを導入しました。これは、専門的なクリエイターが煩雑なタスクを効率的に処理できるようにする一方で、初心者でもアイデアからアウトプットまでの障壁を下げることを目的としています。</p>
               <a href="https://arstechnica.com/ai/2026/04/adobe-takes-creative-cloud-into-claude-code-esque-territory/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="4fdd277735952a6d">
+            <article class="news-card" data-article-id="4fdd277735952a6d" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">AI News</span>
                 <span class="card-date">2026-04-16 01:28 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1173,40 +1133,17 @@
               <h3 class="card-title">
                 <a href="https://www.artificialintelligence-news.com/news/commvault-launches-ctrl-z-for-cloud-ai-workloads/" target="_blank" rel="noopener">Commvault launches a ‘Ctrl-Z’ for cloud AI workloads</a>
               </h3>
-              <p class="card-summary">CommvaultがAI Protectをリリースし、クラウド上の自律型AIエージェントによる予期せぬ行動からデータを保護する機能を提供した。このツールは、AWS、Azure、GCPなどの環境で動作するAIエージェントの活動を監視し、問題発生時にはシステム全体を既知の安全な状態にロールバックできる点が画期的である。</p>
+              <p class="card-summary">Commvaultは、クラウドAIワークロードに対する「Ctrl-Z」機能を提供するAI Protectをリリースしました。これは、自律型ソフトウェアエージェントがAWS、Azure、Google Cloud内で実行した操作（ファイル削除や設定変更など）を検出し、強制的にロールバックできるようにするシステムです。従来の静的なルールベースのガバナンスでは対応できない、複雑で急速に変化するAIエージェントの行動に対応し、システムの整合性を回復させるために重要です。</p>
               <a href="https://www.artificialintelligence-news.com/news/commvault-launches-ctrl-z-for-cloud-ai-workloads/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="10f6afe839b3de2d">
-              <div class="card-meta">
-                <span class="card-source" style="color:#7c4dff">The Verge</span>
-                <span class="card-date">2026-04-16 01:27 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="10f6afe839b3de2d"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://www.theverge.com/transportation/912357/robotaxi-poll-ev-intelligence-report-waymo-tesla" target="_blank" rel="noopener">Most people still don’t want anything to do with robotaxis</a>
-              </h3>
-              <p class="card-summary">自動運転車、特にロボタクシーに対する一般の人々の懐疑心は根強く残っていることが報告されています。技術が進化し実証実験が進む一方で、多くの世論調査で乗客が人間による運転を望んでいる現状が示されました。これは、安全性が証明されても「信頼」という心理的な壁が存在することを示唆しており、今後の普及に向けた大きな課題となります。</p>
-              <a href="https://www.theverge.com/transportation/912357/robotaxi-poll-ev-intelligence-report-waymo-tesla" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="711f8b3ac27d4820">
+            <article class="news-card" data-article-id="711f8b3ac27d4820" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
                 <span class="card-date">2026-04-16 00:26 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge">重複 2件</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1221,16 +1158,17 @@
               <h3 class="card-title">
                 <a href="https://arstechnica.com/ai/2026/04/bubble-watch-fashion-brand-allbirds-pivots-hard-to-become-ai-services-company/" target="_blank" rel="noopener">Allbirds abandons clothes, pivots to &quot;AI compute infrastructure&quot;</a>
               </h3>
-              <p class="card-summary">靴とアパレルで知られていたオールバーズが、事業の方向性を劇的に転換し、GPUaaSやAIネイティブなクラウドソリューションプロバイダーを目指すことを発表した。このピボットに伴い、5000万ドルの資金調達を完了させ、社名はNewBird AIとなる予定だ。ファッションブランドからAIインフラ企業への大胆な変貌が注目されている。</p>
+              <p class="card-summary">Allbirdsは、従来の持続可能な靴やアパレルから脱却し、「GPU-as-a-Service (GPUaaS)」およびAIネイティブなクラウドソリューションプロバイダーへの転換を目指すことを発表しました。この目標達成のため、同社は5000万ドルのコンバーチブル・ファイナンス施設を確保しました。この動きは、Allbirdsがファッション企業からAIインフラ企業へと事業の焦点を大きくシフトさせることを意味し、今後のビジネス展開に大きな変化をもたらします。</p>
               <a href="https://arstechnica.com/ai/2026/04/bubble-watch-fashion-brand-allbirds-pivots-hard-to-become-ai-services-company/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="d18770d2f529a3fa">
+            <article class="news-card is-duplicate-candidate" data-article-id="d18770d2f529a3fa" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">WIRED AI</span>
                 <span class="card-date">2026-04-15 23:58 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.69</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1245,16 +1183,17 @@
               <h3 class="card-title">
                 <a href="https://www.wired.com/story/allbirds-is-pivoting-to-ai-compute-sure-why-not/" target="_blank" rel="noopener">Allbirds Is Pivoting to AI Compute. Sure, Why Not</a>
               </h3>
-              <p class="card-summary">アパレル大手オールバーズが、事業の方向性を大きく転換し、「NewBird AI」として再ブランド化する。同社は従来の衣料品販売から「GPU-as-a-Service」を提供するAIコンピューティング企業へと軸足を移すことが明らかになった。これは、市場の変化に対応するための大胆な戦略的ピボットである。</p>
+              <p class="card-summary">アパレル企業Allbirdsが、GPUをサービスとして提供する「NewBird AI」への事業転換を進めている。これは、同社がAIコンピューティング分野に進出するという点で新しい動きであり、既存のビジネスモデルからの大きな変化を示している。この戦略は、物理的な製品から計算能力を提供する新たな市場への参入を意味する。</p>
               <a href="https://www.wired.com/story/allbirds-is-pivoting-to-ai-compute-sure-why-not/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="3e1c132dc2365f20">
+            <article class="news-card" data-article-id="3e1c132dc2365f20" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">AI News</span>
                 <span class="card-date">2026-04-15 23:42 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge">重複 1件</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1269,16 +1208,17 @@
               <h3 class="card-title">
                 <a href="https://www.artificialintelligence-news.com/news/citizen-developers-now-have-their-own-wingman/" target="_blank" rel="noopener">Citizen developers now have their own Wingman</a>
               </h3>
-              <p class="card-summary">vibe-codingアプリ作成企業のEmergentが、日常タスク管理に使用されるアプリケーションを制御する自律エージェント「Wingman」をリリースしました。これにより、技術的背景を持たないユーザーでもAIチームを常時稼働させることが可能になります。特にデータ変更やメッセージ送信などの重要な操作には人間の承認（トラストバウンダリ）が必要な点が特徴です。</p>
+              <p class="card-summary">Vibe-coding会社Emergentが、日常タスク管理アプリケーションを自律的に操作するエージェント「Wingman」をリリースしました。これにより、技術的な知識がない人でも、AIチームがバックグラウンドで作業を行うことが可能になります。このシステムは、WhatsAppやメールなどの共通アプリケーションを制御し、ユーザーの許可が必要なタスク（データ変更など）と自動実行可能なタスクを区別する「信頼境界」を導入しています。</p>
               <a href="https://www.artificialintelligence-news.com/news/citizen-developers-now-have-their-own-wingman/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="79cf9bdadf1ab690">
+            <article class="news-card is-duplicate-candidate" data-article-id="79cf9bdadf1ab690" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-15 23:24 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.60</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1293,16 +1233,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/after-sale-of-its-shoe-business-allbirds-pivots-to-ai/" target="_blank" rel="noopener">After sale of its shoe business, Allbirds pivots to AI</a>
               </h3>
-              <p class="card-summary">これまでの主力であった靴事業からの撤退という大きな転換を経て、オールバーズは「ニューバードAI」へとブランドイメージを刷新し、人工知能（AI）サーバーの分野に本格的に軸足を移すことを発表しました。この動きに伴い、同社は5000万ドル規模のコンバーチブル・ファイナンスというまとまった資金調達を確保したことが大きなニュースです。</p>
+              <p class="card-summary">Allbirdsは、スニーカー事業を売却した後、AIサーバーへの転換を図り、新ブランド名「NewBird AI」に変更しました。これは、従来のウール素材のスニーカーから脱却し、テクノロジー分野への事業シフトを意味します。この動きは、同社が持続可能な素材から最先端のAI技術へとビジネスモデルを大きく変革していることを示しており、今後の成長戦略において重要な転換点となります。</p>
               <a href="https://techcrunch.com/2026/04/15/after-sale-of-its-shoe-business-allbirds-pivots-to-ai/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="c9609d5540f590d7">
+            <article class="news-card" data-article-id="c9609d5540f590d7" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-15 22:06 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1317,16 +1258,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/reid-hoffman-weighs-in-on-the-tokenmaxxing-debate/" target="_blank" rel="noopener">Reid Hoffman weighs in on the ‘tokenmaxxing’ debate</a>
               </h3>
-              <p class="card-summary">リード・ホフマン氏は、AIのトークン使用量の追跡が技術の普及度合いを測る指標になり得ると指摘しています。しかし、単なる生産性の尺度として捉えるべきではなく、必ず文脈と合わせて解釈する必要があると注意喚起しました。この視点は、AI活用の評価において過度な数値依存を防ぎ、より深い洞察に基づいた議論を促す点で重要です。</p>
+              <p class="card-summary">リード・ホフマン氏は、AIのトークン使用量を追跡することは導入状況を測る指標となり得るが、文脈と組み合わせる必要があり、直接的な生産性指標として扱われるべきではないと指摘している。これは、AI技術の利用状況を評価する際に、単なる数値だけでなく、その背景や質を考慮することが重要であることを示唆している。</p>
               <a href="https://techcrunch.com/2026/04/15/reid-hoffman-weighs-in-on-the-tokenmaxxing-debate/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="c7914637986c10a4">
+            <article class="news-card" data-article-id="c7914637986c10a4" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-15 22:01 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge">重複 2件</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1341,16 +1283,17 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/adobes-new-firefly-ai-assistant-can-use-creative-cloud-apps-to-complete-tasks/" target="_blank" rel="noopener">Adobe’s new Firefly AI assistant can use Creative Cloud apps to complete tasks</a>
               </h3>
-              <p class="card-summary">Adobeが提供する新しいFirefly AIアシスタントは、PhotoshopやPremiereなど複数のCreative Cloudアプリを横断してタスクを実行可能になりました。これにより、ユーザーは単一のインターフェースから多様なクリエイティブ作業をシームレスにこなせるようになります。これはワークフロー全体の効率化という点で大きな進展です。</p>
+              <p class="card-summary">Adobeは、新しいFirefly AIアシスタントがCreative Cloudアプリ全体でタスクを完了できることを発表しました。このアシスタントは、Photoshop、Premiere Pro、Illustratorなどの主要なアプリケーションを横断して機能し、ユーザーの作業を支援します。これにより、クリエイティブな作業の効率が大幅に向上し、より多くの創造的な成果を生み出すことが可能になります。</p>
               <a href="https://techcrunch.com/2026/04/15/adobes-new-firefly-ai-assistant-can-use-creative-cloud-apps-to-complete-tasks/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="e4c3a4fc85c3b154">
+            <article class="news-card is-duplicate-candidate" data-article-id="e4c3a4fc85c3b154" data-is-duplicate-candidate="true">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">VentureBeat</span>
                 <span class="card-date">2026-04-15 22:00 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.72</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1365,40 +1308,17 @@
               <h3 class="card-title">
                 <a href="https://venturebeat.com/technology/adobes-new-firefly-ai-assistant-wants-to-run-photoshop-premiere-illustrator-and-more-from-one-prompt" target="_blank" rel="noopener">Adobe’s new Firefly AI Assistant wants to run Photoshop, Premiere, Illustrator and more from one prompt</a>
               </h3>
-              <p class="card-summary">AdobeがFirefly AIアシスタントを発表し、PhotoshopやPremiereなど全クリエイティブクラウド製品群を単一の対話インターフェースから操作可能にしました。これにより、複雑なワークフロー全体をAIエージェントが自動で調整する新時代を創出します。これは、Adobeが生成AI革命において中心的な役割を果たそうとする大きな戦略的動きです。</p>
+              <p class="card-summary">Adobeは、Firefly AI Assistantをリリースし、一つの指示でPhotoshopやPremiere ProなどのCreative Cloud製品群全体で複雑なマルチステップのワークフローを実行できるようになった。これは、クリエイターが目的を伝えるだけで、AIアシスタントが適切なツールと操作を自動的に実行することを可能にする、エージェント型AIの進化を示すものである。</p>
               <a href="https://venturebeat.com/technology/adobes-new-firefly-ai-assistant-wants-to-run-photoshop-premiere-illustrator-and-more-from-one-prompt" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="d678a80664a1c1e3">
+            <article class="news-card" data-article-id="ef5e5bd873b96e74" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
                 <span class="card-date">2026-04-15 22:00 JST</span>
               </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="d678a80664a1c1e3"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://techcrunch.com/2026/04/15/parasail-raises-32m-to-feed-tokenmaxxing-ai-developers/" target="_blank" rel="noopener">This startup is betting tokenmaxxing will create the next compute giant</a>
-              </h3>
-              <p class="card-summary">スタートアップのParasailがシリーズAラウンドで3200万ドルを調達した。これは、モデルとコンピューティング能力の将来が分断される時代において、トークン最大化（tokenmaxxing）を通じて次世代の計算巨大企業を目指す動きである。この資金調達は、AI開発における新たな資本の流れを示唆している。</p>
-              <a href="https://techcrunch.com/2026/04/15/parasail-raises-32m-to-feed-tokenmaxxing-ai-developers/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="ef5e5bd873b96e74">
-              <div class="card-meta">
-                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
-                <span class="card-date">2026-04-15 22:00 JST</span>
-              </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1413,16 +1333,42 @@
               <h3 class="card-title">
                 <a href="https://techcrunch.com/2026/04/15/gitar-a-startup-that-uses-agents-to-secure-code-emerges-from-stealth-with-9-million/" target="_blank" rel="noopener">Gitar, a startup that uses agents to secure code, emerges from stealth with $9 million</a>
               </h3>
-              <p class="card-summary">コードのセキュリティを確保するためにエージェントを活用するスタートアップ「Gitar」が、資金調達額900万ドルを発表しました。特にAIによって生成されたコードのレビューに焦点を当てており、この技術はAI利用が進む現代において非常に重要です。これにより、AI生成コード特有の脆弱性に対しても高いレベルでのセキュリティ保証が可能になります。</p>
+              <p class="card-summary">スタートアップのGitarが、エージェントを使用してコードを保護する技術で、$900万を調達してステルスから登場した。この会社は、AIによって生成されたコードを含むコードをレビューするためにAIを活用している。これは、AI時代におけるソフトウェアセキュリティと品質管理に新たなアプローチをもたらすことを示している。</p>
               <a href="https://techcrunch.com/2026/04/15/gitar-a-startup-that-uses-agents-to-secure-code-emerges-from-stealth-with-9-million/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="a87d707e5fa98d74">
+            <article class="news-card" data-article-id="d678a80664a1c1e3" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-04-15 22:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="d678a80664a1c1e3"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/04/15/parasail-raises-32m-to-feed-tokenmaxxing-ai-developers/" target="_blank" rel="noopener">This startup is betting tokenmaxxing will create the next compute giant</a>
+              </h3>
+              <p class="card-summary">スタートアップのParasailがシリーズAで3200万ドルを調達し、モデルとコンピューティングの未来が分断されることを示しています。これは、トークンマクシングが次世代の計算巨大企業を生み出すという考えに基づいています。この資金調達は、AI分野における新たな競争と技術革新の方向性を示唆しており、今後のコンピューティング市場に大きな影響を与える可能性があります。</p>
+              <a href="https://techcrunch.com/2026/04/15/parasail-raises-32m-to-feed-tokenmaxxing-ai-developers/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="a87d707e5fa98d74" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">VentureBeat</span>
                 <span class="card-date">2026-04-15 21:55 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1437,16 +1383,17 @@
               <h3 class="card-title">
                 <a href="https://venturebeat.com/orchestration/traza-raises-usd2-1-million-led-by-base10-to-automate-procurement-workflows-with-ai" target="_blank" rel="noopener">Traza raises $2.1 million led by Base10 to automate procurement workflows with AI</a>
               </h3>
-              <p class="card-summary">新興企業Trazaが、調達業務の自動化を目指し210万ドルのシードラウンドを完了しました。同社はAIエージェントを活用し、ベンダーへの連絡や見積もり生成など、これまで手作業だったプロセスを自律的に実行することが可能になります。これは、従来の調達ワークフローそのものを根本から再構築する可能性を示しています。</p>
+              <p class="card-summary">Trazaは、AIエージェントを使用して調達ワークフローを自動化するスタートアップであり、Base10が主導して210万ドルのプレシードラウンドを完了した。この会社は、ベンダーへの連絡、見積もり生成、注文追跡などのプロセスを人間の監視なしに自律的に実行することで、調達のあり方を根本的に再構築することを目指している。</p>
               <a href="https://venturebeat.com/orchestration/traza-raises-usd2-1-million-led-by-base10-to-automate-procurement-workflows-with-ai" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="588f20706a97e1ea">
+            <article class="news-card" data-article-id="588f20706a97e1ea" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">AI News</span>
                 <span class="card-date">2026-04-15 20:03 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1461,16 +1408,17 @@
               <h3 class="card-title">
                 <a href="https://www.artificialintelligence-news.com/news/agricultural-drones-get-smarter-for-large-farm-holdings/" target="_blank" rel="noopener">Drones get smarter for large farm holdings</a>
               </h3>
-              <p class="card-summary">シンガポール発のDroneDashとGEODNETが提携し、大規模農場向けスマート農業ドローン「GEODASH Aerosystems」を開発する。本技術は、飛行中に環境を認識し自律的に行動調整できるため、事前の圃場マッピングや飛行計画の再構築が不要になる点が革新的である。これにより、パーム油園などの広大な農地での作業効率とコスト削減に大きく貢献する。</p>
+              <p class="card-summary">シンガポールの企業が、大規模農場向けの農業散布ドローンを開発する合弁事業を結びました。このドローンは、飛行中に周囲を認識し、状況に応じて行動を調整することで、事前に地図作成や飛行計画の再設定の必要性をなくします。これにより、特にパーム油プランテーションのような広大な土地での作業効率が大幅に向上し、より多くの土地をカバーできるようになります。</p>
               <a href="https://www.artificialintelligence-news.com/news/agricultural-drones-get-smarter-for-large-farm-holdings/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="1125cfb0766105b0">
+            <article class="news-card" data-article-id="1125cfb0766105b0" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">WIRED AI</span>
                 <span class="card-date">2026-04-15 20:00 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1485,16 +1433,17 @@
               <h3 class="card-title">
                 <a href="https://www.wired.com/story/ai-slop-is-changing-the-internet-just-not-how-you-might-think/" target="_blank" rel="noopener">AI Slop Is Making the Internet Fake-Happy</a>
               </h3>
-              <p class="card-summary">AIによって生成されたウェブサイトの増加がインターネットに与える影響を調査した新しい研究が行われました。この結果、オンライン上のコンテンツの信頼性や「偽りの幸福感」といった新たな課題が浮き彫りになっています。今後は、AI生成コンテンツの識別や倫理的なガイドラインの策定が急務となり、情報リテラシーの向上が重要視されます。</p>
+              <p class="card-summary">AIが生成するウェブサイトの増加がインターネットに与える影響について調査した新しい研究が、驚くべき結果を見出しました。この現象は、コンテンツの信頼性や情報の真偽に疑問を投げかけ、インターネット上の情報環境の変化を示しています。これは、私たちがオンラインで受け取る情報の性質と価値を再考する必要があることを意味します。</p>
               <a href="https://www.wired.com/story/ai-slop-is-changing-the-internet-just-not-how-you-might-think/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="ea7173d8d895c036">
+            <article class="news-card" data-article-id="ea7173d8d895c036" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">WIRED AI</span>
                 <span class="card-date">2026-04-15 19:00 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1509,16 +1458,17 @@
               <h3 class="card-title">
                 <a href="https://www.wired.com/story/deepfake-nudify-schools-global-crisis/" target="_blank" rel="noopener">The Deepfake Nudes Crisis in Schools Is Much Worse Than You Thought</a>
               </h3>
-              <p class="card-summary">AIによるディープフェイクヌード画像が学校現場で深刻な問題を引き起こしており、世界中で約90校の600名もの生徒が影響を受けていることが判明しました。この事態は深刻であり、対策が急務です。教育現場におけるデジタル安全性の確保と、被害を受けた学生へのサポート体制の構築が喫緊の課題となっています。</p>
+              <p class="card-summary">AI生成のディープフェイクヌード画像が学校で深刻な問題を引き起こしており、世界中で約90校、600人の生徒が影響を受けていることが調査で明らかになりました。この問題は解決の兆しが見えず、教育現場における倫理的・安全性の危機を示しています。これは、AI技術が悪用され、特に若年層への深刻な被害が拡大していることを意味するため、早急な対策が必要です。</p>
               <a href="https://www.wired.com/story/deepfake-nudify-schools-global-crisis/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="51ce1386a946d580">
+            <article class="news-card" data-article-id="51ce1386a946d580" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#7c4dff">AI News</span>
                 <span class="card-date">2026-04-15 19:00 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1533,80 +1483,8 @@
               <h3 class="card-title">
                 <a href="https://www.artificialintelligence-news.com/news/ai-safety-benchmarks-stanford-hai-2026-report/" target="_blank" rel="noopener">The US-China AI gap closed. The responsible AI gap didn’t</a>
               </h3>
-              <p class="card-summary">スタンフォード大学の最新AIインデックスレポートによると、米国が保持していたAIモデル性能における優位性は薄れており、米中間の差は縮小していることが示された。特に、責任あるAIの評価面でのギャップは開いており、この構造的な脆弱性が指摘されている。また、韓国が一人当たりのAI特許で世界をリードするなど、各国の動向に注目が集まっている。</p>
+              <p class="card-summary">スタンフォード大学のAI指数レポートによると、米国と中国のAIモデル性能における差は縮まり、両者がトップの位置を頻繁に入れ替わっていることが明らかになりました。この結果は、米国がAI開発で持続的な優位性を持つという従来の認識がデータによって裏付けられていないことを示しています。また、AIの安全性に関する評価の厳格さには依然として大きな隔たりがあり、新たな構造的な脆弱性が指摘されています。</p>
               <a href="https://www.artificialintelligence-news.com/news/ai-safety-benchmarks-stanford-hai-2026-report/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="8f82d05f1578b67f">
-              <div class="card-meta">
-                <span class="card-source" style="color:#7c4dff">MIT Technology Review AI</span>
-                <span class="card-date">2026-04-15 15:00 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="8f82d05f1578b67f"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://www.technologyreview.com/2026/04/15/1135530/building-trust-in-the-ai-era-with-privacy-led-ux/" target="_blank" rel="noopener">Building trust in the AI era with privacy-led UX</a>
-              </h3>
-              <p class="card-summary">プライバシー主導のUXは、データ利用に関する透明性を顧客関係の中核に据える設計思想である。これは単なるコンプライアンスではなく、信頼構築を通じたビジネス成長を促す新たな機会と捉えられている。特にAI利用に伴うデータ開示が重要視され、同意取得プロセス自体が継続的なデータ関係性へと進化している点が新しい知見だ。</p>
-              <a href="https://www.technologyreview.com/2026/04/15/1135530/building-trust-in-the-ai-era-with-privacy-led-ux/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="dcc099512aedd286">
-              <div class="card-meta">
-                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
-                <span class="card-date">2026-04-15 11:31 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="dcc099512aedd286"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://techcrunch.com/2026/04/14/anthropics-rise-is-giving-some-openai-investors-second-thoughts/" target="_blank" rel="noopener">Anthropic’s rise is giving some OpenAI investors second thoughts</a>
-              </h3>
-              <p class="card-summary">Anthropicの急成長が、OpenAIへの投資家たちに再考を促している。ある投資家によると、OpenAIの直近の資金調達ラウンドを正当化するには1.2兆ドル以上のIPO評価額が必要であり、それと比較するとAnthropicの現在の3,800億ドルの評価額は割安に見えるという。</p>
-              <a href="https://techcrunch.com/2026/04/14/anthropics-rise-is-giving-some-openai-investors-second-thoughts/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="4436ed3d256ea63f">
-              <div class="card-meta">
-                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
-                <span class="card-date">2026-04-15 07:42 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="4436ed3d256ea63f"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://arstechnica.com/ai/2026/04/ukraines-military-robot-surge-aims-to-offset-drone-risks-to-humans/" target="_blank" rel="noopener">Ukraine’s military robot surge aims to offset drone risks to humans</a>
-              </h3>
-              <p class="card-summary">ウクライナのロボットとドローンがロシア軍陣地を突破し、兵士の降伏に追い込んだとゼレンスキー大統領が主張。これはドローンで変貌した戦場で新たなロボット活用事例となり、今後の紛争における危険な任務への応用が期待される。具体的な検証はされていないものの、ウクライナの無人地上車両ミッションが増加している。</p>
-              <a href="https://arstechnica.com/ai/2026/04/ukraines-military-robot-surge-aims-to-offset-drone-risks-to-humans/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
                 記事を読む →
               </a>
             </article>
@@ -1616,15 +1494,42 @@
         <div class="category-header" style="border-left-color:#00897b">
           <span class="category-icon">🔬</span>
           <h2 class="category-title">研究者・ニュースレター</h2>
-          <span class="category-badge" style="background:#00897b">6件</span>
+          <span class="category-badge" style="background:#00897b">5件</span>
+          
         </div>
         <div class="cards-grid">
           
-            <article class="news-card" data-article-id="5a65edc74649026d">
+            <article class="news-card" data-article-id="c6808f1b0bbd9299" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-04-16 09:18 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="c6808f1b0bbd9299"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/2026/Apr/16/datasette-io-preview/#atom-everything" target="_blank" rel="noopener">datasette.io news preview</a>
+              </h3>
+              <p class="card-summary">datasette.ioのニュースセクションは、GitHubリポジトリ内のnews.yamlファイルから自動生成されています。このYAMLファイルには、CSRF保護の変更や新しいイベント（RenameTableEvent）など、Datasetteのバージョンアップに関する詳細な変更履歴が記録されています。</p>
+              <a href="https://simonwillison.net/2026/Apr/16/datasette-io-preview/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="5a65edc74649026d" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#00897b">Simon Willison</span>
                 <span class="card-date">2026-04-16 02:13 JST</span>
               </div>
+              <div class="card-flags"><span class="duplicate-badge">重複 1件</span></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1639,16 +1544,17 @@
               <h3 class="card-title">
                 <a href="https://simonwillison.net/2026/Apr/15/gemini-31-flash-tts/#atom-everything" target="_blank" rel="noopener">Gemini 3.1 Flash TTS</a>
               </h3>
-              <p class="card-summary">Googleが新しいテキスト読み上げモデル「Gemini 3.1 Flash TTS」をリリースした。このモデルはプロンプトによる詳細な指示が可能で、特定の雰囲気や話し方（例：ラジオDJ風）を指定できる点が画期的である。これにより、より感情豊かで状況に応じた音声コンテンツの生成が期待される。</p>
+              <p class="card-summary">Googleは、プロンプトで指示を出すことができる新しいテキスト読み上げモデル「Gemini 3.1 Flash TTS」をリリースしました。このモデルは音声ファイルのみを出力でき、非常に詳細なスタイルや感情、アクセントを指定して、特定のシーンや雰囲気に合わせた高品質な音声を生成できます。これは、クリエイティブなコンテンツ制作において、より具体的で制御された音声生成を可能にする点で重要です。</p>
               <a href="https://simonwillison.net/2026/Apr/15/gemini-31-flash-tts/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="7b88f29010e83d57">
+            <article class="news-card" data-article-id="7b88f29010e83d57" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#00897b">Towards Data Science</span>
                 <span class="card-date">2026-04-16 01:30 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1663,16 +1569,17 @@
               <h3 class="card-title">
                 <a href="https://towardsdatascience.com/how-to-maximize-claude-cowork/" target="_blank" rel="noopener">How to Maximize Claude Cowork</a>
               </h3>
-              <p class="card-summary">この記事では、Claude Coworkというツールを最大限に活用する方法について解説しています。具体的には、その機能を引き出すための具体的なテクニックが紹介されており、ユーザーがAIとの協業効率を大幅に向上させることが期待できます。これにより、より質の高いアウトプットを効率的に得られるようになります。</p>
+              <p class="card-summary">Claude Coworkを最大限に活用する方法について解説しています。この投稿は、Claude Coworkから最大限の成果を引き出すための具体的な方法を提供し、データサイエンス関連の記事として公開されています。これにより、読者はClaude Coworkの能力をより効果的に利用できるようになります。</p>
               <a href="https://towardsdatascience.com/how-to-maximize-claude-cowork/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="8062852f1ac86731">
+            <article class="news-card" data-article-id="8062852f1ac86731" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#00897b">Simon Willison</span>
                 <span class="card-date">2026-04-16 00:36 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1687,16 +1594,17 @@
               <h3 class="card-title">
                 <a href="https://simonwillison.net/2026/Apr/15/kyle-kingsbury/#atom-everything" target="_blank" rel="noopener">Quoting Kyle Kingsbury</a>
               </h3>
-              <p class="card-summary">記事では、機械学習システムが引き起こす問題に対する責任の所在について論じています。今後は、MLシステムの監督下で何らかの形で責任を負う人材（「肉盾」）が必要になる可能性や、法的な責任追及の形など、多様な責任構造が生まれると指摘しています。これは、AI技術の社会実装が進む中で、誰が最終的な責任を負うのかという倫理的・法的課題が重要になっていることを示唆しています。</p>
+              <p class="card-summary">AIシステムにおける責任の所在について、人間がその監督下にある機械学習システムの責任を負う「肉盾」のような役割を担う可能性が示唆されています。これは、自動モデレーションシステムの決定を人間がレビューする際や、LLMによる虚偽報告に対する法的責任など、内部的・外部的な形で責任が問われることを意味します。企業が問題発生時に第三者（下請け業者）に責任を転嫁する可能性も指摘されており、AI倫理とキャリアにおける新たな課題が浮き彫りになっています。</p>
               <a href="https://simonwillison.net/2026/Apr/15/kyle-kingsbury/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
                 記事を読む →
               </a>
             </article>
-            <article class="news-card" data-article-id="e38baa02e2a67579">
+            <article class="news-card" data-article-id="e38baa02e2a67579" data-is-duplicate-candidate="false">
               <div class="card-meta">
                 <span class="card-source" style="color:#00897b">Towards Data Science</span>
                 <span class="card-date">2026-04-16 00:00 JST</span>
               </div>
+              <div class="card-flags"></div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -1711,56 +1619,8 @@
               <h3 class="card-title">
                 <a href="https://towardsdatascience.com/prefill-is-compute-bound-decode-is-memory-bound-why-your-gpu-shouldnt-do-both/" target="_blank" rel="noopener">Prefill Is Compute-Bound. Decode Is Memory-Bound. Why Your GPU Shouldn’t Do Both.</a>
               </h3>
-              <p class="card-summary">この記事は、LLM推論におけるアーキテクチャの重要な変化について解説しています。具体的には、「Prefill（事前計算）」が計算量に依存し、「Decode（デコード）」がメモリ帯域幅に依存するという特性を指摘しています。この違いを理解し、GPUに両方の処理をさせないように最適化することが、コスト削減のための鍵となります。</p>
+              <p class="card-summary">分散型LLM推論におけるアーキテクチャの転換が、コストを2〜4倍削減する背景にある。事前充填（Prefill）は計算に依存し、デコード（Decode）はメモリに依存するという新しい認識に基づき、GPUが両方を同時に処理すべきではないことが示されている。この知見は、効率的なLLM推論のためのアーキテクチャ設計において非常に重要である。</p>
               <a href="https://towardsdatascience.com/prefill-is-compute-bound-decode-is-memory-bound-why-your-gpu-shouldnt-do-both/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="1ac3830615fe3a44">
-              <div class="card-meta">
-                <span class="card-source" style="color:#00897b">Towards Data Science</span>
-                <span class="card-date">2026-04-15 22:30 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="1ac3830615fe3a44"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://towardsdatascience.com/from-pixels-to-dna-why-the-future-of-compression-is-about-every-kind-of-data/" target="_blank" rel="noopener">From Pixels to DNA: Why the Future of Compression Is About Every Kind of Data</a>
-              </h3>
-              <p class="card-summary">データ圧縮の未来は、従来の音声や動画といったメディア形式に留まらず、あらゆる種類のデータに応用されるようになっています。この記事では、その新たな視点からデータ圧縮技術の進化を論じており、今後の情報処理における効率化と汎用性の向上が期待されます。これにより、多様なデータをより少ないリソースで扱うことが可能になります。</p>
-              <a href="https://towardsdatascience.com/from-pixels-to-dna-why-the-future-of-compression-is-about-every-kind-of-data/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
-                記事を読む →
-              </a>
-            </article>
-            <article class="news-card" data-article-id="486802784a132ebc">
-              <div class="card-meta">
-                <span class="card-source" style="color:#00897b">Simon Willison</span>
-                <span class="card-date">2026-04-15 08:58 JST</span>
-              </div>
-              <div class="card-actions">
-                <button
-                  type="button"
-                  class="interest-toggle"
-                  data-article-id="486802784a132ebc"
-                  aria-pressed="false"
-                >
-                  <span class="interest-icon" aria-hidden="true">☐</span>
-                  <span class="interest-label">気になる</span>
-                </button>
-              </div>
-              <h3 class="card-title">
-                <a href="https://simonwillison.net/2026/Apr/14/replace-token-based-csrf/#atom-everything" target="_blank" rel="noopener">datasette PR #2689: Replace token-based CSRF with Sec-Fetch-Site header protection</a>
-              </h3>
-              <p class="card-summary">datasetteが、従来のトークンベースのCSRF対策を、よりモダンなSec-Fetch-Siteヘッダー保護に置き換える変更を導入した。これにより、テンプレート内の隠しフィールドの実装が不要になり、セキュリティと開発体験が向上する。この改善はGo 1.25での研究に基づいている。</p>
-              <a href="https://simonwillison.net/2026/Apr/14/replace-token-based-csrf/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
                 記事を読む →
               </a>
             </article>
@@ -1770,7 +1630,7 @@
   </div>
 
   <footer class="site-footer">
-    生成日時: 2026-04-16 08:02 JST &nbsp;|&nbsp;
+    生成日時: 2026-04-16 11:53 JST &nbsp;|&nbsp;
     情報源: <a href="https://github.com/Olshansk/rss-feeds" target="_blank" style="color:var(--accent)">Olshansk/rss-feeds</a> および各公式RSSフィード &nbsp;|&nbsp;
     サマリーはAIにより自動生成されています
   </footer>
@@ -1781,9 +1641,11 @@
       const navRoot = document.querySelector('.day-navigation');
       const storageKey = 'daily-ai-news:interests';
       const filterKey = 'daily-ai-news:interest-filter';
+      const duplicateFilterKey = 'daily-ai-news:show-duplicates';
       const cards = Array.from(document.querySelectorAll('.news-card'));
       const buttons = Array.from(document.querySelectorAll('.interest-toggle'));
       const filterCheckbox = document.getElementById('interestFilter');
+      const duplicateCheckbox = document.getElementById('duplicateFilter');
 
       const loadSelected = () => {
         try {
@@ -1819,9 +1681,13 @@
 
       const applyFilterState = (selected) => {
         const onlyInterested = Boolean(filterCheckbox?.checked);
+        const showDuplicates = Boolean(duplicateCheckbox?.checked);
         cards.forEach((card) => {
           const id = card.dataset.articleId;
-          const shouldHide = onlyInterested && !selected.has(id);
+          const isDuplicateCandidate = card.dataset.isDuplicateCandidate === 'true';
+          const hiddenByInterest = onlyInterested && !selected.has(id);
+          const hiddenByDuplicate = !showDuplicates && isDuplicateCandidate;
+          const shouldHide = hiddenByInterest || hiddenByDuplicate;
           card.classList.toggle('is-hidden-by-filter', shouldHide);
         });
       };
@@ -1831,9 +1697,17 @@
 
       if (filterCheckbox) {
         filterCheckbox.checked = localStorage.getItem(filterKey) === 'true';
-        applyFilterState(selected);
         filterCheckbox.addEventListener('change', () => {
           localStorage.setItem(filterKey, String(filterCheckbox.checked));
+          applyFilterState(selected);
+        });
+      }
+
+      if (duplicateCheckbox) {
+        duplicateCheckbox.checked = localStorage.getItem(duplicateFilterKey) === 'true';
+        applyFilterState(selected);
+        duplicateCheckbox.addEventListener('change', () => {
+          localStorage.setItem(duplicateFilterKey, String(duplicateCheckbox.checked));
           applyFilterState(selected);
         });
       }
