@@ -51,6 +51,12 @@ uv run python daily-ai-news-generator/scripts/generate_html.py
 uv run python daily-ai-news-generator/scripts/push_to_github.py --date YYYY-MM-DD --html docs/YYYY-MM-DD.html
 ```
 
+- To run the fetch and HTML generation pipeline in one command:
+
+```bash
+./daily-ai-news-generator/scripts/run_daily_to_html.sh
+```
+
 - For real-time progress logs from `fetch_daily.py`, prefer unbuffered execution:
 
 ```bash

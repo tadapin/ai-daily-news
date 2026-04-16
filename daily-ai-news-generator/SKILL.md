@@ -37,6 +37,12 @@ uv run python daily-ai-news-generator/scripts/fetch_daily.py
 出力:
 - `daily-ai-news-generator/output/daily_articles.json`
 
+HTML生成までを一括で実行する場合:
+
+```bash
+./daily-ai-news-generator/scripts/run_daily_to_html.sh
+```
+
 ### 2. HTML生成
 
 ```bash
