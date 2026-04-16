@@ -176,7 +176,7 @@ def main() -> dict:
         representative = max(cluster_articles, key=summary_sort_key)
         representative_id = representative["article_id"]
         representative["duplicate_group_id"] = representative_id
-        representative["duplicate_count"] = len(cluster_articles) - 1
+        kept_duplicates = 0
 
         print(
             f"  [CLUSTER] {len(cluster_articles)}件 -> 1件採用: "
@@ -185,13 +185,19 @@ def main() -> dict:
 
         rep_index = flat_articles.index(representative)
         for article in cluster_articles:
-            article["duplicate_group_id"] = representative_id
             if article is representative:
                 continue
+            score_to_rep = round(float(similarities[rep_index, flat_articles.index(article)]), 4)
+            if score_to_rep < threshold:
+                continue
             duplicate_count += 1
+            kept_duplicates += 1
             article["is_duplicate_candidate"] = True
             article["duplicate_of"] = representative_id
-            article["duplicate_score"] = round(float(similarities[rep_index, flat_articles.index(article)]), 4)
+            article["duplicate_group_id"] = representative_id
+            article["duplicate_score"] = score_to_rep
+
+        representative["duplicate_count"] = kept_duplicates
 
     total_articles = len(flat_articles)
     visible_articles = total_articles - duplicate_count
