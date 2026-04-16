@@ -49,6 +49,8 @@ def e(text):
     return html_module.escape(str(text))
 
 def article_id(article):
+    if article.get("article_id"):
+        return str(article["article_id"])
     raw = "||".join([
         str(article.get("category", "")),
         str(article.get("source", "")),
@@ -64,6 +66,8 @@ def generate_html(data):
         date_slug = data["date"].replace("年", "-").replace("月", "-").replace("日", "").replace("--", "-")
     generated_at = data["generated_at"]
     total = data["total"]
+    duplicate_candidates = int(data.get("stats", {}).get("duplicate_candidates", 0))
+    visible_total = int(data.get("stats", {}).get("visible_after_summary_dedup", total))
     categories = data["categories"]
     archive_dates = load_archive_dates()
 
@@ -75,19 +79,27 @@ def generate_html(data):
     older_date = archive_dates[current_index + 1] if current_index + 1 < len(archive_dates) else None
 
     # カテゴリ別件数サマリー
-    cat_summary = [(cat, len(arts)) for cat, arts in categories.items() if arts]
+    cat_summary = []
+    for cat, arts in categories.items():
+        if not arts:
+            continue
+        visible_count = sum(1 for art in arts if not art.get("is_duplicate_candidate"))
+        duplicate_count = sum(1 for art in arts if art.get("is_duplicate_candidate"))
+        cat_summary.append((cat, visible_count, duplicate_count))
 
     # サイドバーナビ
     nav_items = ""
-    for cat, count in cat_summary:
+    for cat, count, duplicate_count in cat_summary:
         icon = CATEGORY_ICONS.get(cat, "📌")
         color = CATEGORY_COLORS.get(cat, "#666")
         anchor = cat.replace(" ", "-").replace("/", "").replace("・", "")
+        duplicate_label = f'<span class="nav-duplicate">+重複{duplicate_count}</span>' if duplicate_count else ""
         nav_items += f'''
         <a href="#{anchor}" class="nav-item" style="border-left-color:{color}">
           <span class="nav-icon">{icon}</span>
           <span class="nav-label">{e(cat)}</span>
           <span class="nav-count" style="background:{color}">{count}</span>
+          {duplicate_label}
         </a>'''
 
     # カテゴリ別記事セクション
@@ -102,18 +114,35 @@ def generate_html(data):
         cards = ""
         for art in articles:
             article_key = article_id(art)
+            is_duplicate_candidate = art.get("is_duplicate_candidate", False)
+            duplicate_count = int(art.get("duplicate_count", 0))
+            duplicate_score = art.get("duplicate_score")
             title = e(art.get("title", ""))
             url = e(art.get("url", "#"))
             source = e(art.get("source", ""))
             date = e(art.get("date", ""))
             summary = e(art.get("summary", ""))
+            duplicate_badges = ""
+
+            if duplicate_count:
+                duplicate_badges += (
+                    f'<span class="duplicate-badge">重複 {duplicate_count}件</span>'
+                )
+            if is_duplicate_candidate:
+                score_label = ""
+                if duplicate_score is not None:
+                    score_label = f' 類似度 {duplicate_score:.2f}'
+                duplicate_badges += (
+                    f'<span class="duplicate-badge is-candidate">重複候補{score_label}</span>'
+                )
 
             cards += f'''
-            <article class="news-card" data-article-id="{article_key}">
+            <article class="news-card{' is-duplicate-candidate' if is_duplicate_candidate else ''}" data-article-id="{article_key}" data-is-duplicate-candidate="{str(is_duplicate_candidate).lower()}">
               <div class="card-meta">
                 <span class="card-source" style="color:{color}">{source}</span>
                 <span class="card-date">{date}</span>
               </div>
+              <div class="card-flags">{duplicate_badges}</div>
               <div class="card-actions">
                 <button
                   type="button"
@@ -139,7 +168,8 @@ def generate_html(data):
         <div class="category-header" style="border-left-color:{color}">
           <span class="category-icon">{icon}</span>
           <h2 class="category-title">{e(cat)}</h2>
-          <span class="category-badge" style="background:{color}">{len(articles)}件</span>
+          <span class="category-badge" style="background:{color}">{sum(1 for art in articles if not art.get("is_duplicate_candidate"))}件</span>
+          {f'<span class="category-duplicate-badge">重複候補 {sum(1 for art in articles if art.get("is_duplicate_candidate"))}件</span>' if any(art.get("is_duplicate_candidate") for art in articles) else ''}
         </div>
         <div class="cards-grid">
           {cards}
@@ -329,6 +359,11 @@ def generate_html(data):
       border-radius: 10px;
       flex-shrink: 0;
     }}
+    .nav-duplicate {{
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }}
     .sidebar-stats {{
       margin-top: 28px;
       padding: 16px;
@@ -385,6 +420,13 @@ def generate_html(data):
       padding: 3px 12px;
       border-radius: 12px;
     }}
+    .category-duplicate-badge {{
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 10px;
+    }}
 
     /* ===== カードグリッド ===== */
     .cards-grid {{
@@ -418,6 +460,28 @@ def generate_html(data):
       justify-content: flex-end;
       margin-top: -2px;
     }}
+    .card-flags {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 20px;
+    }}
+    .duplicate-badge {{
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(108,99,255,0.35);
+      background: rgba(108,99,255,0.12);
+      color: #c8c3ff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+    }}
+    .duplicate-badge.is-candidate {{
+      border-color: rgba(255,159,67,0.35);
+      background: rgba(255,159,67,0.12);
+      color: #ffd0a3;
+    }}
     .interest-toggle {{
       display: inline-flex;
       align-items: center;
@@ -450,6 +514,9 @@ def generate_html(data):
     }}
     .news-card.is-hidden-by-filter {{
       display: none;
+    }}
+    .news-card.is-duplicate-candidate {{
+      border-style: dashed;
     }}
     .card-source {{
       font-size: 0.78rem;
@@ -529,8 +596,15 @@ def generate_html(data):
             <input type="checkbox" id="interestFilter">
             <span>気になる記事だけ表示</span>
           </label>
+          <label class="header-filter">
+            <input type="checkbox" id="duplicateFilter">
+            <span>重複記事も表示</span>
+          </label>
         </div>
-        <span class="header-total">本日 {total} 件</span>
+        <div class="header-tools">
+          <span class="header-total">本日 {visible_total} 件</span>
+          {f'<span class="header-filter">重複候補 {duplicate_candidates} 件</span>' if duplicate_candidates else ''}
+        </div>
       </div>
     </div>
   </header>
@@ -549,9 +623,13 @@ def generate_html(data):
 
       <div class="sidebar-stats">
         <div class="stats-title">統計</div>
-        {''.join(f'<div class="stats-item"><span>{e(cat)}</span><strong>{count}件</strong></div>' for cat, count in cat_summary)}
+        {''.join(f'<div class="stats-item"><span>{e(cat)}</span><strong>{count}件</strong></div>' for cat, count, _duplicate_count in cat_summary)}
+        {f'<div class="stats-item"><span>重複候補</span><strong>{duplicate_candidates}件</strong></div>' if duplicate_candidates else ''}
         <div class="stats-item" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-          <span>合計</span><strong>{total}件</strong>
+          <span>表示件数</span><strong>{visible_total}件</strong>
+        </div>
+        <div class="stats-item">
+          <span>総件数</span><strong>{total}件</strong>
         </div>
       </div>
     </aside>
@@ -573,9 +651,11 @@ def generate_html(data):
       const navRoot = document.querySelector('.day-navigation');
       const storageKey = 'daily-ai-news:interests';
       const filterKey = 'daily-ai-news:interest-filter';
+      const duplicateFilterKey = 'daily-ai-news:show-duplicates';
       const cards = Array.from(document.querySelectorAll('.news-card'));
       const buttons = Array.from(document.querySelectorAll('.interest-toggle'));
       const filterCheckbox = document.getElementById('interestFilter');
+      const duplicateCheckbox = document.getElementById('duplicateFilter');
 
       const loadSelected = () => {{
         try {{
@@ -611,9 +691,13 @@ def generate_html(data):
 
       const applyFilterState = (selected) => {{
         const onlyInterested = Boolean(filterCheckbox?.checked);
+        const showDuplicates = Boolean(duplicateCheckbox?.checked);
         cards.forEach((card) => {{
           const id = card.dataset.articleId;
-          const shouldHide = onlyInterested && !selected.has(id);
+          const isDuplicateCandidate = card.dataset.isDuplicateCandidate === 'true';
+          const hiddenByInterest = onlyInterested && !selected.has(id);
+          const hiddenByDuplicate = !showDuplicates && isDuplicateCandidate;
+          const shouldHide = hiddenByInterest || hiddenByDuplicate;
           card.classList.toggle('is-hidden-by-filter', shouldHide);
         }});
       }};
@@ -623,9 +707,17 @@ def generate_html(data):
 
       if (filterCheckbox) {{
         filterCheckbox.checked = localStorage.getItem(filterKey) === 'true';
-        applyFilterState(selected);
         filterCheckbox.addEventListener('change', () => {{
           localStorage.setItem(filterKey, String(filterCheckbox.checked));
+          applyFilterState(selected);
+        }});
+      }}
+
+      if (duplicateCheckbox) {{
+        duplicateCheckbox.checked = localStorage.getItem(duplicateFilterKey) === 'true';
+        applyFilterState(selected);
+        duplicateCheckbox.addEventListener('change', () => {{
+          localStorage.setItem(duplicateFilterKey, String(duplicateCheckbox.checked));
           applyFilterState(selected);
         }});
       }}

@@ -45,6 +45,22 @@ HTML生成までを一括で実行する場合:
 
 ### 2. HTML生成
 
+### 2. サマリー類似度による重複排除
+
+```bash
+uv run python daily-ai-news-generator/scripts/deduplicate_by_summary.py
+```
+
+出力:
+- `daily-ai-news-generator/output/daily_articles.json` を上書き更新
+
+補足:
+- `sentence-transformers` と `hotchpotch/static-embedding-japanese` を使ってサマリー同士の近似重複を検出する
+- 複数の類似記事がある場合は、最もサマリーが長い記事を代表記事として残す
+- 代表以外の記事は JSON に残したまま重複候補としてマークし、HTML ではデフォルト非表示にする
+
+### 3. HTML生成
+
 ```bash
 uv run python daily-ai-news-generator/scripts/generate_html.py
 ```
@@ -52,7 +68,7 @@ uv run python daily-ai-news-generator/scripts/generate_html.py
 出力:
 - `docs/YYYY-MM-DD.html`
 
-### 3. アーカイブ更新
+### 4. アーカイブ更新
 
 ```bash
 DATE=$(uv run python -c "from datetime import datetime, timezone, timedelta; print((datetime.now(timezone.utc)+timedelta(hours=9)).strftime('%Y-%m-%d'))")
@@ -94,11 +110,18 @@ git push origin HEAD
 3. OpenAI互換APIで日本語サマリー生成（2〜3文、十分な長さ）
 4. OpenAI互換APIで AI 関連フィルタリング（AI/ML/LLM/自動化に無関係な記事を除去）
 5. `daily-ai-news-generator/output/daily_articles.json` に出力
+6. `hotchpotch/static-embedding-japanese` によるサマリー類似度重複排除
 
 `generate_html.py` の処理：
 - `daily_articles.json` を読み込みダークテーマのHTMLを生成
 - 左サイドバー（カテゴリナビ・統計）＋右カードグリッドのレイアウト
 - 出力: `docs/YYYY-MM-DD.html`
+
+`deduplicate_by_summary.py` の処理：
+- サマリー埋め込みの cosine 類似度で近似重複記事をクラスタ化
+- クラスタ内では最長サマリーの記事を代表記事として採用
+- 代表以外には重複候補フラグ、代表記事ID、類似度を付与する
+- `daily_articles.json` を上書き更新
 
 `push_to_github.py` の処理：
 - `docs/archive-index.json` に対象日を追加

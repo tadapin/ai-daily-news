@@ -24,6 +24,11 @@
   - Reads `daily_articles.json`.
   - Generates `docs/YYYY-MM-DD.html`.
   - Generated daily pages include local-only saved state UI using `localStorage` with labels `保存` / `保存済み`.
+- `daily-ai-news-generator/scripts/deduplicate_by_summary.py`
+  - Reads `daily_articles.json` after summary generation.
+  - Uses `hotchpotch/static-embedding-japanese` via `sentence-transformers` to detect near-duplicate summaries.
+  - Keeps the article with the longest summary as the representative within each similar cluster.
+  - Marks the remaining articles as duplicate candidates instead of deleting them from JSON.
 - `daily-ai-news-generator/scripts/push_to_github.py`
   - Updates `docs/archive-index.json`.
   - Ensures the generated daily HTML is in the expected `docs/` location.
@@ -47,6 +52,7 @@ uv sync
 
 ```bash
 uv run python daily-ai-news-generator/scripts/fetch_daily.py
+uv run python daily-ai-news-generator/scripts/deduplicate_by_summary.py
 uv run python daily-ai-news-generator/scripts/generate_html.py
 uv run python daily-ai-news-generator/scripts/push_to_github.py --date YYYY-MM-DD --html docs/YYYY-MM-DD.html
 ```
@@ -76,6 +82,7 @@ uv run python daily-ai-news-generator/scripts/serve_docs.py
 - For OpenAI-compatible providers, set `OPENAI_BASE_URL` and `OPENAI_MODEL` in `.env` as needed.
 - Summary parallelism is controlled by `.env` variable `SUMMARY_CONCURRENCY` and defaults to `3`.
 - Local benchmarking in this environment showed `SUMMARY_CONCURRENCY=5` outperforming `1` and `3` during the early summary phase, so treat `5` as a good starting point when GPU headroom is available.
+- Summary-level deduplication uses `.env` variables `SUMMARY_DEDUP_MODEL` and `SUMMARY_DEDUP_THRESHOLD`; defaults are `hotchpotch/static-embedding-japanese` and `0.92`.
 - When working in a worktree, confirm that the active worktree can also read the required environment configuration before running scripts.
 - If `.env` or equivalent environment configuration is missing, or if `OPENAI_API_KEY` has not been restored, stop and ask the user how they want secrets restored before proceeding.
 - Do not guess, synthesize, or silently replace secret values.
