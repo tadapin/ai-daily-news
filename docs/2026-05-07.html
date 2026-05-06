@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily AI News — 2026年05月07日</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e8eaf0;
+      --text-muted: #8b90a8;
+      --accent: #6c63ff;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ===== ヘッダー ===== */
+    .site-header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .site-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-date {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .header-total {
+      background: var(--accent);
+      color: white;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .header-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      padding: 6px 12px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    .header-filter input {
+      accent-color: var(--accent);
+    }
+    .day-navigation {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 18px 36px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      padding: 9px 14px;
+      font-size: 0.84rem;
+      transition: border-color 0.2s, transform 0.15s, color 0.2s;
+    }
+    .nav-pill:hover {
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .nav-pill.is-muted {
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.02);
+    }
+    .nav-pill.is-disabled {
+      color: var(--text-muted);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .nav-spacer {
+      flex: 1 1 auto;
+    }
+
+    /* ===== レイアウト ===== */
+    .layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    /* ===== サイドバー ===== */
+    .sidebar {
+      position: sticky;
+      top: 81px;
+      height: calc(100vh - 81px);
+      overflow-y: auto;
+      padding: 28px 20px;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding: 0 8px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+      transition: background 0.15s;
+    }
+    .nav-item:hover { background: var(--surface2); }
+    .nav-icon { font-size: 1rem; flex-shrink: 0; }
+    .nav-label { flex: 1; }
+    .nav-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .nav-duplicate {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .sidebar-stats {
+      margin-top: 28px;
+      padding: 16px;
+      background: var(--surface2);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .stats-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 3px 0;
+    }
+    .stats-item strong { color: var(--text); }
+
+    /* ===== メインコンテンツ ===== */
+    .main-content {
+      padding: 32px 36px;
+      min-height: calc(100vh - 81px);
+    }
+
+    /* ===== カテゴリセクション ===== */
+    .category-section {
+      margin-bottom: 52px;
+      scroll-margin-top: 100px;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 16px;
+      border-left: 4px solid;
+      margin-bottom: 22px;
+    }
+    .category-icon { font-size: 1.4rem; }
+    .category-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .category-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+      padding: 3px 12px;
+      border-radius: 12px;
+    }
+    .category-duplicate-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 10px;
+    }
+
+    /* ===== カードグリッド ===== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 18px;
+    }
+    .news-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .news-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108,99,255,0.12);
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -2px;
+    }
+    .card-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 20px;
+    }
+    .duplicate-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(108,99,255,0.35);
+      background: rgba(108,99,255,0.12);
+      color: #c8c3ff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+    }
+    .duplicate-badge.is-candidate {
+      border-color: rgba(255,159,67,0.35);
+      background: rgba(255,159,67,0.12);
+      color: #ffd0a3;
+    }
+    .interest-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .interest-toggle:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .interest-toggle.is-selected {
+      border-color: var(--accent);
+      background: rgba(108,99,255,0.12);
+      color: var(--text);
+    }
+    .interest-icon {
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+    .news-card.is-selected {
+      border-color: var(--accent);
+      box-shadow: 0 10px 26px rgba(108,99,255,0.14);
+    }
+    .news-card.is-hidden-by-filter {
+      display: none;
+    }
+    .news-card.is-duplicate-candidate {
+      border-style: dashed;
+    }
+    .card-source {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .card-title {
+      font-size: 0.97rem;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    .card-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .card-title a:hover { color: var(--accent); }
+    .card-summary {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      flex: 1;
+    }
+    .card-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 4px;
+      display: inline-block;
+    }
+    .card-link:hover { text-decoration: underline; }
+
+    /* ===== フッター ===== */
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      background: var(--surface);
+    }
+
+    /* ===== レスポンシブ ===== */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .main-content { padding: 24px 20px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .site-header { padding: 18px 20px; }
+      .day-navigation { padding: 14px 20px 0; }
+      .header-inner { align-items: flex-start; flex-direction: column; }
+      .header-meta { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      .nav-spacer { display: none; }
+    }
+
+    /* ===== スクロールバー ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-title">⚡ Daily AI News</div>
+      <div class="header-meta">
+        <div class="header-tools">
+          <span class="header-date">📅 2026年05月07日</span>
+          <label class="header-filter">
+            <input type="checkbox" id="interestFilter">
+            <span>気になる記事だけ表示</span>
+          </label>
+          <label class="header-filter">
+            <input type="checkbox" id="duplicateFilter">
+            <span>重複記事も表示</span>
+          </label>
+        </div>
+        <div class="header-tools">
+          <span class="header-total">本日 51 件</span>
+          <span class="header-filter">重複候補 3 件</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="day-navigation" aria-label="日付ナビゲーション">
+    <a class="nav-pill is-muted" href="index.html">← アーカイブ一覧へ</a>
+    <a class="nav-pill" href="2026-05-04.html">← 前の日</a>
+    <span class="nav-spacer"></span>
+    <span class="nav-pill is-disabled">次の日 →</span>
+  </nav>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">カテゴリ</div>
+      
+        <a href="#Anthropic" class="nav-item" style="border-left-color:#c85250">
+          <span class="nav-icon">🤖</span>
+          <span class="nav-label">Anthropic</span>
+          <span class="nav-count" style="background:#c85250">1</span>
+          <span class="nav-duplicate">+重複1</span>
+        </a>
+        <a href="#AI開発ツール" class="nav-item" style="border-left-color:#34a853">
+          <span class="nav-icon">🛠️</span>
+          <span class="nav-label">AI開発ツール</span>
+          <span class="nav-count" style="background:#34a853">2</span>
+          
+        </a>
+        <a href="#AIベンダー" class="nav-item" style="border-left-color:#666">
+          <span class="nav-icon">📌</span>
+          <span class="nav-label">AIベンダー</span>
+          <span class="nav-count" style="background:#666">8</span>
+          
+        </a>
+        <a href="#AIニュースメディア" class="nav-item" style="border-left-color:#7c4dff">
+          <span class="nav-icon">📰</span>
+          <span class="nav-label">AIニュース・メディア</span>
+          <span class="nav-count" style="background:#7c4dff">35</span>
+          <span class="nav-duplicate">+重複2</span>
+        </a>
+        <a href="#研究者ニュースレター" class="nav-item" style="border-left-color:#00897b">
+          <span class="nav-icon">🔬</span>
+          <span class="nav-label">研究者・ニュースレター</span>
+          <span class="nav-count" style="background:#00897b">5</span>
+          
+        </a>
+
+      <div class="sidebar-stats">
+        <div class="stats-title">統計</div>
+        <div class="stats-item"><span>Anthropic</span><strong>1件</strong></div><div class="stats-item"><span>AI開発ツール</span><strong>2件</strong></div><div class="stats-item"><span>AIベンダー</span><strong>8件</strong></div><div class="stats-item"><span>AIニュース・メディア</span><strong>35件</strong></div><div class="stats-item"><span>研究者・ニュースレター</span><strong>5件</strong></div>
+        <div class="stats-item"><span>重複候補</span><strong>3件</strong></div>
+        <div class="stats-item" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <span>表示件数</span><strong>51件</strong>
+        </div>
+        <div class="stats-item">
+          <span>総件数</span><strong>54件</strong>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      
+      <section class="category-section" id="Anthropic">
+        <div class="category-header" style="border-left-color:#c85250">
+          <span class="category-icon">🤖</span>
+          <h2 class="category-title">Anthropic</h2>
+          <span class="category-badge" style="background:#c85250">1件</span>
+          <span class="category-duplicate-badge">重複候補 1件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card is-duplicate-candidate" data-article-id="a7affd294b8f9658" data-is-duplicate-candidate="true">
+              <div class="card-meta">
+                <span class="card-source" style="color:#c85250">Anthropic News</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.73</span></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="a7affd294b8f9658"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.anthropic.com/news/higher-limits-spacex" target="_blank" rel="noopener">Higher usage limits for Claude and a compute deal with SpaceX</a>
+              </h3>
+              <p class="card-summary">AnthropicのClaudeに対する利用制限の引き上げとSpaceXとのコンピューティング契約が発表されました。これは、AIモデルのアクセス性と計算資源へのアクセスを向上させるための動きであり、AI技術の開発と実用化を加速させる上で重要です。この提携は、最先端のAI技術が宇宙開発などの分野でどのように応用されうるかを示唆しています。</p>
+              <a href="https://www.anthropic.com/news/higher-limits-spacex" target="_blank" rel="noopener" class="card-link" style="color:#c85250">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="26b6eca4b2c407bb" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#c85250">Claude</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="26b6eca4b2c407bb"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://claude.com/blog/new-in-claude-managed-agents" target="_blank" rel="noopener">New in Claude Managed Agents: dreaming, outcomes, and multiagent orchestration</a>
+              </h3>
+              <p class="card-summary">Claudeの管理されたエージェント機能が新しくなり、夢想、成果、マルチエージェントのオーケストレーションに関する情報が提供されています。これは、AIが複雑なタスクを計画し実行する能力が向上したことを示しており、より高度で複雑な作業を自動化・管理するための新しいアプローチを提供します。</p>
+              <a href="https://claude.com/blog/new-in-claude-managed-agents" target="_blank" rel="noopener" class="card-link" style="color:#c85250">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AI開発ツール">
+        <div class="category-header" style="border-left-color:#34a853">
+          <span class="category-icon">🛠️</span>
+          <h2 class="category-title">AI開発ツール</h2>
+          <span class="category-badge" style="background:#34a853">2件</span>
+          
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="43cbe20c1fb10709" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#34a853">Windsurf Blog</span>
+                <span class="card-date">2026-05-06 21:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="43cbe20c1fb10709"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://windsurf.com/blog/devin-review-windsurf" target="_blank" rel="noopener">Fast and Comprehensive Code Review, Now in Windsurf</a>
+              </h3>
+              <p class="card-summary">Devin ReviewとQuick Reviewが、コードの検証をコーディングと同じワークスペースで可能にします。これにより、開発者はコードレビュープロセスを効率化し、より迅速に高品質なコードを作成できるようになります。これは開発ワークフローにおける新しい統合方法を示しています。</p>
+              <a href="https://windsurf.com/blog/devin-review-windsurf" target="_blank" rel="noopener" class="card-link" style="color:#34a853">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="a3ae781580ecf6e8" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#34a853">Windsurf Changelog</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="a3ae781580ecf6e8"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://windsurf.com/changelog#2.2.17" target="_blank" rel="noopener">Windsurf 2.2.17</a>
+              </h3>
+              <p class="card-summary">Windsurfのバージョン2.2.17では、既存のサブスクリプションユーザーにDevin ReviewとQuick Review機能が追加され、エージェントコマンドセンターにリスト表示オプションが追加されました。また、セッションサイドバーのソートとフィルタリングが改善され、パフォーマンスが向上しました。</p>
+              <a href="https://windsurf.com/changelog#2.2.17" target="_blank" rel="noopener" class="card-link" style="color:#34a853">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AIベンダー">
+        <div class="category-header" style="border-left-color:#666">
+          <span class="category-icon">📌</span>
+          <h2 class="category-title">AIベンダー</h2>
+          <span class="category-badge" style="background:#666">8件</span>
+          
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="15d5931bf08691de" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">Hugging Face Blog</span>
+                <span class="card-date">2026-05-07 04:06 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="15d5931bf08691de"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://huggingface.co/blog/ServiceNow-AI/correctness-before-corrections" target="_blank" rel="noopener">vLLM V0 to V1: Correctness Before Corrections in RL</a>
+              </h3>
+              <p class="card-summary">vLLMのバージョン0からバージョン1への移行では、修正を行う前に正確性を優先するというアプローチが採用されました。これは、大規模言語モデル（LLM）の推論と生成の品質を保証するために非常に重要です。この変更は、AIシステムの信頼性と実用性を高め、より高品質なAI開発を促進するという点で大きな意味を持ちます。</p>
+              <a href="https://huggingface.co/blog/ServiceNow-AI/correctness-before-corrections" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="0aebcef1e24555e8" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">Google AI Blog</span>
+                <span class="card-date">2026-05-07 01:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="0aebcef1e24555e8"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://blog.google/products-and-platforms/products/search/gardening-tips/" target="_blank" rel="noopener">5 gardening tips you can try right in Search</a>
+              </h3>
+              <p class="card-summary">この記事は、GoogleのAIモード、検索ライブ、ショッピングといったツールを使って植物を育てるための5つのガーデニングのヒントを紹介しています。これらのツールを活用することで、より効果的に植物の手入れができ、植物が元気に育つことを助けます。これにより、読者は簡単に実践的な園芸の知識を得ることができます。</p>
+              <a href="https://blog.google/products-and-platforms/products/search/gardening-tips/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="c8420fc3ac002689" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">AWS ML Blog</span>
+                <span class="card-date">2026-05-07 00:37 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="c8420fc3ac002689"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://aws.amazon.com/blogs/machine-learning/cost-effective-deployment-of-vision-language-models-for-pet-behavior-detection-on-aws-inferentia2/" target="_blank" rel="noopener">Cost effective deployment of vision-language models for pet behavior detection on AWS Inferentia2</a>
+              </h3>
+              <p class="card-summary">ペットの行動検出のために、AWS Inferentia2を活用したビジョン・言語モデルの費用対効果の高い展開方法について解説しています。従来のGPUベースの推論は高コストであったため、より安価で効率的なAIチップであるInferentia2を利用することで、リアルタイムでのペットの行動監視を大規模かつ低コストで実現する方法が示されています。これは、多くのデバイスからの継続的なデータ処理におけるコスト削減と性能維持の両立に重要です。</p>
+              <a href="https://aws.amazon.com/blogs/machine-learning/cost-effective-deployment-of-vision-language-models-for-pet-behavior-detection-on-aws-inferentia2/" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="b65ab17aae2d6388" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">xAI News</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"><span class="duplicate-badge">重複 3件</span></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="b65ab17aae2d6388"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://x.ai/news/anthropic-compute-partnership" target="_blank" rel="noopener">New Compute Partnership with Anthropic</a>
+              </h3>
+              <p class="card-summary">SpaceXAIはAnthropicと契約を結び、Colossus 1へのアクセスを提供することで計算パートナーシップを締結しました。これは、大規模なAIモデルのトレーニングや実行に必要な高性能コンピューティングリソースへのアクセスを確保するものです。この提携は、最先端のAI研究とインフラストラクチャの連携を強化し、AI技術の進展に貢献します。</p>
+              <a href="https://x.ai/news/anthropic-compute-partnership" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="d9a752f6c47083ed" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">OpenAI News</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="d9a752f6c47083ed"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://openai.com/index/introducing-chatgpt-futures-class-of-2026" target="_blank" rel="noopener">Introducing ChatGPT Futures: Class of 2026</a>
+              </h3>
+              <p class="card-summary">ChatGPTの未来を担う2026年卒業クラスを紹介します。この学生たちはAIを活用して、実世界への影響を生み出すための構築、研究、推進に取り組んでいます。彼らはChatGPTを通じて学習、創造性、そして機会のあり方を再定義しており、教育とイノベーションの新たな可能性を示しています。</p>
+              <a href="https://openai.com/index/introducing-chatgpt-futures-class-of-2026" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="529b096a595e092f" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">xAI News</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="529b096a595e092f"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://x.ai/news/grok-connectors" target="_blank" rel="noopener">Connectors now on Grok Web</a>
+              </h3>
+              <p class="card-summary">Grokに新しいコネクタが追加され、日常的に使用する様々なアプリケーションを直接統合できるようになりました。これにより、ユーザーはよりシームレスで深い連携体験を得ることが可能になります。この機能は、情報へのアクセスやタスク実行の効率性を大幅に向上させ、Grokの利用価値を大きく高めるものです。</p>
+              <a href="https://x.ai/news/grok-connectors" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="bbe8f839e08c37d6" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">OpenAI News</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="bbe8f839e08c37d6"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://openai.com/index/introducing-b2b-signals" target="_blank" rel="noopener">How frontier enterprises are building an AI advantage</a>
+              </h3>
+              <p class="card-summary">OpenAIのB2B Signalsリサーチは、フロンティア企業がAI導入を深め、Codex搭載のエージェントワークフローを拡大することで、持続的な競争優位性を築く方法を明らかにしています。これは、企業がAI技術を活用して市場での優位性を確立するための具体的な戦略を提供します。この知見は、AI時代において企業がどのように技術を最大限に活用し、ビジネス上の成功を収めるべきかを示す重要な示唆となります。</p>
+              <a href="https://openai.com/index/introducing-b2b-signals" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="5c5b1ba9c37c49ed" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#666">Hugging Face Blog</span>
+                <span class="card-date">2026-05-06 09:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="5c5b1ba9c37c49ed"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://huggingface.co/blog/open-asr-leaderboard-private-data" target="_blank" rel="noopener">Adding Benchmaxxer Repellant to the Open ASR Leaderboard</a>
+              </h3>
+              <p class="card-summary">Open ASRリーダーボードにBenchmaxxer忌避剤を追加するアップデートが発表されました。これは、音声認識システムの性能評価において、特定の環境要因やノイズの影響を考慮に入れることで、より現実的で正確な評価を行うことを目的としています。この変更により、ASRモデルの評価基準が改善され、より実用的な結果が得られることが期待されます。</p>
+              <a href="https://huggingface.co/blog/open-asr-leaderboard-private-data" target="_blank" rel="noopener" class="card-link" style="color:#666">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="AIニュースメディア">
+        <div class="category-header" style="border-left-color:#7c4dff">
+          <span class="category-icon">📰</span>
+          <h2 class="category-title">AIニュース・メディア</h2>
+          <span class="category-badge" style="background:#7c4dff">35件</span>
+          <span class="category-duplicate-badge">重複候補 2件</span>
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="c2e4ee14c7c1e4ff" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-05-07 07:09 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="c2e4ee14c7c1e4ff"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/ai/2026/05/anthropic-raises-claude-code-usage-limits-credits-new-deal-with-spacex/" target="_blank" rel="noopener">Anthropic raises Claude Code usage limits, credits new deal with SpaceX</a>
+              </h3>
+              <p class="card-summary">AnthropicはSpaceXとの契約により、テネシー州メンフィスのデータセンターの計算能力を利用することを発表しました。この取引に基づき、AnthropicはClaude Codeの利用制限を大幅に引き上げました。これにより、ProおよびMaxプランの加入者に対するClaude Codeの5時間ウィンドウ制限が倍増し、API制限も緩和され、より多くのユーザーがClaudeの機能を活用できるようになります。</p>
+              <a href="https://arstechnica.com/ai/2026/05/anthropic-raises-claude-code-usage-limits-credits-new-deal-with-spacex/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="c92fe8a41aa91068" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 06:57 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="c92fe8a41aa91068"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/barry-diller-trusts-sam-altman-but-trust-is-irrelevant-as-agi-nears-he-says/" target="_blank" rel="noopener">Barry Diller trusts Sam Altman. But ‘trust is irrelevant’ as AGI nears, he says.</a>
+              </h3>
+              <p class="card-summary">バリー・ディラーは、AGI（汎用人工知能）が近づく中で、サム・アルトマンを信頼しているものの、「信頼は無関係だ」と述べています。彼は、AGIは予測不可能な力であり、適切な安全策（ガードレール）が必要であると警告しています。これは、AI技術の急速な進展に伴い、その制御と安全性を確保することの重要性を示唆しています。</p>
+              <a href="https://techcrunch.com/2026/05/06/barry-diller-trusts-sam-altman-but-trust-is-irrelevant-as-agi-nears-he-says/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="e12bd009d61d9da4" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-05-07 06:47 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="e12bd009d61d9da4"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/gadgets/2026/05/tsmc-taps-wind-power-as-ai-chip-demand-soars-taiwan-feels-energy-crunch/" target="_blank" rel="noopener">TSMC taps wind power as AI chip demand soars, Taiwan feels energy crunch</a>
+              </h3>
+              <p class="card-summary">AIチップの需要急増を背景に、台湾のTSMCがエネルギー危機に対応するため風力発電への投資を進めています。同社はハイロング洋上風力プロジェクトとの間で30年間の電力購入契約を結び、台湾のエネルギー自立と持続可能性に貢献することを目指しています。これは、AI関連産業の成長とエネルギー安全保障という二つの大きな課題が結びついていることを示しています。</p>
+              <a href="https://arstechnica.com/gadgets/2026/05/tsmc-taps-wind-power-as-ai-chip-demand-soars-taiwan-feels-energy-crunch/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="2c9b977b7ac6c18c" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 06:43 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="2c9b977b7ac6c18c"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/snap-says-its-400m-deal-with-perplexity-amicably-ended/" target="_blank" rel="noopener">Snap says its $400M deal with Perplexity ‘amicably ended’</a>
+              </h3>
+              <p class="card-summary">SnapとPerplexityの間で発表された4億ドルの取引が、円満に終了したことが明らかになりました。この取引は、PerplexityのAI検索エンジンをSnapchatに直接統合するというものでした。これは、両社の間でAI技術を活用した新たなビジネス展開に関する重要な出来事であり、今後のAIとソーシャルメディアの融合の可能性を示唆しています。</p>
+              <a href="https://techcrunch.com/2026/05/06/snap-says-its-400m-deal-with-perplexity-amicably-ended/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card is-duplicate-candidate" data-article-id="3573b6596923c19a" data-is-duplicate-candidate="true">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 06:32 JST</span>
+              </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.66</span></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="3573b6596923c19a"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/is-xai-a-neocloud-now/" target="_blank" rel="noopener">Is xAI a neocloud now?</a>
+              </h3>
+              <p class="card-summary">xAIの実際のビジネスは、AIモデルのトレーニングよりもデータセンターの構築にある可能性がある。これは、xAIが単なるAI開発企業ではなく、大規模な計算インフラストラクチャを提供する事業へとシフトしていることを示唆している。この変化は、AI技術の進展においてハードウェアとインフラストラクチャの重要性が増しているという点で重要である。</p>
+              <a href="https://techcrunch.com/2026/05/06/is-xai-a-neocloud-now/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="96a58fcc65cc5c31" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-05-07 06:21 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="96a58fcc65cc5c31"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/tech/925559/google-project-mariner-shut-down" target="_blank" rel="noopener">Google shuts down Project Mariner</a>
+              </h3>
+              <p class="card-summary">Googleは、ウェブ上のタスクを自動的に実行する実験的な機能であるProject Marinerを終了しました。このプロジェクトは2026年5月4日に停止され、その技術はGemini Agentなどの他のGoogle製品に統合されました。これは、AI技術がGoogleのエコシステム内でより深く組み込まれつつあることを示しています。</p>
+              <a href="https://www.theverge.com/tech/925559/google-project-mariner-shut-down" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="d5cca967e686a8bc" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-05-07 06:20 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="d5cca967e686a8bc"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/tech-policy/2026/05/everything-that-could-go-wrong-with-trumps-ai-safety-tests-according-to-experts/" target="_blank" rel="noopener">Spooked by Mythos, Trump suddenly realized AI safety testing might be good</a>
+              </h3>
+              <p class="card-summary">トランプ政権は、AnthropicのClaude Mythosモデルに関する懸念から、AI安全性のテストの必要性に改めて関心を示した。これにより、Google DeepMind、Microsoft、xAIといった企業が政府による最先端AIモデルのリリース前後の安全チェックを受けることになった。これは、規制とイノベーションのバランスという以前の立場から変化し、AI安全性を重視する動きが加速していることを示唆している。</p>
+              <a href="https://arstechnica.com/tech-policy/2026/05/everything-that-could-go-wrong-with-trumps-ai-safety-tests-according-to-experts/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="9713c7f3dd2cccb7" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-05-07 05:18 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="9713c7f3dd2cccb7"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/column/925487/david-sacks-trump-administration-ai-model-review" target="_blank" rel="noopener">How David Sacks crashed and burned in the White House</a>
+              </h3>
+              <p class="card-summary">ホワイトハウスでAI教育タスクフォースの会議中に、AIと暗号資産の専門家であるデビッド・サックス氏が発言しました。この報道は、ホワイトハウスがAIモデルのリリース前に政府による審査を検討しているという内容です。これは、これまでのトランプ政権の政策とは逆行する動きであり、AI規制に関する新たな展開を示唆しています。</p>
+              <a href="https://www.theverge.com/column/925487/david-sacks-trump-administration-ai-model-review" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card is-duplicate-candidate" data-article-id="ba9e86fb34421622" data-is-duplicate-candidate="true">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-05-07 03:28 JST</span>
+              </div>
+              <div class="card-flags"><span class="duplicate-badge is-candidate">重複候補 類似度 0.66</span></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="ba9e86fb34421622"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/anthropic-spacex-compute-deal-colossus/" target="_blank" rel="noopener">Anthropic Gets in Bed With SpaceX as the AI Race Turns Weird</a>
+              </h3>
+              <p class="card-summary">AnthropicとSpaceXが提携し、AnthropicがxAIのコンピューティングリソースを利用する契約を結んだ。これはAI開発競争における予期せぬ動きであり、両社の技術連携が新たな展開を見せている。この提携は、AI分野におけるパワーバランスの変化や今後の技術革新に大きな影響を与える可能性がある。</p>
+              <a href="https://www.wired.com/story/anthropic-spacex-compute-deal-colossus/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="409bab9ee628de1c" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 03:23 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="409bab9ee628de1c"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/how-elon-musk-left-openai-according-to-greg-brockman/" target="_blank" rel="noopener">How Elon Musk left OpenAI, according to Greg Brockman</a>
+              </h3>
+              <p class="card-summary">イーロン・マスク氏がOpenAIを去った経緯について、創設者の一人であるグレッグ・ブロックマン氏の証言が報じられています。この情報は、世界的に影響力を持つ企業における創業者間の交渉が通常は公に共有されないという背景を示しています。これは、大規模なテクノロジー企業の経営と組織に関する内部的なダイナミクスを理解する上で重要です。</p>
+              <a href="https://techcrunch.com/2026/05/06/how-elon-musk-left-openai-according-to-greg-brockman/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="de31d0761e0ee1b0" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-05-07 03:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="de31d0761e0ee1b0"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/using-ai-negative-impact-thinking-problem-solving-study/" target="_blank" rel="noopener">Using AI for Just 10 Minutes Might Make You Lazy and Dumb, Study Shows</a>
+              </h3>
+              <p class="card-summary">AIアシスタントへの過度な依存は、思考力や問題解決能力に悪影響を及ぼす可能性があるという新しい研究結果が示されました。この研究は、AIを利用することで、人間自身の認知能力が低下するリスクがあることを指摘しています。したがって、AIを賢く利用するためには、自律的な思考力を維持することが重要です。</p>
+              <a href="https://www.wired.com/story/using-ai-negative-impact-thinking-problem-solving-study/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="5f4f6dedb2bb5a8c" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">The Verge</span>
+                <span class="card-date">2026-05-07 02:55 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="5f4f6dedb2bb5a8c"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.theverge.com/ai-artificial-intelligence/925338/openai-musk-v-altman-mira-murati" target="_blank" rel="noopener">Mira Murati tells the court that she couldn’t trust Sam Altman’s words</a>
+              </h3>
+              <p class="card-summary">OpenAIの元CTOであるミラ・ムラティ氏は、CEOのサム・アルトマンが新しいAIモデルの安全基準について嘘をついたと法廷で証言しました。アルトマンは、新しいAIモデルが会社の展開安全委員会を経る必要はないと法務部門が判断したと述べましたが、ムラティ氏はこれを否定しました。この証言は、AI開発における透明性と安全性の問題、および経営層間の信頼関係について重要な論点を示しています。</p>
+              <a href="https://www.theverge.com/ai-artificial-intelligence/925338/openai-musk-v-altman-mira-murati" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="b4784811e3c54034" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 02:20 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="b4784811e3c54034"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/deepseek-could-hit-45b-valuation-from-its-first-investment-round/" target="_blank" rel="noopener">DeepSeek could hit $45B valuation from its first investment round</a>
+              </h3>
+              <p class="card-summary">中国のAI研究機関DeepSeekが、OpenAIやAnthropicといった大規模な米国モデルと比較して、少ない計算資源とコストで大規模言語モデルを訓練したことで注目を集めました。この成功により、DeepSeekは初めての投資ラウンドで450億ドルの評価額に達する可能性があるとされています。</p>
+              <a href="https://techcrunch.com/2026/05/06/deepseek-could-hit-45b-valuation-from-its-first-investment-round/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="c489fa60760ffc1b" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-05-07 01:56 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="c489fa60760ffc1b"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/gaming/2026/05/google-deepmind-partners-with-eve-online-for-ai-model-testing/" target="_blank" rel="noopener">Google DeepMind partners with EVE Online for AI model testing</a>
+              </h3>
+              <p class="card-summary">Google DeepMindとEVE OnlineがAIモデルのテストのために提携した。このパートナーシップは、複雑で動的なプレイヤー主導のシステムにおける知性を研究することを目的としている。両社は、長期計画、記憶、継続的学習を必要とするAIシステムの開発にEVE Onlineの環境が適していると見ている。</p>
+              <a href="https://arstechnica.com/gaming/2026/05/google-deepmind-partners-with-eve-online-for-ai-model-testing/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="ac95aaf73a85ba65" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-05-07 01:51 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="ac95aaf73a85ba65"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/i-am-begging-ai-companies-to-stop-naming-features-after-human-processes/" target="_blank" rel="noopener">I Am Begging AI Companies to Stop Naming Features After Human Processes</a>
+              </h3>
+              <p class="card-summary">Anthropicは、AIエージェントが「記憶」を整理する能力を持つことを示唆し、「夢見」という概念を発表しました。これは、AIが複雑な情報を処理し、より高度な推論を行う可能性を示しています。この進展は、AIの自律性と認知能力に関する議論を深め、将来のAIシステムの開発と倫理的な側面について重要な問いを投げかけています。</p>
+              <a href="https://www.wired.com/story/i-am-begging-ai-companies-to-stop-naming-features-after-human-processes/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="e25d6b70c952587e" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-05-07 01:16 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="e25d6b70c952587e"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/data/market-research-is-too-slow-for-the-ai-era-so-brox-built-60-000-identical-digital-twins-of-real-people-you-can-survey-instantly-repeatedly" target="_blank" rel="noopener">Market research is too slow for the AI era, so Brox built 60,000 identical &#x27;digital twins&#x27; of real people you can survey instantly, repeatedly</a>
+              </h3>
+              <p class="card-summary">Broxは、従来の市場調査の遅さを解消するため、実在の人物60,000人の「デジタルツイン」を作成しました。これは、企業が数ヶ月かかる調査ではなく、数時間で無制限の実験を行うことを可能にし、データに基づいた迅速な意思決定を可能にします。この技術は、市場や製品開発において、人間の反応を予測し、より迅速かつ正確な洞察を得るために重要です。</p>
+              <a href="https://venturebeat.com/data/market-research-is-too-slow-for-the-ai-era-so-brox-built-60-000-identical-digital-twins-of-real-people-you-can-survey-instantly-repeatedly" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="4a757716e5398e04" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-05-07 01:15 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="4a757716e5398e04"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/ai/2026/05/anthropics-claude-can-now-dream-sort-of/" target="_blank" rel="noopener">Anthropic&#x27;s Claude Managed Agents can now &quot;dream,&quot; sort of</a>
+              </h3>
+              <p class="card-summary">Anthropicは、Claude Managed Agentsに「夢見る」機能を追加しました。これは、過去の出来事から将来のタスクに役立つ重要な情報を記憶として選別するプロセスです。この機能は、LLMのコンテキストウィンドウの制限を克服し、長期的なプロジェクトにおいて重要な情報を保持するために重要です。</p>
+              <a href="https://arstechnica.com/ai/2026/05/anthropics-claude-can-now-dream-sort-of/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="e93575f5869a1ac8" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 00:49 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="e93575f5869a1ac8"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/google-updates-ai-search-to-include-expert-advice-from-reddit-and-other-web-forums/" target="_blank" rel="noopener">Google updates AI search to include quotes from Reddit and other sources</a>
+              </h3>
+              <p class="card-summary">GoogleはAI検索結果にRedditなどのフォーラムからの引用を含めるように更新しました。これは、ニッチな質問に対する回答を見つけるのに役立つ可能性がある一方で、情報が混乱する可能性も示唆しています。この変更は、ユーザーがより多様な情報源から答えを見つけられるようにするという点で重要です。</p>
+              <a href="https://techcrunch.com/2026/05/06/google-updates-ai-search-to-include-expert-advice-from-reddit-and-other-web-forums/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="863c517bd3af5187" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-05-07 00:49 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="863c517bd3af5187"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/cybercriminals-are-complaining-about-ai-slop-flooding-their-forums/" target="_blank" rel="noopener">Hackers Hate AI Slop Even More Than You Do</a>
+              </h3>
+              <p class="card-summary">ハッカーやサイバー犯罪者は、サイバー攻撃や違法行為について議論するプラットフォームに「AIのゴミ」が溢れていることに不満を表明しています。これは、AIが情報共有の場を汚染し、セキュリティ関連のコミュニティにとってノイズとなっているという問題です。この状況は、AI技術がどのように悪用され、オンラインでの犯罪活動に利用されるかについて、より深刻な懸念が生じていることを示しています。</p>
+              <a href="https://www.wired.com/story/cybercriminals-are-complaining-about-ai-slop-flooding-their-forums/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="202b1520c1e02725" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 00:46 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="202b1520c1e02725"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/khosla-backed-robotics-startup-genesis-ai-has-gone-full-stack-demo-shows/" target="_blank" rel="noopener">Khosla-backed robotics startup Genesis AI has gone full stack, demo shows</a>
+              </h3>
+              <p class="card-summary">ロボティクススタートアップのGenesis AIが、基盤となるAIを構築するために資金調達した成果として、初のモデルGENE-26.5と複雑なタスクを実行するロボットハンドのデモを発表しました。これは、AIとロボティクスの統合が進んでいることを示しており、実用的な応用への大きな一歩となります。</p>
+              <a href="https://techcrunch.com/2026/05/06/khosla-backed-robotics-startup-genesis-ai-has-gone-full-stack-demo-shows/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="6d38fb85134a929e" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">Ars Technica AI</span>
+                <span class="card-date">2026-05-07 00:44 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="6d38fb85134a929e"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://arstechnica.com/ai/2026/05/googles-gemma-4-open-ai-models-use-speculative-decoding-to-get-up-to-3x-faster/" target="_blank" rel="noopener">Google&#x27;s Gemma 4 AI models get 3x speed boost by predicting future tokens</a>
+              </h3>
+              <p class="card-summary">GoogleのGemma 4モデルは、将来のトークンを予測する推測的デコーディングを利用することで、生成速度が最大3倍向上した。これは、エッジAIでのローカル実行を加速させ、ユーザーがクラウドにデータを共有することなく自分のハードウェアでAIを試せるようにするという点で重要である。</p>
+              <a href="https://arstechnica.com/ai/2026/05/googles-gemma-4-open-ai-models-use-speculative-decoding-to-get-up-to-3x-faster/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="6a1b203c0c3310d9" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 00:27 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="6a1b203c0c3310d9"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/tinder-owner-match-group-is-slowing-hiring-to-pay-for-its-increased-use-of-ai-tools/" target="_blank" rel="noopener">Tinder owner Match Group is slowing hiring to pay for its increased use of AI tools</a>
+              </h3>
+              <p class="card-summary">TinderのオーナーであるMatch Groupは、AIツールの利用にかかる費用が高いため、今年の残りの期間の採用計画を遅らせることを発表しました。これは、AI技術の導入と運用に伴うコストが組織にとって大きな負担となっていることを示しています。この動きは、企業が新しいテクノロジーを採用する際の経済的な側面と、その投資に対する慎重なアプローチの重要性を示唆しています。</p>
+              <a href="https://techcrunch.com/2026/05/06/tinder-owner-match-group-is-slowing-hiring-to-pay-for-its-increased-use-of-ai-tools/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="ad6021e6adab2e4e" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-05-07 00:14 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="ad6021e6adab2e4e"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/hps-ai-and-data-offerings-for-the-enterprise/" target="_blank" rel="noopener">HP and the art of AI and data for the enterprise</a>
+              </h3>
+              <p class="card-summary">この記事は、企業におけるAIとデータ活用の課題について論じている。データが石油であるという言葉とは裏腹に、組織のデータ所有権やシステム間の不整合といったアーキテクチャ上の負債が自動化の障害となっている点を指摘している。また、継続的な学習に伴う概念ドリフトやデータポイズニングなどのリスク管理の重要性についても言及している。</p>
+              <a href="https://www.artificialintelligence-news.com/news/hps-ai-and-data-offerings-for-the-enterprise/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="c8961476e2c8c841" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-07 00:12 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="c8961476e2c8c841"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/apple-to-pay-250m-to-settle-lawsuit-over-siris-delayed-ai-features/" target="_blank" rel="noopener">Apple to pay $250M to settle lawsuit over Siri’s delayed AI features</a>
+              </h3>
+              <p class="card-summary">Appleは、SiriのAI機能の登場時期について過大な期待をさせたとして提起された集団訴訟に対し、2億5000万ドルを支払うことで和解しました。この訴訟は、AI機能に関する約束と実際の提供時期との間に齟齬があったことを問題にしています。これは、企業がユーザーに対して技術的な期待をどのように管理し、コミュニケーションを取るべきかという点で、AI関連製品のローンチにおける透明性と責任の重要性を示しています。</p>
+              <a href="https://techcrunch.com/2026/05/06/apple-to-pay-250m-to-settle-lawsuit-over-siris-delayed-ai-features/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="2e0b57121c7f3bce" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-05-07 00:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="2e0b57121c7f3bce"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/technology/the-app-store-for-robots-has-arrived-hugging-face-launches-open-source-reachy-mini-app-store-with-200-apps" target="_blank" rel="noopener">The app store for robots has arrived: Hugging Face launches open-source Reachy Mini App Store with 200+ apps</a>
+              </h3>
+              <p class="card-summary">Hugging Faceが、オープンソースの物理ロボット「Reachy Mini」向けの新しいミニアプリストアを立ち上げました。このストアには200以上のコミュニティ開発アプリが無料で提供され、ユーザーはこれを使って独自のアプリケーションを簡単に作成できます。これにより、プログラミングやエンジニアリングの知識がなくても、誰もがロボット向けのソフトウェアを迅速に構築できるようになり、ロボット技術へのアクセスが大幅に向上します。</p>
+              <a href="https://venturebeat.com/technology/the-app-store-for-robots-has-arrived-hugging-face-launches-open-source-reachy-mini-app-store-with-200-apps" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="239e2471159ed657" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-06 22:54 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="239e2471159ed657"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/06/ai-boom-pushes-samsung-to-1t/" target="_blank" rel="noopener">AI boom pushes Samsung to $1T</a>
+              </h3>
+              <p class="card-summary">AIを牽引するチップ需要の高まりにより、サムスンが1兆ドルという企業価値の節目を達成しました。これはTSMCに次ぐアジアの企業としてこの偉業を成し遂げたことを意味します。この出来事は、AI技術が世界の産業と経済において極めて重要な役割を果たしていることを示しており、半導体産業におけるAI関連の需要が爆発的に増加している現状を反映しています。</p>
+              <a href="https://techcrunch.com/2026/05/06/ai-boom-pushes-samsung-to-1t/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="7627d9461a9a3ac1" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-05-06 21:23 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="7627d9461a9a3ac1"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/us-government-increases-ai-in-defence-suppliers-roster-and-rethinks-anthropics-role/" target="_blank" rel="noopener">US government increases AI suppliers and rethinks Anthropic’s role</a>
+              </h3>
+              <p class="card-summary">米国政府は、マイクロソフト、Amazon、NvidiaなどのAI企業を優先サプライヤーに追加し、機密作戦での利用を許可する契約を結びました。これは、国防総省がAI技術を「いかなる合法的な目的」で利用できるようにするという方針に基づいています。この動きは、Anthropic AIとの間で、AIの利用範囲や安全保障上の懸念について意見の対立を生んだ背景があります。</p>
+              <a href="https://www.artificialintelligence-news.com/news/us-government-increases-ai-in-defence-suppliers-roster-and-rethinks-anthropics-role/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="3b8e3c03c74ecb4e" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-05-06 19:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="3b8e3c03c74ecb4e"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/hasan-piker-user-behavior/" target="_blank" rel="noopener">Hasan Piker, Self-Described ‘Ayatollah of Woke,’ Wants AI to Die</a>
+              </h3>
+              <p class="card-summary">配信者のハサン・ピカー氏は、人工知能（AI）が人間の思考を蝕んでいると強く主張しています。彼は、AIの存在が社会や個人の精神状態に深刻な影響を与えていると考えています。これは、AI技術の急速な発展に伴い、人間が直面する倫理的・存在論的な問題について深く考察する必要があることを示唆しています。</p>
+              <a href="https://www.wired.com/story/hasan-piker-user-behavior/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="9ceaf892e759cfd0" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">AI News</span>
+                <span class="card-date">2026-05-06 19:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="9ceaf892e759cfd0"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.artificialintelligence-news.com/news/google-remy-ai-agent-gemini-user-control/" target="_blank" rel="noopener">Google tests Remy AI agent for Gemini as focus turns to user control</a>
+              </h3>
+              <p class="card-summary">Googleは、ユーザーの代わりに作業や日常のタスクを実行するAIパーソナルエージェントであるRemyをGemini向けにテストしています。Remyは24時間365日のパーソナルエージェントとして設計されており、Googleサービスとの統合やユーザーの好みの学習を通じて複雑なタスクを処理できるようにすることを目的としています。これは、Geminiをチャット応答だけでなく行動可能なアシスタントへと拡張する取り組みの一環です。</p>
+              <a href="https://www.artificialintelligence-news.com/news/google-remy-ai-agent-gemini-user-control/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="cfb468750883c503" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-05-06 16:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="cfb468750883c503"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/orchestration/scaling-ai-into-production-is-forcing-a-rethink-of-enterprise-infrastructure" target="_blank" rel="noopener">Scaling AI into production is forcing a rethink of enterprise infrastructure</a>
+              </h3>
+              <p class="card-summary">企業がAIを実験段階から大規模な実運用へと移行させるためには、エンタープライズインフラの再考が必要となっている。特にエージェントAIの台頭は、複数のアプリケーションやデータソースにまたがるマルチステップのワークフローと自律性をもたらし、AIインフラに対する要求と圧力が指数関数的に増大している。</p>
+              <a href="https://venturebeat.com/orchestration/scaling-ai-into-production-is-forcing-a-rethink-of-enterprise-infrastructure" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="bff47dcfaa9a2005" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-06 15:47 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="bff47dcfaa9a2005"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/05/peter-sarlins-qutwo-reaches-380m-valuation-in-angel-round/" target="_blank" rel="noopener">Peter Sarlin’s QuTwo reaches $380M valuation in angel round</a>
+              </h3>
+              <p class="card-summary">ピーター・サルリンの企業QuTwoがエンジェルラウンドで3億8000万ドルの評価額を達成しました。同社は、AIを北極星として追求し、量子コンピューティングは新しい種類の計算能力であると主張しています。これは、QuTwoがAI企業であることを強調しており、今後の成長においてAIが中心的な役割を果たすことを示唆しています。</p>
+              <a href="https://techcrunch.com/2026/05/05/peter-sarlins-qutwo-reaches-380m-valuation-in-angel-round/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="151c2e3e77f820ef" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-06 15:34 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="151c2e3e77f820ef"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/05/marc-lore-says-that-ai-will-soon-enable-anyone-open-a-restaurant/" target="_blank" rel="noopener">Marc Lore says that AI will soon enable anyone to open a restaurant</a>
+              </h3>
+              <p class="card-summary">AI技術は、誰でもレストランを開業できるようにするというアイデアに基づき、ロボットキッチンをAI搭載の「レストラン工場」に変えようとしています。これにより、プロンプトを使って仮想の食品ブランドを立ち上げることが可能になります。これは、飲食業界における参入障壁を下げる可能性を示しています。</p>
+              <a href="https://techcrunch.com/2026/05/05/marc-lore-says-that-ai-will-soon-enable-anyone-open-a-restaurant/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="52e2214b10795247" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-06 08:50 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="52e2214b10795247"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/05/sap-bets-1-16b-on-18-month-old-german-ai-lab-and-says-yes-to-nemoclaw/" target="_blank" rel="noopener">SAP bets $1.16B on 18-month-old German AI lab and says yes to NemoClaw</a>
+              </h3>
+              <p class="card-summary">SAPはドイツのAIスタートアップPrior Labsに11.6億ドルを投資し、その買収を計画している。また、NvidiaのNemoClawのような特定の顧客エージェントによる使用を禁止する方針を示した。これは、企業がAI技術と関連製品の利用に関して新たな戦略を採用していることを示唆している。</p>
+              <a href="https://techcrunch.com/2026/05/05/sap-bets-1-16b-on-18-month-old-german-ai-lab-and-says-yes-to-nemoclaw/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="2644dcb330e96826" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-05-06 08:30 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="2644dcb330e96826"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/technology/miami-startup-subquadratic-claims-1-000x-ai-efficiency-gain-with-subq-model-researchers-demand-independent-proof" target="_blank" rel="noopener">Miami startup Subquadratic claims 1,000x AI efficiency gain with SubQ model; researchers demand independent proof.</a>
+              </h3>
+              <p class="card-summary">マイアミのスタートアップSubquadraticは、計算量がコンテキスト長に対して線形に増加するサブ二次的なアーキテクチャに基づいた初のLLMを開発したと主張している。彼らは、このモデルが他の最先端モデルと比較してアテンション計算を約1,000倍削減し、AIシステムのスケールにおける大きな転換点になると主張している。研究者たちは独立した証明を求めている。</p>
+              <a href="https://venturebeat.com/technology/miami-startup-subquadratic-claims-1-000x-ai-efficiency-gain-with-subq-model-researchers-demand-independent-proof" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="03d4737878f1723c" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">VentureBeat</span>
+                <span class="card-date">2026-05-06 08:26 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="03d4737878f1723c"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://venturebeat.com/orchestration/gpt-5-5-instant-shows-you-what-it-remembered-just-not-all-of-it" target="_blank" rel="noopener">GPT-5.5 Instant shows you what it remembered — just not all of it</a>
+              </h3>
+              <p class="card-summary">OpenAIは、ChatGPTのデフォルトモデルをGPT-5.5 Instantに更新し、応答の根拠となった記憶や過去のチャットなどのコンテキストを表示する新しい機能を追加しました。これによりユーザーは回答の出所を確認し、必要に応じて修正できるようになります。しかし、この機能はすべての要因を完全に表示するわけではなく、監査システムとの整合性に関する新たな課題も示唆しています。</p>
+              <a href="https://venturebeat.com/orchestration/gpt-5-5-instant-shows-you-what-it-remembered-just-not-all-of-it" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="a1432694c4ce1a59" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">WIRED AI</span>
+                <span class="card-date">2026-05-06 08:24 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="a1432694c4ce1a59"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://www.wired.com/story/greg-brockman-testifies-elon-musk-fight-trial/" target="_blank" rel="noopener">‘I Actually Thought He Was Going to Hit Me,’ OpenAI’s Greg Brockman Says of Elon Musk</a>
+              </h3>
+              <p class="card-summary">OpenAIのグレッグ・ブロックマン氏は、2017年にイーロン・マスク氏との激しい会談や、その後の取締役会のメンバーを排除しようとした取り組みについて証言した。これは、OpenAIの内部における重要な意思決定と組織構造の変化を示している。この出来事は、AI開発企業におけるリーダーシップとガバナンスのあり方を考える上で重要である。</p>
+              <a href="https://www.wired.com/story/greg-brockman-testifies-elon-musk-fight-trial/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="a19e4804a3507f17" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#7c4dff">TechCrunch AI</span>
+                <span class="card-date">2026-05-06 07:57 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="a19e4804a3507f17"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://techcrunch.com/2026/05/05/altara-secures-7m-to-bridge-the-data-gap-thats-slowing-down-physical-sciences/" target="_blank" rel="noopener">Altara secures $7M to bridge the data gap that’s slowing down physical sciences</a>
+              </h3>
+              <p class="card-summary">Altaraは、スプレッドシートやレガシーシステムに分断されたデータを統合することで、物理科学の進展を遅らせているデータギャップを埋めるために700万ドルを確保しました。このAIは、失敗の診断と研究開発の加速を目的としています。これにより、データの障壁を取り除き、科学的な発見をより迅速に進めることが可能になります。</p>
+              <a href="https://techcrunch.com/2026/05/05/altara-secures-7m-to-bridge-the-data-gap-thats-slowing-down-physical-sciences/" target="_blank" rel="noopener" class="card-link" style="color:#7c4dff">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+      <section class="category-section" id="研究者ニュースレター">
+        <div class="category-header" style="border-left-color:#00897b">
+          <span class="category-icon">🔬</span>
+          <h2 class="category-title">研究者・ニュースレター</h2>
+          <span class="category-badge" style="background:#00897b">5件</span>
+          
+        </div>
+        <div class="cards-grid">
+          
+            <article class="news-card" data-article-id="bb8bfb2795d6c457" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-05-07 00:58 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="bb8bfb2795d6c457"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/2026/May/6/code-w-claude-2026/#atom-everything" target="_blank" rel="noopener">Live blog: Code w/ Claude 2026</a>
+              </h3>
+              <p class="card-summary">サイモン・ウィリソン氏がAnthropicのCode w/ Claudeイベントに参加し、Claude 2026に関する基調講演のライブブログを公開した。このイベントは大規模言語モデル（LLM）とコード生成に関する最新の進展について議論しており、AI開発コミュニティにとって重要な情報を提供している。</p>
+              <a href="https://simonwillison.net/2026/May/6/code-w-claude-2026/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="9744aa3cf4500180" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-05-07 00:00 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="9744aa3cf4500180"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/timer-xl-a-long-context-foundation-model-for-time-series-forecasting/" target="_blank" rel="noopener">Timer-XL: A Long-Context Foundation Model for Time-Series Forecasting</a>
+              </h3>
+              <p class="card-summary">Timer-XLは、時系列予測のための長いコンテキストを持つデコーダーのみのTransformer基盤モデルを探索するものである。これは、時系列データの予測に特化した大規模言語モデルの応用を示している。この研究は、より複雑な時間的依存関係を捉えるための新しい基盤モデルの可能性を示す点で重要である。</p>
+              <a href="https://towardsdatascience.com/timer-xl-a-long-context-foundation-model-for-time-series-forecasting/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="45875817e7db0561" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-05-06 23:24 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="45875817e7db0561"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/#atom-everything" target="_blank" rel="noopener">Vibe coding and agentic engineering are getting closer than I&#x27;d like</a>
+              </h3>
+              <p class="card-summary">Vibe codingとエージェント型エンジニアリングが収束し始めているという気づきが共有された。これらは以前は明確に区別されていたが、AI支援プログラミングにおける責任ある使用に関する認識が変化していることを示唆している。この概念の境界が曖昧になりつつあることは、AI開発における新たなパラダイムを示している。</p>
+              <a href="https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="9545c87fa3d4da49" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Towards Data Science</span>
+                <span class="card-date">2026-05-06 22:30 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="9545c87fa3d4da49"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://towardsdatascience.com/why-i-dont-trust-llms-to-decide-when-the-weather-changed/" target="_blank" rel="noopener">Why I Don’t Trust LLMs to Decide When the Weather Changed</a>
+              </h3>
+              <p class="card-summary">物理学者の視点から、LLM（大規模言語モデル）に気象の変化を判断させることへの不信感が述べられています。これは、単なるテキスト生成ではなく、複雑な現実世界の事象に対する決定を下す際の信頼性に関する問題提起です。この内容は、AIエージェントを構築する際に、LLMの限界と人間の専門的判断の必要性を理解することの重要性を示しています。</p>
+              <a href="https://towardsdatascience.com/why-i-dont-trust-llms-to-decide-when-the-weather-changed/" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+            <article class="news-card" data-article-id="357b79018d4743de" data-is-duplicate-candidate="false">
+              <div class="card-meta">
+                <span class="card-source" style="color:#00897b">Simon Willison</span>
+                <span class="card-date">2026-05-06 08:44 JST</span>
+              </div>
+              <div class="card-flags"></div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="interest-toggle"
+                  data-article-id="357b79018d4743de"
+                  aria-pressed="false"
+                >
+                  <span class="interest-icon" aria-hidden="true">☐</span>
+                  <span class="interest-label">気になる</span>
+                </button>
+              </div>
+              <h3 class="card-title">
+                <a href="https://simonwillison.net/2026/May/5/datasette-referrer-policy/#atom-everything" target="_blank" rel="noopener">datasette-referrer-policy 0.1</a>
+              </h3>
+              <p class="card-summary">Datasetteのグローバル発電所デモにおけるOpenStreetMapタイルが表示されない問題が、CAPTCHAとReferrer-Policyヘッダーの設定不足が原因で発生していた。この問題を解決するため、GPT-5.5を用いて新しいプラグインを開発し、Referrer-Policyヘッダーを設定する機能を追加した。</p>
+              <a href="https://simonwillison.net/2026/May/5/datasette-referrer-policy/#atom-everything" target="_blank" rel="noopener" class="card-link" style="color:#00897b">
+                記事を読む →
+              </a>
+            </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    生成日時: 2026-05-07 07:19 JST &nbsp;|&nbsp;
+    情報源: <a href="https://github.com/Olshansk/rss-feeds" target="_blank" style="color:var(--accent)">Olshansk/rss-feeds</a> および各公式RSSフィード &nbsp;|&nbsp;
+    サマリーはAIにより自動生成されています
+  </footer>
+
+  <script>
+    (() => {
+      const currentDateSlug = '2026-05-07';
+      const navRoot = document.querySelector('.day-navigation');
+      const storageKey = 'daily-ai-news:interests';
+      const filterKey = 'daily-ai-news:interest-filter';
+      const duplicateFilterKey = 'daily-ai-news:show-duplicates';
+      const cards = Array.from(document.querySelectorAll('.news-card'));
+      const buttons = Array.from(document.querySelectorAll('.interest-toggle'));
+      const filterCheckbox = document.getElementById('interestFilter');
+      const duplicateCheckbox = document.getElementById('duplicateFilter');
+
+      const loadSelected = () => {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          return new Set(Array.isArray(parsed) ? parsed : []);
+        } catch (_error) {
+          return new Set();
+        }
+      };
+
+      const saveSelected = (selected) => {
+        localStorage.setItem(storageKey, JSON.stringify(Array.from(selected)));
+      };
+
+      const applyCardState = (selected) => {
+        cards.forEach((card) => {
+          const id = card.dataset.articleId;
+          const isSelected = selected.has(id);
+          card.classList.toggle('is-selected', isSelected);
+        });
+
+        buttons.forEach((button) => {
+          const id = button.dataset.articleId;
+          const isSelected = selected.has(id);
+          button.classList.toggle('is-selected', isSelected);
+          button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+          const icon = button.querySelector('.interest-icon');
+          const label = button.querySelector('.interest-label');
+          if (icon) icon.textContent = isSelected ? '☑' : '☐';
+          if (label) label.textContent = isSelected ? '保存済み' : '保存';
+        });
+      };
+
+      const applyFilterState = (selected) => {
+        const onlyInterested = Boolean(filterCheckbox?.checked);
+        const showDuplicates = Boolean(duplicateCheckbox?.checked);
+        cards.forEach((card) => {
+          const id = card.dataset.articleId;
+          const isDuplicateCandidate = card.dataset.isDuplicateCandidate === 'true';
+          const hiddenByInterest = onlyInterested && !selected.has(id);
+          const hiddenByDuplicate = !showDuplicates && isDuplicateCandidate;
+          const shouldHide = hiddenByInterest || hiddenByDuplicate;
+          card.classList.toggle('is-hidden-by-filter', shouldHide);
+        });
+      };
+
+      const selected = loadSelected();
+      applyCardState(selected);
+
+      if (filterCheckbox) {
+        filterCheckbox.checked = localStorage.getItem(filterKey) === 'true';
+        filterCheckbox.addEventListener('change', () => {
+          localStorage.setItem(filterKey, String(filterCheckbox.checked));
+          applyFilterState(selected);
+        });
+      }
+
+      if (duplicateCheckbox) {
+        duplicateCheckbox.checked = localStorage.getItem(duplicateFilterKey) === 'true';
+        applyFilterState(selected);
+        duplicateCheckbox.addEventListener('change', () => {
+          localStorage.setItem(duplicateFilterKey, String(duplicateCheckbox.checked));
+          applyFilterState(selected);
+        });
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const id = button.dataset.articleId;
+          if (!id) return;
+          if (selected.has(id)) {
+            selected.delete(id);
+          } else {
+            selected.add(id);
+          }
+          saveSelected(selected);
+          applyCardState(selected);
+          applyFilterState(selected);
+        });
+      });
+
+      if (navRoot) {
+        const archiveIndexUrl = new URL('archive-index.json', window.location.href);
+        archiveIndexUrl.searchParams.set('_', Date.now().toString());
+
+        fetch(archiveIndexUrl.toString(), { cache: 'no-store' })
+          .then((response) => response.json())
+          .then((dates) => {
+            const sortedDates = [...dates].sort((a, b) => b.localeCompare(a));
+            const index = sortedDates.indexOf(currentDateSlug);
+            if (index === -1) return;
+
+            const olderDate = sortedDates[index + 1];
+            const newerDate = index > 0 ? sortedDates[index - 1] : null;
+            const navItems = navRoot.querySelectorAll('.nav-pill');
+            const olderLink = navItems[1];
+            const newerLink = navItems[2];
+
+            if (olderDate && olderLink) {
+              olderLink.classList.remove('is-disabled');
+              olderLink.setAttribute('href', `${olderDate}.html`);
+            }
+            if (!olderDate && olderLink) {
+              olderLink.removeAttribute('href');
+              olderLink.classList.add('is-disabled');
+            }
+
+            if (newerDate && newerLink) {
+              newerLink.classList.remove('is-disabled');
+              newerLink.setAttribute('href', `${newerDate}.html`);
+            }
+            if (!newerDate && newerLink) {
+              newerLink.removeAttribute('href');
+              newerLink.classList.add('is-disabled');
+            }
+          })
+          .catch(() => {
+            // archive-index.json が読めない環境でも、初期レンダリング済みのナビをそのまま使う
+          });
+      }
+    })();
+  </script>
+
+</body>
+</html>
