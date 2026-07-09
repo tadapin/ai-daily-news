@@ -21,7 +21,7 @@ from sentence_transformers import SentenceTransformer
 REPO_ROOT = Path(__file__).resolve().parents[2]
 INPUT_JSON = REPO_ROOT / "daily-ai-news-generator" / "output" / "daily_articles.json"
 DEFAULT_MODEL_NAME = "hotchpotch/static-embedding-japanese"
-DEFAULT_SIMILARITY_THRESHOLD = 0.92
+DEFAULT_SIMILARITY_THRESHOLD = 0.65
 
 
 class UnionFind:
