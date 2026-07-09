@@ -72,6 +72,8 @@ uv run python daily-ai-news-generator/scripts/deduplicate_by_summary.py
 uv run python daily-ai-news-generator/scripts/generate_html.py
 ```
 
+`fetch_daily.py` と `deduplicate_by_summary.py` は `daily-ai-news-generator/local-llm.env` を直接読み込む。`run_daily_to_html.sh` も同じファイルを `source` してから各ステップを実行する。
+
 補足:
 - `sentence-transformers` と `hotchpotch/static-embedding-japanese` を使ってサマリー同士の近似重複を検出する
 - 複数の類似記事がある場合は、最もサマリーが長い記事を代表記事として残す
