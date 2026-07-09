@@ -86,9 +86,22 @@ uv run python daily-ai-news-generator/scripts/serve_docs.py
 - When working in a worktree, confirm that the active worktree can also read the required environment configuration before running scripts.
 - If `.env` or equivalent environment configuration is missing, or if `OPENAI_API_KEY` has not been restored, stop and ask the user how they want secrets restored before proceeding.
 - Do not guess, synthesize, or silently replace secret values.
+- Keep `.env` untracked while it contains `OPENAI_API_KEY`. Use the tracked `.env.example` for committable default configuration and placeholders.
+
+## Daily Publish Workflow
+
+- Use `uv run python ...` or `.venv/bin/python ...`; do not rely on a bare `python` executable being available.
+- The generation worktree may be detached and may have a stale or noncanonical `docs/archive-index.json`.
+- Generate the daily HTML in the active worktree, but create the publish commit from a clean temporary clone when the active worktree is detached or has unreliable git metadata.
+- Choose the publish base from remote refs. Use `origin/main` only when it already contains the prior published archive entries; otherwise base the commit on the latest previous `origin/automation/daily-ai-news-publish-YYYY-MM-DD` branch.
+- Prefer `git ls-remote` for remote ref checks in detached worktrees because `git fetch` can fail when linked worktree metadata is not writable.
+- In the publish clone, copy in only `docs/YYYY-MM-DD.html`, rerun `daily-ai-news-generator/scripts/push_to_github.py`, then verify that `docs/archive-index.json` starts with the new date and still includes recent prior dates.
+- Commit only `docs/YYYY-MM-DD.html` and `docs/archive-index.json` for daily publish branches.
+- Do not commit `.env`, `.venv`, or `daily-ai-news-generator/output/`.
 
 ## Operational Expectations
 
 - Do not publish or commit a zero-article daily edition caused by network failure or missing secrets.
-- When updating daily content, verify that `docs/index.html`, `docs/archive-index.json`, and the target daily page remain in a coherent published state.
+- Validate `daily-ai-news-generator/output/daily_articles.json` before publishing. Confirm nonzero AI-filtered total, nonzero visible published count, duplicate-candidate count, and category breakdown.
+- When updating daily content, verify that `docs/archive-index.json` and the target daily page remain in a coherent published state.
 - Keep generated intermediate files out of git; `daily-ai-news-generator/output/` is intentionally ignored.
