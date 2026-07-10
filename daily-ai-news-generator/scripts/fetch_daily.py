@@ -74,6 +74,7 @@ FEED_CATEGORIES = {
         ("AWS ML Blog",              "https://aws.amazon.com/blogs/machine-learning/feed/"),
         ("Hugging Face Blog",        "https://huggingface.co/blog/feed.xml"),
         ("NVIDIA Deep Learning",     "https://blogs.nvidia.com/blog/category/deep-learning/feed/"),
+        ("NVIDIA Generative AI",     "https://developer.nvidia.com/blog/category/generative-ai/feed/rss2/"),
     ],
     # --- AIニュースサイト ---
     "AIニュース・メディア": [

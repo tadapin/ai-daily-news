@@ -1,11 +1,11 @@
 ---
 name: daily-ai-news-generator
-description: 44本のRSSフィードから過去24時間のAIニュースを収集・要約・重複排除・AI関連フィルタリングして、このリポジトリの`docs/`に日次HTMLを生成するCodex用スキル。「Daily AI Newsを更新して」「今日のAIニュースを公開して」などの依頼や、Codexオートメーションでの日次更新時に使用する。
+description: 45本のRSSフィードから過去24時間のAIニュースを収集・要約・重複排除・AI関連フィルタリングして、このリポジトリの`docs/`に日次HTMLを生成するCodex用スキル。「Daily AI Newsを更新して」「今日のAIニュースを公開して」などの依頼や、Codexオートメーションでの日次更新時に使用する。
 ---
 
 # Daily AI News Generator
 
-44本のRSSフィードから過去24時間のAIニュースを収集し、日本語サマリー付きHTMLを生成して、このリポジトリのGitHub Pages用`docs/`を更新する。
+45本のRSSフィードから過去24時間のAIニュースを収集し、日本語サマリー付きHTMLを生成して、このリポジトリのGitHub Pages用`docs/`を更新する。
 
 ## 使う場面
 
