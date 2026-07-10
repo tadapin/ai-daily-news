@@ -16,12 +16,16 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 INPUT_JSON = REPO_ROOT / "daily-ai-news-generator" / "output" / "daily_articles.json"
+ENV_PATH = REPO_ROOT / "daily-ai-news-generator" / "local-llm.env"
 DEFAULT_MODEL_NAME = "hotchpotch/static-embedding-japanese"
-DEFAULT_SIMILARITY_THRESHOLD = 0.92
+DEFAULT_SIMILARITY_THRESHOLD = 0.65
+
+load_dotenv(ENV_PATH)
 
 
 class UnionFind:
