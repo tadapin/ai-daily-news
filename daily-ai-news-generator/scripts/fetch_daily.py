@@ -36,6 +36,7 @@ OUTPUT_DIR = REPO_ROOT / "daily-ai-news-generator" / "output"
 OUTPUT_JSON = OUTPUT_DIR / "daily_articles.json"
 ENV_PATH = REPO_ROOT / "daily-ai-news-generator" / "local-llm.env"
 DEFAULT_SUMMARY_CONCURRENCY = 3
+DEFAULT_SUMMARY_MAX_OUTPUT_TOKENS = 500
 
 # ===== カテゴリ別フィード定義（ai-news-feedsスキルと完全一致） =====
 
@@ -189,6 +190,28 @@ def get_summary_concurrency():
         return DEFAULT_SUMMARY_CONCURRENCY
 
     return concurrency
+
+def get_summary_max_output_tokens():
+    raw_value = os.environ.get(
+        "SUMMARY_MAX_OUTPUT_TOKENS", str(DEFAULT_SUMMARY_MAX_OUTPUT_TOKENS)
+    )
+    try:
+        max_output_tokens = int(raw_value)
+    except (TypeError, ValueError):
+        print(
+            f"[WARN] SUMMARY_MAX_OUTPUT_TOKENS={raw_value!r} は不正です。"
+            f"デフォルト値 {DEFAULT_SUMMARY_MAX_OUTPUT_TOKENS} を使用します。"
+        )
+        return DEFAULT_SUMMARY_MAX_OUTPUT_TOKENS
+
+    if max_output_tokens < 1:
+        print(
+            f"[WARN] SUMMARY_MAX_OUTPUT_TOKENS={max_output_tokens} は 1 以上を指定してください。"
+            f"デフォルト値 {DEFAULT_SUMMARY_MAX_OUTPUT_TOKENS} を使用します。"
+        )
+        return DEFAULT_SUMMARY_MAX_OUTPUT_TOKENS
+
+    return max_output_tokens
 
 # ─── Step 2: タイトルベースの重複排除（高速・LLM不要） ──────────────────────
 
@@ -350,6 +373,7 @@ def finalize_summary_text(summary, min_len=140, max_len=240, max_sentences=4):
     return summary[:max_len].rstrip()
 
 def summarize_and_filter(title, url, text, source):
+    max_output_tokens = get_summary_max_output_tokens()
     prompt = f"""Read the article below and return only a single JSON object.
 Do not include code blocks, markdown, or any text outside the JSON.
 
@@ -428,7 +452,7 @@ Previous JSON:
             current_prompt = prompt if attempt == 1 else retry_prompt
             raw = generate_text(
                 current_prompt,
-                max_output_tokens=500,
+                max_output_tokens=max_output_tokens,
                 temperature=temperature,
                 system_prompt=JSON_SYSTEM_PROMPT,
                 json_schema=SUMMARY_FILTER_JSON_SCHEMA,
@@ -447,7 +471,7 @@ Previous JSON:
         if payload.get("is_ai_related") and len(payload["summary"]) < 140:
             raw = generate_text(
                 expand_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
-                max_output_tokens=500,
+                max_output_tokens=max_output_tokens,
                 temperature=0.2,
                 system_prompt=JSON_SYSTEM_PROMPT,
                 json_schema=SUMMARY_FILTER_JSON_SCHEMA,
@@ -460,7 +484,7 @@ Previous JSON:
         if payload.get("is_ai_related") and not is_summary_primarily_japanese(payload["summary"]):
             raw = generate_text(
                 japanese_retry_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
-                max_output_tokens=500,
+                max_output_tokens=max_output_tokens,
                 temperature=0.1,
                 system_prompt=JSON_SYSTEM_PROMPT,
                 json_schema=SUMMARY_FILTER_JSON_SCHEMA,
@@ -473,7 +497,7 @@ Previous JSON:
         if payload.get("is_ai_related") and not is_summary_primarily_japanese(payload["summary"]):
             raw = generate_text(
                 translation_retry_prompt.format(payload=json.dumps(payload, ensure_ascii=False)),
-                max_output_tokens=500,
+                max_output_tokens=max_output_tokens,
                 temperature=0,
                 system_prompt=JSON_SYSTEM_PROMPT,
                 json_schema=SUMMARY_FILTER_JSON_SCHEMA,
