@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""Reproducible Daily AI News publisher.
+
+LLM work stays in the existing generator. This program owns deterministic
+preflight, validation, archive, Git, push, and draft-PR steps.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import urlsplit
+
+import requests
+from dotenv import dotenv_values
+from pydantic import BaseModel, Field
+
+ROOT = Path(__file__).resolve().parents[2]
+GENERATOR = ROOT / "daily-ai-news-generator"
+ENV_PATH = GENERATOR / "local-llm.env"
+OUTPUT = GENERATOR / "output" / "daily_articles.json"
+DOCS = ROOT / "docs"
+
+
+class Article(BaseModel):
+    summary: str = ""
+    reason: str = ""
+    is_duplicate_candidate: bool = False
+
+
+class Stats(BaseModel):
+    fetched: int = 0
+    after_ai_filter: int = 0
+    duplicate_candidates: int = 0
+    visible_after_summary_dedup: int | None = None
+
+
+class Edition(BaseModel):
+    total: int
+    stats: Stats = Field(default_factory=Stats)
+    categories: dict[str, list[Article]] = Field(default_factory=dict)
+
+
+class Result(BaseModel):
+    date: str
+    fetched: int
+    after_ai_filter: int
+    visible: int
+    duplicate_candidates: int
+    categories: dict[str, dict[str, int]]
+    branch: str | None = None
+    base_branch: str | None = None
+    commit: str | None = None
+    pull_request: str | None = None
+
+
+def command(*args: str, capture: bool = False) -> str:
+    print("+", " ".join(args), flush=True)
+    completed = subprocess.run(args, cwd=ROOT, check=True, text=True, capture_output=capture)
+    return completed.stdout.strip() if capture else ""
+
+
+def today_jst() -> str:
+    return (datetime.now(timezone.utc) + timedelta(hours=9)).strftime("%Y-%m-%d")
+
+
+def config() -> dict[str, str]:
+    values = {key: value for key, value in dotenv_values(ENV_PATH).items() if value}
+    if not ENV_PATH.is_file() or not values.get("LOCAL_LLM_BASE_URL") or not values.get("LOCAL_LLM_MODEL"):
+        raise RuntimeError(f"invalid local LLM configuration: {ENV_PATH}")
+    return values
+
+
+def preload(values: dict[str, str]) -> None:
+    parsed = urlsplit(values["LOCAL_LLM_BASE_URL"])
+    if not parsed.scheme or not parsed.netloc:
+        raise RuntimeError("LOCAL_LLM_BASE_URL must be absolute")
+    response = requests.post(
+        f"{parsed.scheme}://{parsed.netloc}/api/v1/chat",
+        json={"model": values["LOCAL_LLM_MODEL"], "system_prompt": "You answer only in rhymes.", "input": "What is your favorite color?"},
+        timeout=180,
+    )
+    response.raise_for_status()
+    print(f"LM Studio model loaded: {values['LOCAL_LLM_MODEL']}")
+
+
+def clean_worktree() -> None:
+    if command("git", "status", "--porcelain", capture=True):
+        raise RuntimeError("working tree has local changes; refusing to overwrite them")
+
+
+def archive(ref: str) -> list[str]:
+    return json.loads(command("git", "show", f"{ref}:docs/archive-index.json", capture=True))
+
+
+def base_branch(date: str) -> str:
+    previous = (datetime.strptime(date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
+    if previous in archive("origin/main"):
+        return "main"
+    refs = command("git", "ls-remote", "--heads", "origin", "refs/heads/automation/daily-ai-news-publish-*", capture=True).splitlines()
+    candidates = [line.rsplit("/", 1)[-1] for line in refs]
+    candidates = [name for name in candidates if name < f"automation/daily-ai-news-publish-{date}"]
+    if not candidates:
+        raise RuntimeError(f"main lacks {previous}, and no prior publish branch exists")
+    return max(candidates)
+
+
+def prepare_branch(date: str) -> tuple[str, str]:
+    clean_worktree()
+    command("git", "switch", "main")
+    command("git", "pull", "--ff-only", "origin", "main")
+    command("git", "fetch", "origin", "main")
+    base = base_branch(date)
+    branch = f"automation/daily-ai-news-publish-{date}"
+    if command("git", "branch", "--list", branch, capture=True):
+        raise RuntimeError(f"branch already exists: {branch}")
+    command("git", "switch", "-c", branch, f"origin/{base}")
+    return branch, base
+
+
+def validate(date: str) -> Result:
+    if not OUTPUT.is_file():
+        raise RuntimeError(f"missing generator output: {OUTPUT}")
+    edition = Edition.model_validate_json(OUTPUT.read_text(encoding="utf-8"))
+    visible = edition.stats.visible_after_summary_dedup
+    if visible is None:
+        visible = edition.total - edition.stats.duplicate_candidates
+    failures = [a for items in edition.categories.values() for a in items if "サマリー生成に失敗しました" in a.summary or "AI関連判定に失敗" in a.reason]
+    html = DOCS / f"{date}.html"
+    if edition.total <= 0 or visible <= 0 or failures or not html.is_file() or not html.stat().st_size:
+        raise RuntimeError("validation failed: zero articles, failed LLM output, or missing HTML")
+    categories = {}
+    for name, items in edition.categories.items():
+        duplicates = sum(item.is_duplicate_candidate for item in items)
+        categories[name] = {"total": len(items), "visible": len(items) - duplicates, "duplicates": duplicates}
+    return Result(date=date, fetched=edition.stats.fetched, after_ai_filter=edition.stats.after_ai_filter or edition.total, visible=visible, duplicate_candidates=edition.stats.duplicate_candidates, categories=categories)
+
+
+def update_archive(date: str) -> None:
+    command(sys.executable, str(GENERATOR / "scripts" / "push_to_github.py"), "--date", date, "--html", str(DOCS / f"{date}.html"))
+    if json.loads((DOCS / "archive-index.json").read_text(encoding="utf-8"))[0] != date:
+        raise RuntimeError("archive index does not start with the edition date")
+
+
+def commit_and_pr(result: Result, base: str) -> Result:
+    html = f"docs/{result.date}.html"
+    command("git", "add", html, "docs/archive-index.json")
+    staged = command("git", "diff", "--cached", "--name-only", capture=True).splitlines()
+    if not staged or not set(staged).issubset({html, "docs/archive-index.json"}):
+        raise RuntimeError(f"unexpected staged files: {staged}")
+    command("git", "commit", "-m", f"Publish Daily AI News {result.date}")
+    result.commit = command("git", "rev-parse", "HEAD", capture=True)
+    result.branch, result.base_branch = command("git", "branch", "--show-current", capture=True), base
+    command("git", "push", "-u", "origin", result.branch)
+    body = f"## Daily AI News — {result.date}\n\n- Fetched: {result.fetched}\n- After AI filter: {result.after_ai_filter}\n- Visible: {result.visible}\n- Duplicate candidates: {result.duplicate_candidates}\n"
+    result.pull_request = command("gh", "pr", "create", "--draft", "--base", base, "--head", result.branch, "--title", f"Publish Daily AI News {result.date}", "--body", body, capture=True)
+    return result
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--date", default=today_jst())
+    parser.add_argument("--publish", action="store_true", help="prepare branch, commit, push, and create a draft PR")
+    parser.add_argument("--skip-model-load", action="store_true")
+    args = parser.parse_args()
+    datetime.strptime(args.date, "%Y-%m-%d")
+    branch = base = None
+    if args.publish:
+        branch, base = prepare_branch(args.date)
+    if not args.skip_model_load:
+        preload(config())
+    command(str(GENERATOR / "scripts" / "run_daily_to_html.sh"))
+    result = validate(args.date)
+    update_archive(args.date)
+    if args.publish:
+        result = commit_and_pr(result, base or "main")
+    print(json.dumps(result.model_dump(), ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (RuntimeError, subprocess.CalledProcessError, requests.RequestException, ValueError) as error:
+        print(f"publish failed: {error}", file=sys.stderr)
+        raise SystemExit(1) from error
