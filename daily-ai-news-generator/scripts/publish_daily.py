@@ -100,7 +100,7 @@ def confirm_missing_previous(previous: str) -> None:
     prompt = (
         f"origin/main に前日分 ({previous}) の出力がありません。"
         "単にスキップされた可能性があります。"
-        "最新の公開ブランチを基に続行しますか？ [y/N]: "
+        "main または最新の公開ブランチを基に続行しますか？ [y/N]: "
     )
     try:
         answer = input(prompt)
@@ -119,7 +119,8 @@ def base_branch(date: str) -> str:
     candidates = [line.rsplit("/", 1)[-1] for line in refs]
     candidates = [name for name in candidates if name < f"automation/daily-ai-news-publish-{date}"]
     if not candidates:
-        raise RuntimeError(f"main lacks {previous}, and no prior publish branch exists")
+        print(f"前日分 ({previous}) の公開ブランチがないため、mainをベースにします", flush=True)
+        return "main"
     return max(candidates)
 
 
