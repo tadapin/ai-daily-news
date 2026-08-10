@@ -214,8 +214,8 @@ git ls-remote --heads origin "refs/heads/$BRANCH"
 
 | カテゴリ | 件数 | 主な情報源 |
 |---|---|---|
-| Anthropic | 7件 | Anthropic News/Research/Engineering、Claude Code Changelog等 |
+| Anthropic | 6件 | Anthropic News/Research/Engineering、Claude Code Changelog等 |
 | AI開発ツール | 5件 | Cursor、Ollama、Windsurf Blog/Changelog等 |
-| AIベンダー | 13件 | OpenAI、Google DeepMind、Microsoft AI、AWS ML Blog、Hugging Face、NVIDIA等 |
-| AIニュース・メディア | 8件 | MIT Technology Review、VentureBeat、TechCrunch AI、WIRED AI、The Verge等 |
+| AIベンダー | 15件 | OpenAI、Google DeepMind、Microsoft AI、AWS ML Blog、Hugging Face、NVIDIA等 |
+| AIニュース・メディア | 8件 | MIT Technology Review、VentureBeat、TechCrunch AI、WIRED AI、The Verge、AI News等 |
 | 研究者・ニュースレター | 10件 | Import AI、Ahead of AI、Simon Willison、Andrej Karpathy、Last Week in AI等 |

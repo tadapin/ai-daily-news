@@ -29,7 +29,7 @@ from dotenv import load_dotenv
 # ===== 設定 =====
 DAYS_BACK = 1
 OLSHANSK_BASE = "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; DailyAINews/1.0)"}
+HEADERS = {"User-Agent": "feedparser/6.0"}
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_DIR = REPO_ROOT / "daily-ai-news-generator" / "output"
@@ -43,13 +43,12 @@ DEFAULT_SUMMARY_MAX_OUTPUT_TOKENS = 500
 FEED_CATEGORIES = {
     # --- Olshansk/rss-feeds: Anthropic関連 ---
     "Anthropic": [
-        ("Anthropic（総合）",         OLSHANSK_BASE + "feed_anthropic.xml"),
-        ("Claude Code Changelog",    OLSHANSK_BASE + "feed_anthropic_changelog_claude_code.xml"),
+        ("Claude",                   OLSHANSK_BASE + "feed_claude.xml"),
+        ("Claude Code Changelog",    "https://code.claude.com/docs/en/changelog/rss.xml"),
         ("Anthropic Engineering",    OLSHANSK_BASE + "feed_anthropic_engineering.xml"),
         ("Anthropic News",           OLSHANSK_BASE + "feed_anthropic_news.xml"),
         ("Anthropic RED",            OLSHANSK_BASE + "feed_anthropic_red.xml"),
         ("Anthropic Research",       OLSHANSK_BASE + "feed_anthropic_research.xml"),
-        ("Claude",                   OLSHANSK_BASE + "feed_claude.xml"),
     ],
     # --- Olshansk/rss-feeds: AI開発ツール ---
     "AI開発ツール": [
@@ -66,7 +65,7 @@ FEED_CATEGORIES = {
         ("Thinking Machines",        OLSHANSK_BASE + "feed_thinkingmachines.xml"),
         ("BlogSurge AI",             OLSHANSK_BASE + "feed_blogsurgeai.xml"),
         ("Dagster",                  OLSHANSK_BASE + "feed_dagster.xml"),
-        ("OpenAI Research",          OLSHANSK_BASE + "feed_openai_research.xml"),
+        ("OpenAI Research",          "https://openai.com/blog/rss.xml"),
         ("OpenAI News",              "https://openai.com/news/rss.xml"),
         ("Google DeepMind",          "https://deepmind.google/blog/rss.xml"),
         ("Google AI Blog",           "https://blog.google/innovation-and-ai/technology/ai/rss/"),
@@ -98,7 +97,7 @@ FEED_CATEGORIES = {
         ("Andrej Karpathy",          "https://karpathy.substack.com/feed"),
         ("Last Week in AI",          "https://lastweekin.ai/feed"),
         ("Chander Ramesh",           OLSHANSK_BASE + "feed_chanderramesh.xml"),
-        ("Hamel Husain",             OLSHANSK_BASE + "feed_hamel.xml"),
+        ("Hamel Husain",             "https://hamel.dev/index.xml"),
         ("Paul Graham",              OLSHANSK_BASE + "feed_paulgraham.xml"),
     ],
 }
