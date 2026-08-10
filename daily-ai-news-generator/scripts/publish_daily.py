@@ -96,10 +96,25 @@ def archive(ref: str) -> list[str]:
     return json.loads(command("git", "show", f"{ref}:docs/archive-index.json", capture=True))
 
 
+def confirm_missing_previous(previous: str) -> None:
+    prompt = (
+        f"origin/main に前日分 ({previous}) の出力がありません。"
+        "単にスキップされた可能性があります。"
+        "最新の公開ブランチを基に続行しますか？ [y/N]: "
+    )
+    try:
+        answer = input(prompt)
+    except EOFError as error:
+        raise RuntimeError("前日分の出力がないため、確認できず中止しました") from error
+    if answer.strip().lower() not in {"y", "yes"}:
+        raise RuntimeError("前日分の出力がないため、ユーザーの確認により中止しました")
+
+
 def base_branch(date: str) -> str:
     previous = (datetime.strptime(date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
     if previous in archive("origin/main"):
         return "main"
+    confirm_missing_previous(previous)
     refs = command("git", "ls-remote", "--heads", "origin", "refs/heads/automation/daily-ai-news-publish-*", capture=True).splitlines()
     candidates = [line.rsplit("/", 1)[-1] for line in refs]
     candidates = [name for name in candidates if name < f"automation/daily-ai-news-publish-{date}"]
